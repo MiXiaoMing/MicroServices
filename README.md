@@ -9,3 +9,5 @@ SpringCloud版本：Greenwich.SR1
 -|-|-
 user | 用户 | 9001 |
 information | 资讯 | 9002 |
+
+testdata | 评测数据 | 9100 |

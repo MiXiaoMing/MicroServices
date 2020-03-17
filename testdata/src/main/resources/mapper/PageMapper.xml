@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.microservices.testdata.mapper.PageMapper">
+
+    <sql id="columns">
+		  id, schemeID as scheme_id, pageName as page_name,
+		  responseTime as response_time, operateTime as operate_time, flag
+    </sql>
+
+    <insert id="insertPage" parameterType="com.microservices.testdata.entity.Page">
+        insert into td_page
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="schemeID != null">
+                scheme_id,
+            </if>
+            <if test="pageName != null">
+                page_name,
+            </if>
+            <if test="responseTime != null">
+                response_time,
+            </if>
+            <if test="operateTime != null">
+                operate_time,
+            </if>
+            <if test="flag != null">
+                flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeID != null">
+                #{schemeID,jdbcType=VARCHAR},
+            </if>
+            <if test="pageName != null">
+                #{pageName,jdbcType=VARCHAR},
+            </if>
+            <if test="responseTime != null">
+                #{responseTime,jdbcType=VARCHAR},
+            </if>
+            <if test="operateTime != null">
+                #{operateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectPagesBySchemeID" resultType="com.microservices.testdata.entity.Page" parameterType="java.util.Map">
+        select
+        <include refid="columns"/>
+        <![CDATA[
+            from td_page
+            where scheme_id = #{schemeID,jdbcType=VARCHAR}
+            and flag <> 'D'
+        ]]>
+    </select>
+
+</mapper>

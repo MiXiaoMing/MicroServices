@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.microservices.testdata.mapper.SchemeMapper">
+
+    <sql id="columns">
+		  id, appID as app_id, appVersion as app_version,
+		  deviceModel as device_model, systemVersion as system_version,
+		  startTime as start_time, endTime as end_time, flag
+    </sql>
+
+    <insert id="insertScheme" parameterType="com.microservices.testdata.entity.Scheme">
+        insert into td_scheme
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="appID != null">
+                app_id,
+            </if>
+            <if test="appVersion != null">
+                app_version,
+            </if>
+            <if test="deviceModel != null">
+                device_model,
+            </if>
+            <if test="systemVersion != null">
+                system_version,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="flag != null">
+                flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="appID != null">
+                #{appID,jdbcType=VARCHAR},
+            </if>
+            <if test="appVersion != null">
+                #{appVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceModel != null">
+                #{deviceModel,jdbcType=VARCHAR},
+            </if>
+            <if test="systemVersion != null">
+                #{systemVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=VARCHAR},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectSchemeByID" resultType="com.microservices.testdata.entity.Scheme" parameterType="java.util.Map">
+        select
+        <include refid="columns"/>
+        <![CDATA[
+            from td_scheme
+            where id = #{id,jdbcType=VARCHAR}
+            and flag <> 'D'
+        ]]>
+    </select>
+
+    <update id="updateScheme" parameterType="com.microservices.testdata.entity.Scheme">
+        update td_scheme
+        <set>
+            <if test="flag != null">
+                flag = #{flag,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

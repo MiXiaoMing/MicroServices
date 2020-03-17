@@ -5,13 +5,14 @@ import com.alibaba.fastjson.JSON;
 import java.io.Serializable;
 
 public class ResponseModel<T> implements Serializable {
-    private boolean success = false;
-    private String errCode;
-    private T data;
-    private String message;
-    private Long execTime;
+    protected boolean success = false;
+    protected String errCode = "";
+    protected T data;
+    protected String message = "";
+    private Long execTime = 0L, startTime;
 
     public ResponseModel() {
+        startTime = System.currentTimeMillis();
     }
 
     public ResponseModel(T iRows) {
@@ -25,6 +26,7 @@ public class ResponseModel<T> implements Serializable {
 
     public void setData(T rows) {
         this.data = rows;
+        execTime = System.currentTimeMillis() - startTime;
     }
 
     public Long getExecTime() {
