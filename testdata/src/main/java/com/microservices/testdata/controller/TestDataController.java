@@ -1,12 +1,24 @@
 package com.microservices.testdata.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.support.ResponseJsonModel;
 import com.microservices.support.ResponseModel;
+import com.microservices.testdata.entity.Interface;
+import com.microservices.testdata.entity.Page;
+import com.microservices.testdata.entity.Performance;
+import com.microservices.testdata.service.InterfaceService;
+import com.microservices.testdata.service.PageService;
+import com.microservices.testdata.service.PerformanceService;
 import com.microservices.testdata.service.SchemeService;
 import com.microservices.utils.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/td")
@@ -14,6 +26,14 @@ public class TestDataController {
 
     @Autowired
     private SchemeService schemeService;
+    @Autowired
+    private PageService pageService;
+    @Autowired
+    private InterfaceService interfaceService;
+    @Autowired
+    private PerformanceService performanceService;
+
+
 
     /************  流程控制   ************/
 
@@ -55,6 +75,171 @@ public class TestDataController {
             } else {
                 responseModel.setSuccess(true);
             }
+        }
+
+        return responseModel;
+    }
+
+    /************  具体的监控指标   ************/
+
+    /************  页面   ************/
+    // 页面监控
+    @RequestMapping(value = "/monitor/pageResponse", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> pageRecord(@RequestBody JSONObject params) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        String schemeID = params.getString("id");
+        JSONArray contextArray = params.getJSONArray("context");
+
+        if (TextUtils.isEmpty(schemeID)) {
+            responseModel.setMessage("id 为空");
+            return responseModel;
+        }
+
+        if (contextArray == null || contextArray.size() <= 0) {
+            responseModel.setMessage("context 为空");
+            return responseModel;
+        }
+
+        int count = pageService.insertPageBatch(schemeID, contextArray);
+        if (count >= 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("count", count);
+
+            responseModel.setData(jsonObject);
+            responseModel.setSuccess(true);
+        }
+
+        return responseModel;
+    }
+
+    // 页面监控 查询
+    @RequestMapping(value = "/monitor/pages", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> pages(@RequestBody JSONObject params) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        String schemeID = params.getString("id");
+
+        if (TextUtils.isEmpty(schemeID)) {
+            responseModel.setMessage("id 为空");
+            return responseModel;
+        }
+
+        List<Page> pages = pageService.selectPages(schemeID);
+        if (pages.size() > 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("pages", pages);
+
+            responseModel.setData(jsonObject);
+            responseModel.setSuccess(true);
+        }
+
+        return responseModel;
+    }
+
+    /************  接口   ************/
+
+    @RequestMapping(value = "/monitor/urlResponse", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> interfaceRecord(@RequestBody JSONObject params) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        String schemeID = params.getString("id");
+        JSONArray contextArray = params.getJSONArray("context");
+
+        if (TextUtils.isEmpty(schemeID)) {
+            responseModel.setMessage("id 为空");
+            return responseModel;
+        }
+
+        if (contextArray == null || contextArray.size() <= 0) {
+            responseModel.setMessage("context 为空");
+            return responseModel;
+        }
+
+        int count = interfaceService.insertInterfaceBatch(schemeID, contextArray);
+        if (count >= 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("count", count);
+
+            responseModel.setData(jsonObject);
+            responseModel.setSuccess(true);
+        }
+
+        return responseModel;
+    }
+
+    @RequestMapping(value = "/monitor/interfaces", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> interfaces(@RequestBody JSONObject params) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        String schemeID = params.getString("id");
+
+        if (TextUtils.isEmpty(schemeID)) {
+            responseModel.setMessage("id 为空");
+            return responseModel;
+        }
+
+        List<Interface> interfaces = interfaceService.selectInterfaces(schemeID);
+        if (interfaces.size() > 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("interfaces", interfaces);
+
+            responseModel.setData(jsonObject);
+            responseModel.setSuccess(true);
+        }
+
+        return responseModel;
+    }
+
+    /************  性能数据   ************/
+
+    @RequestMapping(value = "/monitor/cpuAndMemory", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> performanceRecord(@RequestBody JSONObject params) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        String schemeID = params.getString("id");
+        JSONArray contextArray = params.getJSONArray("context");
+
+        if (TextUtils.isEmpty(schemeID)) {
+            responseModel.setMessage("id 为空");
+            return responseModel;
+        }
+
+        if (contextArray == null || contextArray.size() <= 0) {
+            responseModel.setMessage("context 为空");
+            return responseModel;
+        }
+
+        int count = performanceService.insertPerformanceBatch(schemeID, contextArray);
+        if (count >= 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("count", count);
+
+            responseModel.setData(jsonObject);
+            responseModel.setSuccess(true);
+        }
+
+        return responseModel;
+    }
+
+    @RequestMapping(value = "/monitor/performances", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> performances(@RequestBody JSONObject params) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        String schemeID = params.getString("id");
+
+        if (TextUtils.isEmpty(schemeID)) {
+            responseModel.setMessage("id 为空");
+            return responseModel;
+        }
+
+        List<Performance> performances = performanceService.selectPerformances(schemeID);
+        if (performances.size() > 0) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("performances", performances);
+
+            responseModel.setData(jsonObject);
+            responseModel.setSuccess(true);
         }
 
         return responseModel;

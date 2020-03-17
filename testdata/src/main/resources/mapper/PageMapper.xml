@@ -3,11 +3,11 @@
 <mapper namespace="com.microservices.testdata.mapper.PageMapper">
 
     <sql id="columns">
-		  id, schemeID as scheme_id, pageName as page_name,
-		  responseTime as response_time, operateTime as operate_time, flag
+		  id, scheme_id as schemeID, page_name as pageName,
+		  response_time as responseTime, operate_time as operateTime, flag
     </sql>
 
-    <insert id="insertPage" parameterType="com.microservices.testdata.entity.Page">
+    <insert id="insertPageBatch" parameterType="map">
         insert into td_page
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -29,26 +29,13 @@
                 flag,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=VARCHAR},
-            </if>
-            <if test="schemeID != null">
-                #{schemeID,jdbcType=VARCHAR},
-            </if>
-            <if test="pageName != null">
-                #{pageName,jdbcType=VARCHAR},
-            </if>
-            <if test="responseTime != null">
-                #{responseTime,jdbcType=VARCHAR},
-            </if>
-            <if test="operateTime != null">
-                #{operateTime,jdbcType=VARCHAR},
-            </if>
-            <if test="flag != null">
-                #{flag,jdbcType=VARCHAR},
-            </if>
-        </trim>
+        values
+        <foreach collection="pages" item="page" index="index" separator=",">
+          (
+            #{page.id}, #{page.schemeID}, #{page.pageName},
+            #{page.responseTime}, #{page.operateTime}, #{page.flag}
+          )
+        </foreach >
     </insert>
 
     <select id="selectPagesBySchemeID" resultType="com.microservices.testdata.entity.Page" parameterType="java.util.Map">
@@ -60,5 +47,4 @@
             and flag <> 'D'
         ]]>
     </select>
-
 </mapper>

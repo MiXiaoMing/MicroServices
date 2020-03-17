@@ -3,9 +3,9 @@
 <mapper namespace="com.microservices.testdata.mapper.SchemeMapper">
 
     <sql id="columns">
-		  id, appID as app_id, appVersion as app_version,
-		  deviceModel as device_model, systemVersion as system_version,
-		  startTime as start_time, endTime as end_time, flag
+		  id, app_id as appID, app_version as appVersion,
+		  device_model as deviceModel, system_version as systemVersion,
+		  start_time as startTime, end_time as endTime, flag
     </sql>
 
     <insert id="insertScheme" parameterType="com.microservices.testdata.entity.Scheme">

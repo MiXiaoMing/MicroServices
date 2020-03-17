@@ -3,11 +3,11 @@
 <mapper namespace="com.microservices.testdata.mapper.PerformanceMapper">
 
     <sql id="columns">
-		  id, schemeID as scheme_id, cpuRatio as cpu_ratio,
-		  memorySize as memory_size, flag
+		  id, scheme_id as schemeID, cpu_ratio as cpuRatio,
+		  memory_size as memorySize, flag
     </sql>
 
-    <insert id="insertPerformance" parameterType="com.microservices.testdata.entity.Performance">
+    <insert id="insertPerformanceBatch" parameterType="map">
         insert into td_performance
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -26,23 +26,13 @@
                 flag,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=VARCHAR},
-            </if>
-            <if test="schemeID != null">
-                #{schemeID,jdbcType=VARCHAR},
-            </if>
-            <if test="cpuRatio != null">
-                #{cpuRatio,jdbcType=VARCHAR},
-            </if>
-            <if test="memorySize != null">
-                #{memorySize,jdbcType=VARCHAR},
-            </if>
-            <if test="flag != null">
-                #{flag,jdbcType=VARCHAR},
-            </if>
-        </trim>
+        values
+        <foreach collection="performances" item="item" index="index" separator=",">
+            (
+            #{item.id}, #{item.schemeID}, #{item.cpuRatio},
+            #{item.memorySize}, #{item.flag}
+            )
+        </foreach >
     </insert>
 
     <select id="selectPerformancesBySchemeID" resultType="com.microservices.testdata.entity.Performance" parameterType="java.util.Map">
