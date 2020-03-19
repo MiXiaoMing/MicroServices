@@ -4,7 +4,7 @@
 
     <sql id="columns">
 		  id, scheme_id as schemeID, cpu_ratio as cpuRatio,
-		  memory_size as memorySize, flag
+		  memory_size as memorySize, operate_time as operateTime, flag
     </sql>
 
     <insert id="insertPerformanceBatch" parameterType="map">
@@ -22,6 +22,9 @@
             <if test="memorySize != null">
                 memory_size,
             </if>
+            <if test="operateTime != null">
+                operate_time,
+            </if>
             <if test="flag != null">
                 flag,
             </if>
@@ -30,7 +33,7 @@
         <foreach collection="performances" item="item" index="index" separator=",">
             (
             #{item.id}, #{item.schemeID}, #{item.cpuRatio},
-            #{item.memorySize}, #{item.flag}
+            #{item.memorySize}, #{item.operateTime}, #{item.flag}
             )
         </foreach >
     </insert>
@@ -41,6 +44,24 @@
         <![CDATA[
             from td_performance
             where scheme_id = #{schemeID,jdbcType=VARCHAR}
+            and flag <> 'D'
+        ]]>
+    </select>
+
+    <select id="averageCpu" resultType="float" parameterType="java.util.Map">
+        select avg(cpu_ratio)
+        from td_performance
+        where scheme_id = #{schemeID,jdbcType=VARCHAR}
+        <![CDATA[
+            and flag <> 'D'
+        ]]>
+    </select>
+
+    <select id="averageMemory" resultType="float" parameterType="java.util.Map">
+        select avg(memory_size)
+        from td_performance
+        where scheme_id = #{schemeID,jdbcType=VARCHAR}
+        <![CDATA[
             and flag <> 'D'
         ]]>
     </select>

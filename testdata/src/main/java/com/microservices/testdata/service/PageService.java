@@ -47,4 +47,11 @@ public class PageService {
 
         return sqlSessionTemplate.selectList("com.microservices.testdata.mapper.PageMapper.selectPagesBySchemeID", map);
     }
+
+    public float averageTime(String schemeID) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("schemeID", schemeID);
+
+        return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PageMapper.averageTime", map);
+    }
 }

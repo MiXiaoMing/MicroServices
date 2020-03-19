@@ -48,4 +48,11 @@ public class InterfaceService {
 
         return sqlSessionTemplate.selectList("com.microservices.testdata.mapper.InterfaceMapper.selectInterfacesBySchemeID", map);
     }
+
+    public float averageTime(String schemeID) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("schemeID", schemeID);
+
+        return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.InterfaceMapper.averageTime", map);
+    }
 }

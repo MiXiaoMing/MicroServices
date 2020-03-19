@@ -1,12 +1,18 @@
 package com.microservices.testdata.service;
 
+import com.microservices.testdata.entity.Page;
 import com.microservices.testdata.entity.Scheme;
+import com.microservices.utils.TextUtils;
+import com.mysql.cj.util.TestUtils;
 import org.coffee.falsework.core.generator.SnowflakeIdService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class SchemeService {
@@ -16,10 +22,10 @@ public class SchemeService {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    public String insertScheme(String appID, String appVersion, String deviceModel, String systemVersion) {
+    public String insertScheme(String appCode, String appVersion, String deviceModel, String systemVersion) {
         Scheme scheme = new Scheme();
         scheme.id = snowflakeIdService.getId();
-        scheme.appID = appID;
+        scheme.appCode = appCode;
         scheme.appVersion = appVersion;
         scheme.deviceModel = deviceModel;
         scheme.systemVersion = systemVersion;
@@ -41,5 +47,18 @@ public class SchemeService {
         scheme.flag = "U";
 
         return sqlSessionTemplate.update("com.microservices.testdata.mapper.SchemeMapper.updateScheme", scheme);
+    }
+
+    public List<Scheme> selectSchemes(String appCode, String appVersion) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (!TextUtils.isEmpty(appCode)) {
+            map.put("appCode", appCode);
+        }
+
+        if (!TextUtils.isEmpty(appVersion)) {
+            map.put("appVersion", appVersion);
+        }
+
+        return sqlSessionTemplate.selectList("com.microservices.testdata.mapper.SchemeMapper.selectSchemes", map);
     }
 }

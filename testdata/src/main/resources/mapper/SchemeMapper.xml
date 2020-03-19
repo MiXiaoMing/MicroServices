@@ -3,7 +3,7 @@
 <mapper namespace="com.microservices.testdata.mapper.SchemeMapper">
 
     <sql id="columns">
-		  id, app_id as appID, app_version as appVersion,
+		  id, app_code as appCode, app_version as appVersion,
 		  device_model as deviceModel, system_version as systemVersion,
 		  start_time as startTime, end_time as endTime, flag
     </sql>
@@ -14,8 +14,8 @@
             <if test="id != null">
                 id,
             </if>
-            <if test="appID != null">
-                app_id,
+            <if test="appCode != null">
+                app_code,
             </if>
             <if test="appVersion != null">
                 app_version,
@@ -40,8 +40,8 @@
             <if test="id != null">
                 #{id,jdbcType=VARCHAR},
             </if>
-            <if test="appID != null">
-                #{appID,jdbcType=VARCHAR},
+            <if test="appCode != null">
+                #{appCode,jdbcType=VARCHAR},
             </if>
             <if test="appVersion != null">
                 #{appVersion,jdbcType=VARCHAR},
@@ -64,13 +64,19 @@
         </trim>
     </insert>
 
-    <select id="selectSchemeByID" resultType="com.microservices.testdata.entity.Scheme" parameterType="java.util.Map">
+    <select id="selectSchemes" resultType="com.microservices.testdata.entity.Scheme" parameterType="java.util.Map">
         select
         <include refid="columns"/>
+        from td_scheme
+        where
+        <if test="appCode != null">
+            app_code = #{appCode,jdbcType=VARCHAR} and
+        </if>
+        <if test="appVersion != null">
+            app_version = #{appVersion,jdbcType=VARCHAR} and
+        </if>
         <![CDATA[
-            from td_scheme
-            where id = #{id,jdbcType=VARCHAR}
-            and flag <> 'D'
+            flag <> 'D'
         ]]>
     </select>
 

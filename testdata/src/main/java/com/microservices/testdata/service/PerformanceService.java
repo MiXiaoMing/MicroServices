@@ -30,6 +30,7 @@ public class PerformanceService {
             entity.schemeID = schemeID;
             entity.cpuRatio = Float.valueOf(object.getString("cpuUse"));
             entity.memorySize = Float.valueOf(object.getString("memoryUse"));
+            entity.operateTime = object.getDate("recordTime");
             entity.flag = "A";
 
             entities.add(entity);
@@ -46,5 +47,19 @@ public class PerformanceService {
         map.put("schemeID", schemeID);
 
         return sqlSessionTemplate.selectList("com.microservices.testdata.mapper.PerformanceMapper.selectPerformancesBySchemeID", map);
+    }
+
+    public float averageCpu(String schemeID) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("schemeID", schemeID);
+
+        return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PerformanceMapper.averageCpu", map);
+    }
+
+    public float averageMemory(String schemeID) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("schemeID", schemeID);
+
+        return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PerformanceMapper.averageMemory", map);
     }
 }

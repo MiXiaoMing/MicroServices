@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.microservices.testdata.mapper.AppCodeMapper">
+
+    <sql id="columns">
+		  id, app_id as appID, app_name as appName, platform_code as platformCode, flag
+    </sql>
+
+    <select id="selectAppCode" resultType="com.microservices.testdata.entity.AppCode" parameterType="java.util.Map">
+        select
+        <include refid="columns"/>
+        from td_app_code
+        where
+        <if test="appID != null">
+           app_id = #{appID,jdbcType=VARCHAR}
+        </if>
+        <if test="appName != null">
+            app_name = #{appName,jdbcType=VARCHAR}
+        </if>
+        <if test="platformCode != null">
+            platform_code = #{platformCode,jdbcType=VARCHAR}
+        </if>
+        <![CDATA[
+            and flag <> 'D'
+        ]]>
+    </select>
+
+</mapper>

@@ -47,4 +47,13 @@
             and flag <> 'D'
         ]]>
     </select>
+
+    <select id="averageTime" resultType="float" parameterType="java.util.Map">
+        select avg(response_time)
+        from td_page
+        where scheme_id = #{schemeID,jdbcType=VARCHAR}
+        <![CDATA[
+            and flag <> 'D'
+        ]]>
+    </select>
 </mapper>
