@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/td/server")
+@RequestMapping(value = "/td/web")
 public class ServerController {
 
     @Autowired
