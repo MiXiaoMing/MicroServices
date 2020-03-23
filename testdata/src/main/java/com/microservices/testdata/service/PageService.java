@@ -49,9 +49,13 @@ public class PageService {
     }
 
     public float averageTime(String schemeID) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("schemeID", schemeID);
+        if (selectPages(schemeID).size() > 0) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("schemeID", schemeID);
 
-        return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PageMapper.averageTime", map);
+            return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PageMapper.averageTime", map);
+        } else {
+            return -1;
+        }
     }
 }

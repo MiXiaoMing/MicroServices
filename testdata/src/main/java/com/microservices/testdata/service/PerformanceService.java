@@ -52,16 +52,24 @@ public class PerformanceService {
     }
 
     public float averageCpu(String schemeID) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("schemeID", schemeID);
+        if (selectPerformances(schemeID).size() > 0) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("schemeID", schemeID);
 
-        return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PerformanceMapper.averageCpu", map);
+            return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PerformanceMapper.averageCpu", map);
+        } else {
+            return -1;
+        }
     }
 
     public float averageMemory(String schemeID) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("schemeID", schemeID);
+        if (selectPerformances(schemeID).size() > 0) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("schemeID", schemeID);
 
-        return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PerformanceMapper.averageMemory", map);
+            return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.PerformanceMapper.averageMemory", map);
+        } else {
+            return -1;
+        }
     }
 }

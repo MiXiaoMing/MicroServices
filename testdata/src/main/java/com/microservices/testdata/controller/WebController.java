@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/td/web")
-public class ServerController {
+public class WebController {
 
     @Autowired
     private CodeService codeService;
@@ -44,25 +44,28 @@ public class ServerController {
         String appVersion = params.getString("appVersion");
         String platform = params.getString("platForm");
 
-        if (TextUtils.isEmpty(platform)) {
-            responseModel.setMessage("平台分类未空");
-            return responseModel;
-        }
+        String appID = null;
 
-        Code code = codeService.selectPlatformCode(platform);
-        if (code == null) {
-            responseModel.setMessage("暂不支持该类型平台：" + platform);
-            return responseModel;
-        }
+        if (!TextUtils.isEmpty(platform)) {
+            Code code = codeService.selectPlatformCode(platform);
+            if (code == null) {
+                responseModel.setMessage("暂不支持该类型平台：" + platform);
+                return responseModel;
+            }
 
-        AppCode appCode = appCodeService.selectAppCode("", appName, code.code);
-        if (appCode == null) {
-            responseModel.setMessage(platform + " 平台下未找到应用：" + appName);
-            return responseModel;
+            if (!TextUtils.isEmpty(appName)) {
+                AppCode appCode = appCodeService.selectAppCode("", appName, code.code);
+                if (appCode == null) {
+                    responseModel.setMessage(platform + " 平台下未找到应用：" + appName);
+                    return responseModel;
+                }
+
+                appID = appCode.appID;
+            }
         }
 
         ArrayList<JSONObject> jsonObjects = new ArrayList<>();
-        List<Scheme> schemes = schemeService.selectSchemes(appCode.id, appVersion);
+        List<Scheme> schemes = schemeService.selectSchemes(appID, appVersion);
         if (schemes != null && schemes.size() > 0) {
             for (int i = 0; i < schemes.size(); ++i) {
                 Scheme scheme = schemes.get(i);
