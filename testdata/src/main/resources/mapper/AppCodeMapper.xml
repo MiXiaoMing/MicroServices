@@ -12,16 +12,16 @@
         from td_app_code
         where
         <if test="appID != null">
-           app_id = #{appID,jdbcType=VARCHAR}
+           app_id = #{appID,jdbcType=VARCHAR} and
         </if>
         <if test="appName != null">
-            app_name = #{appName,jdbcType=VARCHAR}
+            app_name = #{appName,jdbcType=VARCHAR} and
         </if>
         <if test="platformCode != null">
-            platform_code = #{platformCode,jdbcType=VARCHAR}
+            platform_code = #{platformCode,jdbcType=VARCHAR} and
         </if>
         <![CDATA[
-            and flag <> 'D'
+            flag <> 'D'
         ]]>
     </select>
 

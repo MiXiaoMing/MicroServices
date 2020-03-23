@@ -1,6 +1,6 @@
 package com.microservices;
 
-import org.coffee.falsework.core.generator.SnowflakeIdService;
+import com.microservices.generator.SnowflakeIdService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;

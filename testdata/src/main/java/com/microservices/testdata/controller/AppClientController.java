@@ -81,7 +81,7 @@ public class AppClientController {
     public ResponseModel<JSONObject> endRecord(@RequestBody JSONObject params) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        String recordID = params.getString("id");
+        String recordID = params.getString("recordId");
 
         if (TextUtils.isEmpty(recordID)) {
             responseModel.setMessage("记录ID不能为空");
@@ -105,7 +105,7 @@ public class AppClientController {
     public ResponseModel<JSONObject> pageRecord(@RequestBody JSONObject params) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        String schemeID = params.getString("id");
+        String schemeID = params.getString("recordId");
         JSONArray contextArray = params.getJSONArray("context");
 
         if (TextUtils.isEmpty(schemeID)) {
@@ -135,7 +135,7 @@ public class AppClientController {
     public ResponseModel<JSONObject> pages(@RequestBody JSONObject params) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        String schemeID = params.getString("id");
+        String schemeID = params.getString("recordId");
 
         if (TextUtils.isEmpty(schemeID)) {
             responseModel.setMessage("id 为空");
@@ -160,7 +160,7 @@ public class AppClientController {
     public ResponseModel<JSONObject> interfaceRecord(@RequestBody JSONObject params) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        String schemeID = params.getString("id");
+        String schemeID = params.getString("recordId");
         JSONArray contextArray = params.getJSONArray("context");
 
         if (TextUtils.isEmpty(schemeID)) {
@@ -189,7 +189,7 @@ public class AppClientController {
     public ResponseModel<JSONObject> interfaces(@RequestBody JSONObject params) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        String schemeID = params.getString("id");
+        String schemeID = params.getString("recordId");
 
         if (TextUtils.isEmpty(schemeID)) {
             responseModel.setMessage("id 为空");
@@ -214,7 +214,7 @@ public class AppClientController {
     public ResponseModel<JSONObject> performanceRecord(@RequestBody JSONObject params) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        String schemeID = params.getString("id");
+        String schemeID = params.getString("recordId");
         JSONArray contextArray = params.getJSONArray("context");
 
         if (TextUtils.isEmpty(schemeID)) {
@@ -243,7 +243,7 @@ public class AppClientController {
     public ResponseModel<JSONObject> performances(@RequestBody JSONObject params) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        String schemeID = params.getString("id");
+        String schemeID = params.getString("recordId");
 
         if (TextUtils.isEmpty(schemeID)) {
             responseModel.setMessage("id 为空");

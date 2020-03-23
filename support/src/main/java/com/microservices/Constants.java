@@ -1,7 +1,7 @@
 package com.microservices;
 
 
-import org.coffee.falsework.core.contant.AbstractContants;
+import com.microservices.support.AbstractContants;
 
 public class Constants extends AbstractContants {
 
