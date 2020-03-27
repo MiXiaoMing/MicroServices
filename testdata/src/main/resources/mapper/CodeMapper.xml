@@ -11,7 +11,8 @@
         <include refid="columns"/>
         <![CDATA[
             from td_code
-            where nick = #{nick,jdbcType=VARCHAR}
+            where code = #{code,jdbcType=VARCHAR}
+            or nick = #{nick,jdbcType=VARCHAR}
             and `type` = #{type,jdbcType=VARCHAR}
             and flag <> 'D'
         ]]>

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.microservices.support.ResponseArrayModel;
 import com.microservices.testdata.entity.*;
 import com.microservices.testdata.service.*;
+import com.microservices.utils.DateUtil;
 import com.microservices.utils.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,14 +47,14 @@ public class WebController {
         String appID = null;
 
         if (!TextUtils.isEmpty(platform)) {
-            Code code = codeService.selectPlatformCode(platform);
+            Code code = codeService.selectPlatformCode(platform , "");
             if (code == null) {
                 responseModel.setMessage("暂不支持该类型平台：" + platform);
                 return responseModel;
             }
 
             if (!TextUtils.isEmpty(appName)) {
-                AppCode appCode = appCodeService.selectAppCode("", appName, code.code);
+                AppCode appCode = appCodeService.selectAppCode("","", appName, code.code);
                 if (appCode == null) {
                     responseModel.setMessage(platform + " 平台下未找到应用：" + appName);
                     return responseModel;
@@ -70,17 +71,23 @@ public class WebController {
 
             for (int i = 0; i < schemes.size(); ++i) {
                 Scheme scheme = schemes.get(i);
-
                 JSONObject object = new JSONObject();
-                object.put("appName", appName);
-                object.put("appVersion", appVersion);
-                object.put("platForm", platform);
+                if (!TextUtils.isEmpty(scheme.appCode)) {
+                    AppCode appCode = appCodeService.selectAppCode(scheme.appCode, "", "", "");
+                    Code code = codeService.selectPlatformCode(null, appCode.platformCode);
+                    object.put("appName", appCode.appName);
+                    object.put("platForm", code.nick);
+                }else {
+                    object.put("appName", appName);
+                    object.put("platForm", platform);
+                }
 
+                object.put("appVersion", scheme.appVersion);
                 object.put("recordId", scheme.id);
                 object.put("phoneNum", scheme.deviceModel);
                 object.put("phoneSystem", scheme.systemVersion);
-                object.put("recordStartTime", scheme.startTime);
-                object.put("recordEndTime", scheme.endTime);
+                object.put("recordStartTime", DateUtil.dealDateFormat(scheme.startTime));
+                object.put("recordEndTime", DateUtil.dealDateFormat(scheme.endTime));
                 if (scheme.flag.equalsIgnoreCase("A")) {
                     object.put("recordStatus", "测试中");
                 } else if (scheme.flag.equalsIgnoreCase("U") && scheme.endTime != null) {

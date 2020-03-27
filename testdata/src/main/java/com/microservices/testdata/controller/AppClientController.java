@@ -52,13 +52,13 @@ public class AppClientController {
             return responseModel;
         }
 
-        Code code = codeService.selectPlatformCode(platform);
+        Code code = codeService.selectPlatformCode(platform , "");
         if (code == null) {
             responseModel.setMessage("暂不支持该平台类型：" + platform);
             return responseModel;
         }
 
-        AppCode appCode = appCodeService.selectAppCode(appID, "", code.code);
+        AppCode appCode = appCodeService.selectAppCode("", appID, "", code.code);
         if (appCode == null) {
             responseModel.setMessage(platform + " 该平台下未找到对应应用：" + appID);
             return responseModel;

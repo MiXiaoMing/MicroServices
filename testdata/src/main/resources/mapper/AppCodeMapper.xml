@@ -11,6 +11,9 @@
         <include refid="columns"/>
         from td_app_code
         where
+        <if test="id != null">
+           id = #{id,jdbcType=VARCHAR} and
+        </if>
         <if test="appID != null">
            app_id = #{appID,jdbcType=VARCHAR} and
         </if>

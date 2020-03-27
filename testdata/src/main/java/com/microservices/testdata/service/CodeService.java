@@ -14,10 +14,11 @@ public class CodeService {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    public Code selectPlatformCode(String nick) {
+    public Code selectPlatformCode(String nick , String code ) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("nick", nick);
         map.put("type", "platform");
+        map.put("code" , code);
 
         return sqlSessionTemplate.selectOne("com.microservices.testdata.mapper.CodeMapper.selectPlatformCodeByNick", map);
     }

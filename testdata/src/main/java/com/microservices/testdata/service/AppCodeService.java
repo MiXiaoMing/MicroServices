@@ -15,8 +15,11 @@ public class AppCodeService {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    public AppCode selectAppCode(String appID, String appName, String platformCode) {
+    public AppCode selectAppCode(String id ,String appID, String appName, String platformCode) {
         Map<String, Object> map = new HashMap<String, Object>();
+        if (!TextUtils.isEmpty(id)) {
+            map.put("id", id);
+        }
         if (!TextUtils.isEmpty(appID)) {
             map.put("appID", appID);
         }
