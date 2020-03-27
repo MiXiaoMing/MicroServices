@@ -32,7 +32,6 @@ public class WebController {
     private PerformanceService performanceService;
 
 
-
     /************  统计数据   ************/
 
     // 记录列表
@@ -64,9 +63,11 @@ public class WebController {
             }
         }
 
-        ArrayList<JSONObject> jsonObjects = new ArrayList<>();
+
         List<Scheme> schemes = schemeService.selectSchemes(appID, appVersion);
-        if (schemes != null && schemes.size() > 0) {
+        if (schemes != null) {
+            ArrayList<JSONObject> jsonObjects = new ArrayList<>();
+
             for (int i = 0; i < schemes.size(); ++i) {
                 Scheme scheme = schemes.get(i);
 
@@ -93,10 +94,10 @@ public class WebController {
 
                 jsonObjects.add(object);
             }
-        }
 
-        responseModel.setData(jsonObjects);
-        responseModel.setSuccess(true);
+            responseModel.setData(jsonObjects);
+            responseModel.setSuccess(true);
+        }
 
         return responseModel;
     }
@@ -117,7 +118,7 @@ public class WebController {
         }
 
         List<Page> pages = pageService.selectPages(schemeID);
-        if (pages != null  && pages.size() > 0) {
+        if (pages != null) {
             ArrayList<JSONObject> jsonObjects = new ArrayList<>();
 
             for (int i = 0; i < pages.size(); ++i) {
@@ -150,9 +151,8 @@ public class WebController {
         }
 
         List<Interface> interfaces = interfaceService.selectInterfaces(schemeID);
-        if (interfaces != null  && interfaces.size() > 0) {
+        if (interfaces != null) {
             ArrayList<JSONObject> jsonObjects = new ArrayList<>();
-
             for (int i = 0; i < interfaces.size(); ++i) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("content", interfaces.get(i).url);
@@ -184,7 +184,7 @@ public class WebController {
         }
 
         List<Performance> performances = performanceService.selectPerformances(schemeID);
-        if (performances != null && performances.size() > 0) {
+        if (performances != null) {
             ArrayList<JSONObject> jsonObjects = new ArrayList<>();
 
             for (int i = 0; i < performances.size(); ++i) {
