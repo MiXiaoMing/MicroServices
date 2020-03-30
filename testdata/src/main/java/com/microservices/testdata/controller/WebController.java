@@ -132,7 +132,7 @@ public class WebController {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("content", pages.get(i).pageName);
                 jsonObject.put("duration", pages.get(i).responseTime);
-                jsonObject.put("recordTime", pages.get(i).operateTime);
+                jsonObject.put("recordTime", DateUtil.dealDateFormat(pages.get(i).operateTime));
 
                 jsonObjects.add(jsonObject);
             }
@@ -164,7 +164,7 @@ public class WebController {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("content", interfaces.get(i).url);
                 jsonObject.put("duration", interfaces.get(i).responseTime);
-                jsonObject.put("recordTime", interfaces.get(i).operateTime);
+                jsonObject.put("recordTime", DateUtil.dealDateFormat(interfaces.get(i).operateTime));
 
                 jsonObjects.add(jsonObject);
             }
@@ -201,7 +201,7 @@ public class WebController {
                 } else if (type.equalsIgnoreCase("1")) {
                     jsonObject.put("content", performances.get(i).memorySize);
                 }
-                jsonObject.put("recordTime", performances.get(i).operateTime);
+                jsonObject.put("recordTime", DateUtil.detailDateFormat(performances.get(i).operateTime));
 
                 jsonObjects.add(jsonObject);
             }
