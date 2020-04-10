@@ -2,6 +2,7 @@ package com.microservices.testdata.service;
 
 import com.microservices.generator.SnowflakeIdService;
 import com.microservices.testdata.entity.Scheme;
+import com.microservices.testdata.response.SchemeResponse;
 import com.microservices.utils.TextUtils;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class SchemeService {
         return sqlSessionTemplate.update("com.microservices.testdata.mapper.SchemeMapper.updateScheme", scheme);
     }
 
-    public List<Scheme> selectSchemes(String appCode, String appVersion) {
+    public List<SchemeResponse> selectSchemes(String appCode, String appVersion) {
         Map<String, Object> map = new HashMap<String, Object>();
         if (!TextUtils.isEmpty(appCode)) {
             map.put("appCode", appCode);

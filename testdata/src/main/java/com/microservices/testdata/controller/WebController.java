@@ -3,6 +3,7 @@ package com.microservices.testdata.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.support.ResponseArrayModel;
 import com.microservices.testdata.entity.*;
+import com.microservices.testdata.response.SchemeResponse;
 import com.microservices.testdata.service.*;
 import com.microservices.utils.DateUtil;
 import com.microservices.utils.TextUtils;
@@ -37,8 +38,8 @@ public class WebController {
 
     // 记录列表
     @RequestMapping(value = "/monitor/recordList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> recordList(@RequestBody JSONObject params) {
-        ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<SchemeResponse> recordList(@RequestBody JSONObject params) {
+        ResponseArrayModel<SchemeResponse> responseModel = new ResponseArrayModel<>();
 
         String appName = params.getString("appName");
         String appVersion = params.getString("appVersion");
@@ -65,44 +66,22 @@ public class WebController {
         }
 
 
-        List<Scheme> schemes = schemeService.selectSchemes(appID, appVersion);
+        List<SchemeResponse> schemes = schemeService.selectSchemes(appID, appVersion);
         if (schemes != null) {
-            ArrayList<JSONObject> jsonObjects = new ArrayList<>();
-
             for (int i = 0; i < schemes.size(); ++i) {
-                Scheme scheme = schemes.get(i);
-                JSONObject object = new JSONObject();
-                if (!TextUtils.isEmpty(scheme.appCode)) {
-                    AppCode appCode = appCodeService.selectAppCode(scheme.appCode, "", "", "");
-                    Code code = codeService.selectPlatformCode(null, appCode.platformCode);
-                    object.put("appName", appCode.appName);
-                    object.put("platForm", code.nick);
-                }else {
-                    object.put("appName", appName);
-                    object.put("platForm", platform);
+                SchemeResponse scheme = schemes.get(i);
+
+                scheme.recordStartTime = DateUtil.dealDateFormat(scheme.startTime);
+                scheme.recordEndTime = DateUtil.dealDateFormat(scheme.endTime);
+
+                if (scheme.recordStatus.equalsIgnoreCase("A")) {
+                    scheme.recordStatus = "测试中";
+                } else if (scheme.recordStatus.equalsIgnoreCase("U") && scheme.endTime != null) {
+                    scheme.recordStatus = "已完成";
                 }
-
-                object.put("appVersion", scheme.appVersion);
-                object.put("recordId", scheme.id);
-                object.put("phoneNum", scheme.deviceModel);
-                object.put("phoneSystem", scheme.systemVersion);
-                object.put("recordStartTime", DateUtil.dealDateFormat(scheme.startTime));
-                object.put("recordEndTime", DateUtil.dealDateFormat(scheme.endTime));
-                if (scheme.flag.equalsIgnoreCase("A")) {
-                    object.put("recordStatus", "测试中");
-                } else if (scheme.flag.equalsIgnoreCase("U") && scheme.endTime != null) {
-                    object.put("recordStatus", "已完成");
-                }
-
-                object.put("classConsumeTime", pageService.averageTime(scheme.id));
-                object.put("urlConsumeTime", interfaceService.averageTime(scheme.id));
-                object.put("cpuUse", performanceService.averageCpu(scheme.id));
-                object.put("memoryUse", performanceService.averageMemory(scheme.id));
-
-                jsonObjects.add(object);
             }
 
-            responseModel.setData(jsonObjects);
+            responseModel.setData(schemes);
             responseModel.setSuccess(true);
         }
 

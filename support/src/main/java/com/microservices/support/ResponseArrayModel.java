@@ -4,11 +4,12 @@ import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ResponseArrayModel<T> implements Serializable {
     protected boolean success = false;
     protected String errCode = "";
-    protected ArrayList<T> data = new ArrayList<>();
+    protected List<T> data = new ArrayList<>();
     protected String message = "";
     private Long execTime = 0L, startTime;
 
@@ -16,16 +17,16 @@ public class ResponseArrayModel<T> implements Serializable {
         startTime = System.currentTimeMillis();
     }
 
-    public ResponseArrayModel(ArrayList<T> iRows) {
+    public ResponseArrayModel(List<T> iRows) {
         this.data = iRows;
     }
 
 
-    public ArrayList<T> getData() {
+    public List<T> getData() {
         return this.data;
     }
 
-    public void setData(ArrayList<T> rows) {
+    public void setData(List<T> rows) {
         this.data = rows;
         execTime = System.currentTimeMillis() - startTime;
     }

@@ -64,19 +64,27 @@
         </trim>
     </insert>
 
-    <select id="selectSchemes" resultType="com.microservices.testdata.entity.Scheme" parameterType="java.util.Map">
-        select
-        <include refid="columns"/>
-        from td_scheme
+    <select id="selectSchemes" resultType="com.microservices.testdata.response.SchemeResponse" parameterType="java.util.Map">
+        select schemeTable.id as recordId, schemeTable.flag as recordStatus,
+        schemeTable.app_version as appVersion, appCodeTable.app_name as appName, appCodeTable.platform_code as platForm,
+        schemeTable.device_model as phoneNum, schemeTable.system_version as phoneSystem,
+        schemeTable.start_time as startTime, schemeTable.end_time as endTime,
+        pageTable.responseTime as classConsumeTime, interfaceTable.responseTime as urlConsumeTime,
+        performanceTable.cpuRatio as cpuUse, performanceTable.memorySize as memoryUse
+        from td_scheme schemeTable
+        LEFT JOIN td_app_code appCodeTable on schemeTable.app_code = appCodeTable.id
+        left join (select scheme_id, avg (response_time) responseTime from td_page group by scheme_id) pageTable on schemeTable.id = pageTable.scheme_id
+        left join (select scheme_id, avg (response_time) responseTime from td_interface group by scheme_id) interfaceTable on schemeTable.id = interfaceTable.scheme_id
+        left join (select scheme_id, avg (cpu_ratio) cpuRatio, avg (memory_size) memorySize from td_performance group by scheme_id) performanceTable on schemeTable.id = performanceTable.scheme_id
         where
         <if test="appCode != null">
-            app_code = #{appCode,jdbcType=VARCHAR} and
+            schemeTable.app_code = #{appCode,jdbcType=VARCHAR} and
         </if>
         <if test="appVersion != null">
-            app_version = #{appVersion,jdbcType=VARCHAR} and
+            schemeTable.app_version = #{appVersion,jdbcType=VARCHAR} and
         </if>
         <![CDATA[
-            flag <> 'D'
+            schemeTable.flag <> 'D'
         ]]>
     </select>
 
