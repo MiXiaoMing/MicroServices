@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.microservices.data</groupId>
-    <artifactId>user</artifactId>
+    <artifactId>data-user</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>data-user</name>
-    <description>用户中心 user center</description>
+    <description>用户中心</description>
 
     <properties>
         <java.version>1.8</java.version>
