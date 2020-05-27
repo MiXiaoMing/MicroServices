@@ -1,0 +1,93 @@
+version: '2'
+
+
+networks:
+    basic:
+
+
+services:
+
+
+ # interfaces layer
+
+  justbehere-interfaces-user:
+    image: openjdk
+    container_name: justbehere-interfaces-user
+    ports:
+    - "7101:7101"
+    environment: 
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/justbehere-interfaces-user.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/justbehere-interfaces-user.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - eureka
+    - zipkin
+    - config
+    links:
+    - mp-sms
+
+ # business layer
+
+ # middle platform layer
+
+  mp-sms:
+    image: openjdk
+    container_name: mp-sms
+    ports:
+    - "9001:9001"
+    environment: 
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/mp-sms.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/mp-sms.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - eureka
+    - zipkin
+    - config
+    links:
+    - data-cache
+
+
+ 
+ # data layer
+
+  data-cache:
+    image: openjdk
+    container_name: data-cache
+    ports:
+    - "9100:9100"
+    environment: 
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/data-cache.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/data-cache.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - eureka
+    - zipkin
+    - config
+    - redis
+
+
+
+
+
+
+
+
+
+
+
+
