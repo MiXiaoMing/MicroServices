@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
-import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.profile.DefaultProfile;
-import com.microservices.common.feignclient.data.DataCacheClient;
+import com.microservices.common.feignclient.data.cache.DataCacheClient;
+import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.response.ResponseJsonModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.RandomUtil;
@@ -38,7 +38,6 @@ public class SmsController {
     private String secret;
 
 
-    private static final String sms_code_pre = "sms_code_";
 
     private final Logger logger = LoggerFactory.getLogger(SmsController.class);
 
@@ -77,11 +76,11 @@ public class SmsController {
 //            logger.debug("短信验证信息：" + resp.getCode() + "   " + resp.getMessage() + "   " + resp.getRequestId() + "   " + resp.getBizId());
 
             // 缓存数据
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("key", sms_code_pre + phoneNumber);
-            jsonObject.put("value", smsCode);
-            jsonObject.put("seconds", 5 * 60);
-            ResponseModel<JSONObject> redisResponse = dataCacheClient.redisSetExtend(jsonObject);
+            SmsCodeBody body = new SmsCodeBody();
+            body.phoneNumber = phoneNumber;
+            body.smsCode = smsCode;
+
+            ResponseModel<JSONObject> redisResponse = dataCacheClient.saveSmsCode(body);
             if (redisResponse.isSuccess()) {
                 responseModel.setSuccess(true);
                 responseModel.setMessage(smsCode);

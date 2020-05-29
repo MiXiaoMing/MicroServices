@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT_DIR="/Users/qiumi/Code/MicroServices"
+ROOT_DIR="/Users/qiumi/Code/Framework/MicroServices"
 MIDDLE_PATH="$1"
 MODULE="$2"
 PROPERTIES_FILE="$3"

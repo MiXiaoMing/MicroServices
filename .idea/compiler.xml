@@ -6,7 +6,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="business" />
         <module name="Business" />
         <module name="Common" />
         <module name="common" />
@@ -15,15 +14,16 @@
         <module name="Data-User" />
         <module name="gateway" />
         <module name="Gateway" />
+        <module name="JBH-BIZ-User" />
+        <module name="JBH-IF-User" />
         <module name="JBH-User" />
         <module name="justbehere" />
         <module name="JustBeHere" />
-        <module name="justbehere-interfaces-user" />
         <module name="JustBeHere-Mysql" />
         <module name="justbehere-mysql" />
-        <module name="MP-Sms" />
         <module name="mp-sms" />
-        <module name="User" />
+        <module name="MP-Sms" />
+        <module name="MP-User" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -32,7 +32,9 @@
       <module name="Common-Interfaces" target="1.8" />
       <module name="Common-MP" target="1.8" />
       <module name="Interfaces" target="1.5" />
+      <module name="justbehere-interfaces-user" target="1.8" />
       <module name="Sms" target="1.8" />
+      <module name="User" target="1.8" />
       <module name="user" target="1.8" />
     </bytecodeTargetLevel>
   </component>
