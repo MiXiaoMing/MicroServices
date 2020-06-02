@@ -16,18 +16,18 @@ public interface DataCacheClient {
 
     /********  短信 验证码  *********/
 
-    @RequestMapping(value = "/saveSmsCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "redis/saveSmsCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResponseModel<JSONObject> saveSmsCode(@RequestBody SmsCodeBody body);
 
-    @RequestMapping(value = "/getSmsCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "redis/getSmsCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<String> getSmsCode(@RequestBody String phoneNumber);
 
     /********  token  *********/
 
-    @RequestMapping(value = "/saveToken", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "redis/saveToken", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> saveToken(@RequestBody TokenBody body);
 
-    @RequestMapping(value = "/getToken", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "redis/getToken", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<String> getToken(@RequestBody String userID);
 
 }

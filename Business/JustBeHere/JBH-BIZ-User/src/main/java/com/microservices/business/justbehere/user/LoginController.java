@@ -2,6 +2,7 @@ package com.microservices.business.justbehere.user;
 
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
+import com.microservices.common.feignclient.data.cache.body.TokenBody;
 import com.microservices.common.feignclient.data.user.CreateUserBody;
 import com.microservices.common.feignclient.data.user.UserResult;
 import com.microservices.common.feignclient.middleplatform.MPUserClient;
@@ -63,6 +64,8 @@ public class LoginController {
         }
 
         // 判断用户数据
+        String userID = "";
+
         ResponseModel<UserResult> userResultResponseModel = mpUserClient.getUserByPhoneNumber(body.phoneNumber);
         if (!userResultResponseModel.isSuccess()) {
             CreateUserBody createUserBody = new CreateUserBody();
@@ -72,13 +75,29 @@ public class LoginController {
             if (!createUserResponse.isSuccess()) {
                 responseModel.setMessage("用户创建失败：" + createUserResponse.getErrCode() + " - " + createUserResponse.getMessage());
                 return responseModel;
+            } else {
+                userID = createUserResponse.getData();
             }
+        } else {
+            userID = userResultResponseModel.getData().id;
         }
 
         // 返回token
         responseModel.setSuccess(true);
         // TODO: 2020/5/28 token生成，需要切换为 正式的
-        responseModel.setData(snowflakeIdService.getId());
+        String token = snowflakeIdService.getId();
+        responseModel.setData(token);
+
+        // 缓存token数据
+        {
+            TokenBody tokenBody = new TokenBody();
+            tokenBody.userID = userID;
+            tokenBody.token = token;
+            dataCacheClient.saveToken(tokenBody);
+        }
+
+
+
         return responseModel;
     }
 

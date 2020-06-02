@@ -147,7 +147,8 @@ public class RedisController {
     public ResponseModel<ExtendResult> getExtend(@RequestBody String key) {
         ResponseModel<ExtendResult> responseModel = new ResponseModel<>();
 
-        if (!StringUtil.isEmpty(key)) {
+        if (StringUtil.isEmpty(key)) {
+            logger.error(key + " - 为空");
             return responseModel;
         }
 
