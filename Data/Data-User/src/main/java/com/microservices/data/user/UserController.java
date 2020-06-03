@@ -1,7 +1,7 @@
 package com.microservices.data.user;
 
-import com.microservices.common.feignclient.data.user.CreateUserBody;
-import com.microservices.common.feignclient.data.user.UserResult;
+import com.microservices.common.feignclient.data.user.body.CreateUserBody;
+import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/user/base")
 public class UserController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class UserController {
     public ResponseModel<String> insert(@RequestBody CreateUserBody body) {
         ResponseModel<String> responseModel = new ResponseModel<>();
 
-        UserResult entity = new UserResult();
+        UserBase entity = new UserBase();
         entity.id = snowflakeIdService.getId();
         entity.name = body.name;
         entity.type = body.type;
@@ -43,7 +43,7 @@ public class UserController {
         entity.createTime = new Date();
         entity.delflag = "A";
 
-        int count = sqlSessionTemplate.insert("com.microservices.data.user.UserMapper.insert", entity);
+        int count = sqlSessionTemplate.insert("com.microservices.data.user.UserBaseMapper.insert", entity);
         if (count > 0) {
             responseModel.setData(entity.id);
             responseModel.setSuccess(true);
@@ -55,13 +55,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/selectByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserResult> getUserByPhoneNumber(@RequestBody String phoneNumber) {
-        ResponseModel<UserResult> responseModel = new ResponseModel<>();
+    public ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber) {
+        ResponseModel<UserBase> responseModel = new ResponseModel<>();
 
         Map<String, Object> map = new HashMap<>();
         if (!StringUtil.isEmpty(phoneNumber)) {
             map.put("phoneNumber", phoneNumber);
-            UserResult user = sqlSessionTemplate.selectOne("com.microservices.data.user.UserMapper.selectUserByPhoneNumber", map);
+            UserBase user = sqlSessionTemplate.selectOne("com.microservices.data.user.UserBaseMapper.selectUserByPhoneNumber", map);
             if (user == null) {
                 responseModel.setMessage("该用户不存在：" + phoneNumber);
             } else {

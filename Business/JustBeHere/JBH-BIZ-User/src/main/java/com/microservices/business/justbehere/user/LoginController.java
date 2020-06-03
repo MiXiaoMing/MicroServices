@@ -3,8 +3,8 @@ package com.microservices.business.justbehere.user;
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.data.cache.body.TokenBody;
-import com.microservices.common.feignclient.data.user.CreateUserBody;
-import com.microservices.common.feignclient.data.user.UserResult;
+import com.microservices.common.feignclient.data.user.body.CreateUserBody;
+import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.feignclient.middleplatform.MPUserClient;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseModel;
@@ -66,7 +66,7 @@ public class LoginController {
         // 判断用户数据
         String userID = "";
 
-        ResponseModel<UserResult> userResultResponseModel = mpUserClient.getUserByPhoneNumber(body.phoneNumber);
+        ResponseModel<UserBase> userResultResponseModel = mpUserClient.getUserByPhoneNumber(body.phoneNumber);
         if (!userResultResponseModel.isSuccess()) {
             CreateUserBody createUserBody = new CreateUserBody();
             createUserBody.phoneNumber = body.phoneNumber;

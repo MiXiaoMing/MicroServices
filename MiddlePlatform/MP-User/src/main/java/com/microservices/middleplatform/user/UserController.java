@@ -1,7 +1,7 @@
 package com.microservices.middleplatform.user;
 
-import com.microservices.common.feignclient.data.user.CreateUserBody;
-import com.microservices.common.feignclient.data.user.UserResult;
+import com.microservices.common.feignclient.data.user.body.CreateUserBody;
+import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.middleplatform.user.client.DataUserClient;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/getUserByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserResult> getUserByPhoneNumber(@RequestBody String phoneNumber) {
+    public ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber) {
         return dataUserClient.getUserByPhoneNumber(phoneNumber);
     }
 

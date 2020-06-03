@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.user.UserDeliveryAddressMapper">
+
+    <sql id="column">
+	  <![CDATA[
+
+
+		  id, user_id as userID, contact, phone_number as phoneNumber, region, detail, delflag, update_time as updateTime, create_time as createTime
+
+
+        ]]>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.user.result.UserDeliveryAddress">
+        insert into t_user_delivery_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userID != null">
+                user_id,
+            </if>
+            <if test="contact != null">
+                contact,
+            </if>
+            <if test="phoneNumber != null">
+                phone_number,
+            </if>
+            <if test="region != null">
+                region,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+            <if test="delflag != null">
+                delflag,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userID != null">
+                #{userID,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="phoneNumber != null">
+                #{phoneNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="region != null">
+                #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="delflag != null">
+                #{delflag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.UserDeliveryAddress">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_user_delivery_address
+          where delflag <> 'D'
+          <if test="userID != null">
+            and user_id = #{userID,jdbcType=VARCHAR}
+          </if>
+        ]]>
+    </select>
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.UserDeliveryAddress">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_user_delivery_address
+          where id = #{id,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+    <update id="update" parameterType="java.util.Map">
+        update t_user_delivery_address
+        <set>
+            <if test="contact != null">
+                contact = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="region != null">
+                region = #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+            delflag = #{delflag,jdbcType=VARCHAR}
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+        <if test="userID != null">
+            and user_id = #{userID,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+</mapper>

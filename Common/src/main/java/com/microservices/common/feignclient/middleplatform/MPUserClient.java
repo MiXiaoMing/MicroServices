@@ -1,8 +1,11 @@
 package com.microservices.common.feignclient.middleplatform;
 
 import com.microservices.common.feignclient.ClientConstants;
-import com.microservices.common.feignclient.data.user.CreateUserBody;
-import com.microservices.common.feignclient.data.user.UserResult;
+import com.microservices.common.feignclient.data.user.body.CreateUserBody;
+import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
+import com.microservices.common.feignclient.data.user.result.UserBase;
+import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
+import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = ClientConstants.module_middle_platform_user)
 public interface MPUserClient {
 
-    /********  用户  *********/
+    /************  用户 基本信息 *************/
 
     // 创建用户
     @RequestMapping(value = "user/createUser", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -20,5 +23,54 @@ public interface MPUserClient {
 
     // 获取用户
     @RequestMapping(value = "user/getUserByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    ResponseModel<UserResult> getUserByPhoneNumber(@RequestBody String phoneNumber);
+    ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber);
+
+
+
+
+    /************  用户 收货地址  *************/
+
+    /**
+     * 收货地址 插入新数据
+     *
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/deliveryAddress/add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<String> addDeliveryAddress(@RequestBody UserDeliveryAddressBody body);
+
+    /**
+     * 收货地址 通过ID 获取指定数据
+     *
+     * @param id 收货地址表ID
+     * @return
+     */
+    @RequestMapping(value = "user/deliveryAddress/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserDeliveryAddress> getDeliveryAddress(@RequestBody String id);
+
+    /**
+     * 收货地址 通过 用户ID 获取该用户所有收货地址
+     *
+     * @param userID 用户ID
+     * @return
+     */
+    @RequestMapping(value = "user/deliveryAddress/getList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<UserDeliveryAddress> getAllDeliveryAddress(@RequestBody String userID);
+
+    /**
+     * 收货地址 删除
+     *
+     * @param id  表ID
+     * @return
+     */
+    @RequestMapping(value = "user/deliveryAddress/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserDeliveryAddress> deleteDeliveryAddress(@RequestBody String id);
+
+    /**
+     * 收货地址 更新
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/deliveryAddress/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserDeliveryAddress> updateDeliveryAddress(@RequestBody UserDeliveryAddressBody body);
 }

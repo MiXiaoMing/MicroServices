@@ -6,6 +6,7 @@ import com.microservices.common.utils.ValidateUtil;
 import com.microservices.data.cache.entity.ExtendBody;
 import com.microservices.data.cache.entity.ExtendResult;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
+import com.microservices.data.cache.entity.UserRedis;
 import com.microservices.data.cache.redis.RedisService;
 import com.microservices.common.response.ResponseJsonModel;
 import com.microservices.common.response.ResponseModel;
@@ -27,6 +28,7 @@ public class RedisController {
 
     private static final String sms_code_pre = "sms_code_";
     private static final String token_pre = "token_";
+    private static final String user_pre = "user_";
 
 
     private final Logger logger = LoggerFactory.getLogger(RedisController.class);
@@ -77,7 +79,7 @@ public class RedisController {
     }
 
 
-    /************  token   ************/
+    /************  userID   ************/
 
     @RequestMapping(value = "/saveToken", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> saveToken(@RequestBody TokenBody body) {
@@ -93,14 +95,37 @@ public class RedisController {
             return responseModel;
         }
 
-        ExtendBody extendBody = new ExtendBody();
-        extendBody.key = token_pre + body.userID;
-        extendBody.value = body.token;
-        extendBody.seconds = 30 * 60;
+        UserRedis userRedis = new UserRedis();
 
-        return setExtend(extendBody);
+        ResponseModel<ExtendResult> oldDataResult = getExtend(user_pre + body.userID);
+        if (oldDataResult.isSuccess()) {
+           userRedis = JSONObject.parseObject(oldDataResult.getData().value, UserRedis.class);
+        }
+
+        ExtendBody userExtendBody = new ExtendBody();
+        userExtendBody.key = user_pre + body.userID;
+        // 更新token值
+        userRedis.token = body.token;
+        userExtendBody.value = body.token;
+
+        ResponseModel<JSONObject> userResult = setExtend(userExtendBody);
+        if (!userResult.isSuccess()) {
+            return userResult;
+        }
+
+        ExtendBody tokenExtendBody = new ExtendBody();
+        tokenExtendBody.key = token_pre + body.token;
+        tokenExtendBody.value = body.userID;
+        tokenExtendBody.seconds = 60 * 60;
+
+        return setExtend(userExtendBody);
     }
 
+    /**
+     * 通过userID 获取 token
+     * @param userID
+     * @return
+     */
     @RequestMapping(value = "/getToken", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<String> getToken(@RequestBody String userID) {
         ResponseModel<String> responseModel = new ResponseModel<>();
@@ -110,7 +135,33 @@ public class RedisController {
             return responseModel;
         }
 
-        ResponseModel<ExtendResult> tokenResponse = getExtend(token_pre + userID);
+        ResponseModel<ExtendResult> userResponse = getExtend(user_pre + userID);
+        if (userResponse.isSuccess()) {
+            responseModel.setSuccess(true);
+            UserRedis userRedis = JSONObject.parseObject(userResponse.getData().value, UserRedis.class);
+            responseModel.setData(userRedis.token);
+        } else {
+            responseModel.setMessage(userResponse.getErrCode() + " -- " + userResponse.getMessage());
+        }
+
+        return responseModel;
+    }
+
+    /**
+     * 通过 token 获取用户ID
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "/getUserID", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<String> getUserID(@RequestBody String token) {
+        ResponseModel<String> responseModel = new ResponseModel<>();
+
+        if (!StringUtil.isEmpty(token)) {
+            responseModel.setMessage("token为空");
+            return responseModel;
+        }
+
+        ResponseModel<ExtendResult> tokenResponse = getExtend(token_pre + token);
         if (tokenResponse.isSuccess()) {
             responseModel.setSuccess(true);
             responseModel.setData(tokenResponse.getData().value);
