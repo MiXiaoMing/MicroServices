@@ -36,7 +36,6 @@ public class UserController {
     public ResponseModel<UserDeliveryAddress> getAllDeliveryAddress(@RequestBody UserDeliveryAddressBody body) {
         ResponseModel<UserDeliveryAddress> responseModel = new ResponseModel<>();
 
-
         ResponseModel<String> addResponse = mpUserClient.addDeliveryAddress(body);
         if (!addResponse.isSuccess()) {
             responseModel.setMessage(addResponse.getMessage());

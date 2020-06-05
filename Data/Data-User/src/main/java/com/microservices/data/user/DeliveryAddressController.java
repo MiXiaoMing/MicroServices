@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用户 获取地址
+ * 用户 收货地址
  */
 @RestController
 @RequestMapping(value = "/user/deliveryAddress")
