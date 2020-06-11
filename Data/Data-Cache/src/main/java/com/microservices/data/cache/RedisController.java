@@ -97,18 +97,15 @@ public class RedisController {
 
         UserRedis userRedis = new UserRedis();
 
-        ResponseModel<ExtendResult> oldDataResult = getExtend(user_pre + body.userID);
+        ResponseModel<String> oldDataResult = get(user_pre + body.userID);
         if (oldDataResult.isSuccess()) {
-           userRedis = JSONObject.parseObject(oldDataResult.getData().value, UserRedis.class);
+           userRedis = JSONObject.parseObject(oldDataResult.getData(), UserRedis.class);
         }
 
-        ExtendBody userExtendBody = new ExtendBody();
-        userExtendBody.key = user_pre + body.userID;
         // 更新token值
         userRedis.token = body.token;
-        userExtendBody.value = body.token;
 
-        ResponseModel<JSONObject> userResult = setExtend(userExtendBody);
+        ResponseModel<JSONObject> userResult = set(user_pre + body.userID, userRedis.toString());
         if (!userResult.isSuccess()) {
             return userResult;
         }
@@ -118,7 +115,7 @@ public class RedisController {
         tokenExtendBody.value = body.userID;
         tokenExtendBody.seconds = 60 * 60;
 
-        return setExtend(userExtendBody);
+        return setExtend(tokenExtendBody);
     }
 
     /**
@@ -135,10 +132,10 @@ public class RedisController {
             return responseModel;
         }
 
-        ResponseModel<ExtendResult> userResponse = getExtend(user_pre + userID);
+        ResponseModel<String> userResponse = get(user_pre + userID);
         if (userResponse.isSuccess()) {
             responseModel.setSuccess(true);
-            UserRedis userRedis = JSONObject.parseObject(userResponse.getData().value, UserRedis.class);
+            UserRedis userRedis = JSONObject.parseObject(userResponse.getData(), UserRedis.class);
             responseModel.setData(userRedis.token);
         } else {
             responseModel.setMessage(userResponse.getErrCode() + " -- " + userResponse.getMessage());
@@ -156,7 +153,7 @@ public class RedisController {
     public ResponseModel<String> getUserID(@RequestBody String token) {
         ResponseModel<String> responseModel = new ResponseModel<>();
 
-        if (!StringUtil.isEmpty(token)) {
+        if (StringUtil.isEmpty(token)) {
             responseModel.setMessage("token为空");
             return responseModel;
         }
@@ -174,6 +171,46 @@ public class RedisController {
 
 
     /************  extend : key-value   ************/
+
+    @RequestMapping(value = "/set", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> set(@RequestBody String key, String value) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        if (StringUtil.isEmpty(key)) {
+            responseModel.setMessage("缓存数据，key为空");
+            return responseModel;
+        }
+
+        String result = redisService.set(key, value);
+        if (!StringUtil.isEmpty(result) && result.endsWith("OK")) {
+            responseModel.setSuccess(true);
+        } else {
+            responseModel.setMessage("缓存失败");
+        }
+
+        return responseModel;
+    }
+
+    @RequestMapping(value = "/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<String> get(@RequestBody String key) {
+        ResponseModel<String> responseModel = new ResponseModel<>();
+
+        if (StringUtil.isEmpty(key)) {
+            logger.error(key + " - 为空");
+            return responseModel;
+        }
+
+        String value = redisService.get(key);
+        if (value == null) {
+            responseModel.setMessage(key + " - 不存在");
+            responseModel.setErrCode("-2");
+        } else {
+            responseModel.setSuccess(true);
+            responseModel.setData(value);
+        }
+
+        return responseModel;
+    }
 
     @RequestMapping(value = "/setExtend", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> setExtend(@RequestBody ExtendBody body) {

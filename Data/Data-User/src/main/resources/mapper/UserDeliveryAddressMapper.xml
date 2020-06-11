@@ -6,7 +6,9 @@
 	  <![CDATA[
 
 
+
 		  id, user_id as userID, contact, phone_number as phoneNumber, region, detail, delflag, update_time as updateTime, create_time as createTime
+
 
 
         ]]>
@@ -79,13 +81,15 @@
             resultType="com.microservices.common.feignclient.data.user.result.UserDeliveryAddress">
         select
         <include refid="column"/>
+
+        from t_user_delivery_address
         <![CDATA[
-          from t_user_delivery_address
           where delflag <> 'D'
-          <if test="userID != null">
-            and user_id = #{userID,jdbcType=VARCHAR}
-          </if>
         ]]>
+        <if test="userID != null">
+            and user_id = #{userID,jdbcType=VARCHAR}
+        </if>
+
     </select>
 
     <select id="select" parameterType="java.util.Map"

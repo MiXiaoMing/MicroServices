@@ -32,6 +32,8 @@ public class ClientConstants {
 
     // 缓存服务
     public static final String module_data_cache = "data-cache";
+    // 统一用户
+    public static final String module_data_user = "data-user";
 
 
 

@@ -1,5 +1,6 @@
 package com.microservices.middleplatform.user.client;
 
+import com.microservices.common.feignclient.ClientConstants;
 import com.microservices.common.feignclient.data.user.body.CreateUserBody;
 import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
 import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "data-user")
+@FeignClient(value = ClientConstants.module_data_user)
 public interface DataUserClient {
 
     /************  用户基本信息  *************/

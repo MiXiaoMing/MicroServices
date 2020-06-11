@@ -159,6 +159,7 @@ public class UserController {
 
         ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
         if (!tokenResponse.isSuccess()) {
+            responseModel.setErrCode("401");
             responseModel.setMessage(tokenResponse.getMessage());
             return responseModel;
         }
