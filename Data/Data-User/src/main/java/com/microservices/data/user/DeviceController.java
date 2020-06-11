@@ -1,9 +1,9 @@
 package com.microservices.data.user;
 
-import com.alibaba.fastjson.JSONObject;
-import com.microservices.common.feignclient.data.user.result.UserDevice;
 import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
+import com.microservices.common.feignclient.data.user.result.UserDevice;
 import com.microservices.common.generator.SnowflakeIdService;
+import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/device")
+@RequestMapping(value = "/user/device")
 public class DeviceController {
 
     @Autowired
@@ -29,9 +30,13 @@ public class DeviceController {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    private final Logger logger	= LoggerFactory.getLogger(DeviceController.class);
+    private final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-
+    /**
+     * 设备信息 添加新数据
+     * @param body
+     * @return
+     */
     @RequestMapping(value = "/insert", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<String> insert(@RequestBody UserDeviceBody body) {
         ResponseModel<String> responseModel = new ResponseModel<>();
@@ -56,9 +61,41 @@ public class DeviceController {
         return responseModel;
     }
 
+    /**
+     * 设备信息 通过ID 获取指定数据
+     *
+     * @param id 表ID
+     * @return
+     */
     @RequestMapping(value = "/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserDevice> getUserDevice(@RequestBody UserDeviceBody body) {
+    public ResponseModel<UserDevice> select(@RequestBody String id) {
         ResponseModel<UserDevice> responseModel = new ResponseModel<>();
+
+        Map<String, Object> map = new HashMap<>();
+
+        if (!StringUtil.isEmpty(id)) {
+            map.put("id", id);
+        }
+
+        UserDevice entity = sqlSessionTemplate.selectOne("com.microservices.data.user.UserDeviceMapper.select", map);
+        if (entity == null) {
+            responseModel.setMessage("该用户设备信息不存在：" + id);
+        } else {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
+        }
+
+        return responseModel;
+    }
+
+    /**
+     * 设备信息 列表获取 通过用户ID，设备ID，mac
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<UserDevice> selectList(@RequestBody UserDeviceBody body) {
+        ResponseArrayModel<UserDevice> responseModel = new ResponseArrayModel<>();
 
         Map<String, Object> map = new HashMap<>();
 
@@ -74,20 +111,25 @@ public class DeviceController {
             map.put("mac", body.mac);
         }
 
-        UserDevice userDevice = sqlSessionTemplate.selectOne("com.microservices.data.user.UserDeviceMapper.select", map);
-        if (userDevice == null) {
+        List<UserDevice> entities = sqlSessionTemplate.selectList("com.microservices.data.user.UserDeviceMapper.selectList", map);
+        if (entities == null) {
             responseModel.setMessage("该用户设备不存在：" + body.toString());
         } else {
             responseModel.setSuccess(true);
-            responseModel.setData(userDevice);
+            responseModel.setData(entities);
         }
 
-        return  responseModel;
+        return responseModel;
     }
 
+    /**
+     * 设备信息 更新
+     * @param body
+     * @return
+     */
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> update(@RequestBody UserDeviceBody body) {
-        ResponseModel<JSONObject> responseModel = new ResponseModel<>();
+    public ResponseModel<UserDevice> update(@RequestBody UserDeviceBody body) {
+        ResponseModel<UserDevice> responseModel = new ResponseModel<>();
 
         Map<String, Object> map = new HashMap<>();
 
@@ -109,14 +151,14 @@ public class DeviceController {
         map.put("updateTime", new Date());
         map.put("delflag", "U");
 
-        int count = sqlSessionTemplate.insert("com.microservices.data.user.UserDeviceMapper.updateDeliveryAddress", map);
+        int count = sqlSessionTemplate.insert("com.microservices.data.user.UserDeviceMapper.update", map);
         if (count == 0) {
             responseModel.setMessage("更新用户设备信息失败");
         } else {
-            responseModel.setSuccess(true);
+            return select(body.id);
         }
 
-        return  responseModel;
+        return responseModel;
     }
 
 }

@@ -3,8 +3,10 @@ package com.microservices.common.feignclient.middleplatform;
 import com.microservices.common.feignclient.ClientConstants;
 import com.microservices.common.feignclient.data.user.body.CreateUserBody;
 import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
+import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
+import com.microservices.common.feignclient.data.user.result.UserDevice;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -24,6 +26,49 @@ public interface MPUserClient {
     // 获取用户
     @RequestMapping(value = "user/getUserByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber);
+
+
+
+
+
+    /************  用户 设备信息 *************/
+
+    /**
+     * 用户设备 插入新数据
+     *
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/device/add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<String> addDevice(@RequestBody UserDeviceBody body);
+
+    /**
+     * 用户设备 通过ID 获取指定数据
+     *
+     * @param id 用户设备表ID
+     * @return
+     */
+    @RequestMapping(value = "user/device/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserDevice> getDevice(@RequestBody String id);
+
+    /**
+     * 用户设备 通过 用户ID, mac, region 获取该用户所有用户设备
+     *
+     * @param body 用户ID
+     * @return
+     */
+    @RequestMapping(value = "user/device/getList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<UserDevice> getDeviceList(@RequestBody UserDeviceBody body);
+
+    /**
+     * 用户设备 更新
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/device/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserDevice> updateDevice(@RequestBody UserDeviceBody body);
+
+
 
 
 

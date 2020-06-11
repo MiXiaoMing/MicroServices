@@ -65,12 +65,14 @@
         </trim>
     </insert>
 
-    <select id="select" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.user.result.UserDevice">
+    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.user.result.UserDevice">
         select
         <include refid="column"/>
-        <![CDATA[
           from t_user_device
-          where delflag <> 'D'
+          where
+          <![CDATA[
+            delflag <> 'D'
+          ]]>
           <if test="userID != null">
             and user_id = #{userID,jdbcType=VARCHAR}
           </if>
@@ -80,6 +82,15 @@
            <if test="mac != null">
             and mac = #{mac,jdbcType=VARCHAR}
           </if>
+    </select>
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.UserDevice">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_user_device
+          where id = #{id,jdbcType=VARCHAR}
         ]]>
     </select>
 

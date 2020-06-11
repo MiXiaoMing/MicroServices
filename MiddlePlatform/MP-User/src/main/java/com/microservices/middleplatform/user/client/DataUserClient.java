@@ -2,9 +2,11 @@ package com.microservices.middleplatform.user.client;
 
 import com.microservices.common.feignclient.ClientConstants;
 import com.microservices.common.feignclient.data.user.body.CreateUserBody;
+import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
 import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
 import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
+import com.microservices.common.feignclient.data.user.result.UserDevice;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -32,6 +34,47 @@ public interface DataUserClient {
      */
     @RequestMapping(value = "user/base/selectByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber);
+
+
+
+
+    /************  用户 设备信息  *************/
+
+    /**
+     * 设备信息 添加新数据
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/device/insert", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<String> insertDevice(@RequestBody UserDeviceBody body);
+
+    /**
+     * 设备信息 通过ID 获取指定数据
+     *
+     * @param id 表ID
+     * @return
+     */
+    @RequestMapping(value = "user/device/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserDevice> selectDevice(@RequestBody String id);
+
+    /**
+     * 设备信息 列表获取 通过用户ID，设备ID，mac
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/device/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<UserDevice> selectDeviceList(@RequestBody UserDeviceBody body);
+
+    /**
+     * 设备信息 更新
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/device/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserDevice> updateDevice(@RequestBody UserDeviceBody body);
+
+
+
 
 
     /************  用户 收货地址  *************/
@@ -68,7 +111,7 @@ public interface DataUserClient {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "user/deliveryAddress/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<UserDeliveryAddress> delete(@RequestBody String id);
 
     /**
