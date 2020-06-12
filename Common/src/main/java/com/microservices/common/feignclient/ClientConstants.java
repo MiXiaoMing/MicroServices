@@ -6,14 +6,15 @@ public class ClientConstants {
      * 接口层
      */
 
+    // just be here
+    public static final String module_jbh_if = "jbh-if";
 
     /**
      * 业务层
      */
 
-    /**** just be here ****/
-    // 用户
-    public static final String module_jbh_biz_user = "jbh-biz-user";
+    // just be here
+    public static final String module_jbh_biz = "jbh-biz";
 
 
     /**
@@ -34,8 +35,8 @@ public class ClientConstants {
     public static final String module_data_cache = "data-cache";
     // 统一用户
     public static final String module_data_user = "data-user";
-
-
+    // Just Be Here
+    public static final String module_data_just_be_here = "jbh-mysql";
 
 
 

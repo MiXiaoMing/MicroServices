@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.justbehere.mysql.ServiceOrderMapper">
+
+    <sql id="column">
+	  <![CDATA[
+		  id, trade_id as tradeID, user_id as userID, delivery_address_id as deliveryAddressID,
+		  service_time as serviceTime, service_code as serviceCode,
+		  service_name as serviceName, service_items as serviceItems,
+		  remind, price_total as totalPrice, price_discount as discountPrice, price_pay as payPrice,
+		  status, delflag, update_time as updateTime, create_time as createTime
+        ]]>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.justbehere.result.ServiceOrder">
+        insert into t_order_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userID != null">
+                user_id,
+            </if>
+            <if test="tradeID != null">
+                trade_id,
+            </if>
+            <if test="deliveryAddressID != null">
+                delivery_address_id,
+            </if>
+            <if test="serviceTime != null">
+                service_time,
+            </if>
+            <if test="serviceCode != null">
+                service_code,
+            </if>
+            <if test="serviceName != null">
+                service_name,
+            </if>
+            <if test="serviceItems != null">
+                service_items,
+            </if>
+            <if test="remind != null">
+                remind,
+            </if>
+            <if test="totalPrice != null">
+                price_total,
+            </if>
+            <if test="discountPrice != null">
+                price_discount,
+            </if>
+            <if test="payPrice != null">
+                price_pay,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="delflag != null">
+                delflag,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userID != null">
+                #{userID,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeID != null">
+                #{tradeID,jdbcType=VARCHAR},
+            </if>
+            <if test="deliveryAddressID != null">
+                #{deliveryAddressID,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceTime != null">
+                #{serviceTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="serviceCode != null">
+                #{serviceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceName != null">
+                #{serviceName,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceItems != null">
+                #{serviceItems,jdbcType=VARCHAR},
+            </if>
+            <if test="remind != null">
+                #{remind,jdbcType=VARCHAR},
+            </if>
+            <if test="totalPrice != null">
+                #{totalPrice,jdbcType=FLOAT},
+            </if>
+            <if test="discountPrice != null">
+                #{discountPrice,jdbcType=FLOAT},
+            </if>
+            <if test="payPrice != null">
+                #{payPrice,jdbcType=FLOAT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="delflag != null">
+                #{delflag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceOrder">
+        select
+        <include refid="column"/>
+          from t_order_service
+          where
+          <![CDATA[
+            delflag <> 'D'
+          ]]>
+          <if test="userID != null">
+            and user_id = #{userID,jdbcType=VARCHAR}
+          </if>
+          <if test="status != null">
+            and status = #{status,jdbcType=VARCHAR}
+          </if>
+          <if test="serviceTime != null">
+            and service_time = #{serviceTime,jdbcType=TIMESTAMP}
+          </if>
+          order by serviceTime desc
+    </select>
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceOrder">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_order_service
+          where id = #{id,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+    <update id="update" parameterType="java.util.Map">
+        update t_order_service
+        <set>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delflag != null">
+                delflag = #{delflag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>
