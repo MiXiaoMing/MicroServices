@@ -1,5 +1,6 @@
 package com.microservices.data.justbehere.mysql.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
 import com.microservices.common.generator.SnowflakeIdService;
@@ -98,23 +99,33 @@ public class ServiceOrderController {
     }
 
     /**
-     * 服务订单 列表获取 通过用户ID
-     * @param userID
+     * 服务订单 列表获取 通过userID, status, serviceTime
+     * @param body
      * @return
      */
     @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<ServiceOrder> selectList(@RequestBody String userID) {
+    public ResponseArrayModel<ServiceOrder> selectList(@RequestBody JSONObject body) {
         ResponseArrayModel<ServiceOrder> responseModel = new ResponseArrayModel<>();
 
         Map<String, Object> map = new HashMap<>();
 
-        if (!StringUtil.isEmpty(userID)) {
-            map.put("userID", userID);
+        if (!StringUtil.isEmpty(body.getString("userID"))) {
+            map.put("userID", body.getString("userID"));
         }
+
+        if (!StringUtil.isEmpty(body.getString("status"))) {
+            map.put("status", body.getString("status"));
+        }
+
+        Timestamp timestamp = body.getTimestamp("serviceTime");
+        if (timestamp != null) {
+            map.put("serviceTime", timestamp);
+        }
+
 
         List<ServiceOrder> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.ServiceOrderMapper.selectList", map);
         if (entities == null) {
-            responseModel.setMessage("该用户没有订单数据：" + userID);
+            responseModel.setMessage("该用户没有订单数据：" + body.toJSONString());
         } else {
             responseModel.setSuccess(true);
             responseModel.setData(entities);

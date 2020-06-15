@@ -1,5 +1,6 @@
 package com.microservices.business.justbehere.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.JBH_Mysql_Client;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
@@ -37,13 +38,13 @@ public class ServiceOrderController {
     public ResponseModel<ServiceOrder> addServiceOrder(@RequestBody ServiceOrderBody body) {
         ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
 
-        ResponseModel<String> addResponse = serviceClient.insertOrder(body);
+        ResponseModel<String> addResponse = serviceClient.insertServiceOrder(body);
         if (!addResponse.isSuccess()) {
             responseModel.setMessage(addResponse.getMessage());
             return responseModel;
         }
 
-        return serviceClient.selectOrder(addResponse.getData());
+        return serviceClient.selectServiceOrder(addResponse.getData());
     }
 
     /**
@@ -72,7 +73,10 @@ public class ServiceOrderController {
             return responseModel;
         }
 
-        return serviceClient.selectOrderList(userID);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("userID", userID);
+
+        return serviceClient.selectServiceOrderList(jsonObject);
     }
 
 }
