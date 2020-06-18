@@ -5,7 +5,7 @@ import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.data.cache.body.TokenBody;
 import com.microservices.common.feignclient.data.user.body.CreateUserBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
-import com.microservices.common.feignclient.middleplatform.MPUserClient;
+import com.microservices.common.feignclient.middleplatform.UserClient;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Autowired
-    MPUserClient mpUserClient;
+    UserClient mpUserClient;
 
     @Autowired
     DataCacheClient dataCacheClient;
