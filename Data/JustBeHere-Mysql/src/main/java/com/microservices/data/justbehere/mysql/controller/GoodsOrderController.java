@@ -1,8 +1,8 @@
 package com.microservices.data.justbehere.mysql.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
-import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
+import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
@@ -16,15 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/order/service")
-public class ServiceOrderController {
+@RequestMapping(value = "/order/goods")
+public class GoodsOrderController {
 
     @Autowired
     private SnowflakeIdService snowflakeIdService;
@@ -32,35 +31,30 @@ public class ServiceOrderController {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    private final Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
+    private final Logger logger = LoggerFactory.getLogger(GoodsOrderController.class);
 
     /**
-     * 服务订单 添加新数据
+     * 商品订单 添加新数据
      * @param body
      * @return
      */
     @RequestMapping(value = "/insert", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<String> insert(@RequestBody ServiceOrderBody body) {
+    public ResponseModel<String> insert(@RequestBody GoodsOrderBody body) {
         ResponseModel<String> responseModel = new ResponseModel<>();
 
-        ServiceOrder entity = new ServiceOrder();
+        GoodsOrder entity = new GoodsOrder();
         entity.id = snowflakeIdService.getId();
         entity.userID = body.userID;
         entity.tradeID = entity.id + System.currentTimeMillis();
         entity.deliveryAddressID = body.deliveryAddressID;
-        entity.serviceCode = body.serviceCode;
-        entity.serviceName = body.serviceName;
-        entity.serviceItems = body.serviceItems;
-        entity.serviceTime = new Timestamp(body.serviceTime);
-        entity.totalPrice = body.totalPrice;
-        entity.discountPrice = body.discountPrice;
-        entity.payPrice = body.payPrice;
+        entity.goodsItems = body.goodsItems;
+        entity.price = body.price;
         entity.remind = body.remind;
         entity.status = "01";
         entity.createTime = new Date();
         entity.delflag = "A";
 
-        int count = sqlSessionTemplate.insert("com.microservices.data.justbehere.mysql.ServiceOrderMapper.insert", entity);
+        int count = sqlSessionTemplate.insert("com.microservices.data.justbehere.mysql.GoodsOrderMapper.insert", entity);
         if (count > 0) {
             responseModel.setData(entity.id);
             responseModel.setSuccess(true);
@@ -72,14 +66,14 @@ public class ServiceOrderController {
     }
 
     /**
-     * 服务订单 通过ID 获取指定数据
+     * 商品订单 通过ID 获取指定数据
      *
      * @param id 表ID
      * @return
      */
     @RequestMapping(value = "/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> select(@RequestBody String id) {
-        ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
+    public ResponseModel<GoodsOrder> select(@RequestBody String id) {
+        ResponseModel<GoodsOrder> responseModel = new ResponseModel<>();
 
         Map<String, Object> map = new HashMap<>();
 
@@ -87,9 +81,9 @@ public class ServiceOrderController {
             map.put("id", id);
         }
 
-        ServiceOrder entity = sqlSessionTemplate.selectOne("com.microservices.data.justbehere.mysql.ServiceOrderMapper.select", map);
+        GoodsOrder entity = sqlSessionTemplate.selectOne("com.microservices.data.justbehere.mysql.GoodsOrderMapper.select", map);
         if (entity == null) {
-            responseModel.setMessage("该用户服务订单不存在：" + id);
+            responseModel.setMessage("该用户商品订单不存在：" + id);
         } else {
             responseModel.setSuccess(true);
             responseModel.setData(entity);
@@ -99,13 +93,13 @@ public class ServiceOrderController {
     }
 
     /**
-     * 服务订单 列表获取 通过userID, status, serviceTime
+     * 商品订单 列表获取 通过userID, status
      * @param body
      * @return
      */
     @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<ServiceOrder> selectList(@RequestBody JSONObject body) {
-        ResponseArrayModel<ServiceOrder> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<GoodsOrder> selectList(@RequestBody JSONObject body) {
+        ResponseArrayModel<GoodsOrder> responseModel = new ResponseArrayModel<>();
 
         Map<String, Object> map = new HashMap<>();
 
@@ -117,13 +111,7 @@ public class ServiceOrderController {
             map.put("status", body.getString("status"));
         }
 
-        Timestamp timestamp = body.getTimestamp("serviceTime");
-        if (timestamp != null) {
-            map.put("serviceTime", timestamp);
-        }
-
-
-        List<ServiceOrder> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.ServiceOrderMapper.selectList", map);
+        List<GoodsOrder> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.GoodsOrderMapper.selectList", map);
         if (entities == null) {
             responseModel.setMessage("该用户没有订单数据：" + body.toJSONString());
         } else {
@@ -135,39 +123,39 @@ public class ServiceOrderController {
     }
 
     /**
-     * 服务订单 更新
-     * @param body
+     * 商品订单 更新
+     * @param body 通过id, status, content
      * @return
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> update(@RequestBody ServiceOrderBody body) {
-        ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
+    public ResponseModel<GoodsOrder> update(@RequestBody JSONObject body) {
+        ResponseModel<GoodsOrder> responseModel = new ResponseModel<>();
 
         Map<String, Object> map = new HashMap<>();
 
-        if (StringUtil.isEmpty(body.id)) {
+        if (StringUtil.isEmpty(body.getString("id"))) {
             responseModel.setMessage("更新ID不能为空");
             return responseModel;
         }
 
-        map.put("id", body.id);
+        map.put("id", body.getString("id"));
 
-        if (!StringUtil.isEmpty(body.status)) {
-            map.put("status", body.status);
+        if (!StringUtil.isEmpty(body.getString("status"))) {
+            map.put("status", body.getString("status"));
         }
 
-        if (!StringUtil.isEmpty(body.content)) {
-            map.put("content", body.content);
+        if (!StringUtil.isEmpty(body.getString("content"))) {
+            map.put("content", body.getString("content"));
         }
 
         map.put("updateTime", new Date());
         map.put("delflag", "U");
 
-        int count = sqlSessionTemplate.insert("com.microservices.data.justbehere.mysql.ServiceOrderMapper.update", map);
+        int count = sqlSessionTemplate.insert("com.microservices.data.justbehere.mysql.GoodsOrderMapper.update", map);
         if (count == 0) {
-            responseModel.setMessage("更新用户服务订单失败");
+            responseModel.setMessage("更新用户商品订单失败");
         } else {
-            return select(body.id);
+            return select(body.getString("id"));
         }
 
         return responseModel;

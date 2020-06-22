@@ -68,7 +68,7 @@ public class CartController {
      */
     @RequestMapping(value = "/deleteFromCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<Cart> deleteFromCart(@RequestBody  String id) {
-        return serviceClient.delete(id);
+        return serviceClient.deleteFromCart(id);
     }
 
     /**

@@ -7,5 +7,5 @@ public class ServiceOrderBody implements Serializable {
     public String deliveryAddressID, serviceCode, serviceName, serviceItems, remind;
     public float totalPrice, discountPrice, payPrice;
     public long serviceTime;
-    public String status;
+    public String status, content;
 }

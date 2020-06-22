@@ -3,13 +3,12 @@ package com.microservices.common.feignclient.data.justbehere.result;
 import java.io.Serializable;
 import java.util.Date;
 
-public class ServiceOrder implements Serializable {
+public class GoodsOrder implements Serializable {
     public String id, userID, tradeID, deliveryAddressID;
 
-    public Date serviceTime;
-    public String serviceCode, serviceName, serviceItems, remind;
+    public String goodsItems, remind;
 
-    public float totalPrice, discountPrice, payPrice;
+    public float price;
     public String status, content;
 
     public String delflag;

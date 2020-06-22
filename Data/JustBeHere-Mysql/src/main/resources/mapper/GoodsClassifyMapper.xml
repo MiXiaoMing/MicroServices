@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.justbehere.mysql.GoodsClassifyMapper">
+
+    <sql id="column">
+	  <![CDATA[
+		  id, code, title, `name`, `desc`, icon
+		  delflag, update_time as updateTime, create_time as createTime
+        ]]>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.justbehere.result.GoodsClassify">
+        insert into t_goods_classify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="desc != null">
+                `desc`,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="delflag != null">
+                delflag,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null">
+                #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="delflag != null">
+                #{delflag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsClassify">
+        select
+        <include refid="column"/>
+          from t_goods_classify
+          where
+          <![CDATA[
+            delflag <> 'D'
+          ]]>
+    </select>
+
+    <select id="select" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsClassify">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_goods_classify
+          where code = #{code,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+</mapper>
