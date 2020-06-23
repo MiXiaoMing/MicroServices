@@ -1,10 +1,8 @@
 package com.microservices.interfaces.justbehere.user.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.business.JBH_BIZ_Client;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.middleplatform.SmsClient;
-import com.microservices.common.response.ResponseJsonModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import com.microservices.common.utils.ValidateUtil;
@@ -26,12 +24,12 @@ public class LoginController {
 
     /**
      * 发送验证码
+     * @param phoneNumber
+     * @return
      */
     @RequestMapping(value = "/sendSmsCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> sendSmsCode(@RequestBody JSONObject params) {
-        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
-
-        String phoneNumber = params.getString("phoneNumber");
+    public ResponseModel<String> sendSmsCode(@RequestBody String phoneNumber) {
+        ResponseModel<String> responseModel = new ResponseModel<>();
 
         if (!ValidateUtil.isCellphone(phoneNumber)) {
             responseModel.setMessage("请输入正确手机号");
@@ -39,7 +37,7 @@ public class LoginController {
         }
 
         // 发送短信
-        return smsClient.sendVerificationCode(params);
+        return smsClient.sendVerificationCode(phoneNumber);
     }
 
     /**

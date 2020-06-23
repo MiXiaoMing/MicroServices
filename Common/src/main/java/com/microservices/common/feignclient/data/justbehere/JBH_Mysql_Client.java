@@ -23,10 +23,10 @@ public interface JBH_Mysql_Client {
     /**
      * 轮播图 列表获取
      *
-     * @param body 通过carouselCode（轮播图位置编码）, code（对应编码）
+     * @param body 通过carouselCode（轮播图位置编码）, classify（数据分类), code（对应编码）
      * @return
      */
-    @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "carousel/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<Carousel> selectCarouselList(@RequestBody JSONObject body);
 
 
@@ -202,8 +202,8 @@ public interface JBH_Mysql_Client {
      * @param code 服务编码
      * @return
      */
-    @RequestMapping(value = "service/price/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServicePrice> selectServicePrice(@RequestBody String code);
+    @RequestMapping(value = "service/price/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<ServicePrice> selectServicePriceList(@RequestBody String code);
 
 
 

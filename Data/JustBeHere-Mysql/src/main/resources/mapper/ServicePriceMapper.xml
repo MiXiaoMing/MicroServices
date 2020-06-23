@@ -78,7 +78,7 @@
         </trim>
     </insert>
 
-    <select id="select" parameterType="java.util.Map"
+    <select id="selectList" parameterType="java.util.Map"
             resultType="com.microservices.common.feignclient.data.justbehere.result.ServicePrice">
         select
         <include refid="column"/>

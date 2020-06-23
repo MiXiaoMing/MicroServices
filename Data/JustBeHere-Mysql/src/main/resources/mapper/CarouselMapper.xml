@@ -4,7 +4,7 @@
 
     <sql id="column">
 	  <![CDATA[
-		  id, carousel_code as carouselCode, code, path, delflag, update_time as updateTime, create_time as createTime
+		  id, carousel_code as carouselCode, classify, code, path, delflag, update_time as updateTime, create_time as createTime
         ]]>
     </sql>
 
@@ -17,6 +17,9 @@
             </if>
             <if test="carouselCode != null">
                 carousel_code,
+            </if>
+            <if test="classify != null">
+                classify,
             </if>
             <if test="code != null">
                 code,
@@ -44,6 +47,9 @@
             <if test="code != null">
                 #{code,jdbcType=VARCHAR},
             </if>
+            <if test="classify != null">
+                #{classify,jdbcType=VARCHAR},
+            </if>
             <if test="path != null">
                 #{path,jdbcType=VARCHAR},
             </if>
@@ -69,6 +75,9 @@
           ]]>
           <if test="carouselCode != null">
             and carousel_code = #{carouselCode,jdbcType=VARCHAR}
+          </if>
+          <if test="classify != null">
+            and classify = #{classify,jdbcType=VARCHAR}
           </if>
           <if test="code != null">
             and code = #{code,jdbcType=VARCHAR}

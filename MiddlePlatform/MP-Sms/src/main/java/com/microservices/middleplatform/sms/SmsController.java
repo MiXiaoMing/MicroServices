@@ -46,10 +46,9 @@ public class SmsController {
 
     // 发送验证码
     @RequestMapping(value = "/sendVerificationCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> sendVerificationCode(@RequestBody JSONObject params) {
-        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+    public ResponseModel<String> sendVerificationCode(@RequestBody String phoneNumber) {
+        ResponseModel<String> responseModel = new ResponseModel<>();
 
-        String phoneNumber = params.getString("phoneNumber");
         if (!ValidateUtil.isCellphone(phoneNumber)) {
             responseModel.setMessage("请输入正确手机号");
             return responseModel;
@@ -83,12 +82,11 @@ public class SmsController {
             ResponseModel<JSONObject> redisResponse = dataCacheClient.saveSmsCode(body);
             if (redisResponse.isSuccess()) {
                 responseModel.setSuccess(true);
-                responseModel.setMessage(smsCode);
+                responseModel.setData(smsCode);
             } else {
                 responseModel.setMessage("验证码发送成功，缓存失败");
             }
         } catch (Exception e) {
-            logger.error("手机验证码发送异常：", e);
             responseModel.setMessage("验证码发送失败：" + e.toString());
         }
 

@@ -4,7 +4,7 @@
 
     <sql id="column">
 	  <![CDATA[
-		  id, code, `name`, `desc`, icon, cover, link
+		  id, code, `name`, `desc`, icon, cover, link,
 		  delflag, update_time as updateTime, create_time as createTime
         ]]>
     </sql>

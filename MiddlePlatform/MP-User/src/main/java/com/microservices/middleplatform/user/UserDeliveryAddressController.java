@@ -30,7 +30,7 @@ public class UserDeliveryAddressController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<String> add(@RequestBody UserDeliveryAddressBody body) {
-        return dataUserClient.insert(body);
+        return dataUserClient.insertDeliveryAddress(body);
     }
 
     /**
@@ -41,7 +41,7 @@ public class UserDeliveryAddressController {
      */
     @RequestMapping(value = "/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<UserDeliveryAddress> get(@RequestBody String id) {
-        return dataUserClient.select(id);
+        return dataUserClient.selectDeliveryAddress(id);
     }
 
     /**
@@ -52,7 +52,7 @@ public class UserDeliveryAddressController {
      */
     @RequestMapping(value = "/getList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<UserDeliveryAddress> getList(@RequestBody String userID) {
-        return dataUserClient.selectList(userID);
+        return dataUserClient.selectDeliveryAddressList(userID);
     }
 
     /**
@@ -63,7 +63,7 @@ public class UserDeliveryAddressController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<UserDeliveryAddress> delete(@RequestBody String id) {
-        return dataUserClient.delete(id);
+        return dataUserClient.deleteDeliveryAddress(id);
     }
 
     /**
@@ -73,7 +73,7 @@ public class UserDeliveryAddressController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<UserDeliveryAddress> update(@RequestBody UserDeliveryAddressBody body) {
-        return dataUserClient.update(body);
+        return dataUserClient.updateDeliveryAddress(body);
     }
 
 }

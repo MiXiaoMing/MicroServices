@@ -1,7 +1,10 @@
 package com.microservices.data.user;
 
-import com.microservices.common.feignclient.data.user.body.CreateUserBody;
+import com.alibaba.fastjson.JSONObject;
+import com.microservices.common.feignclient.data.user.body.UserBaseBody;
+import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
+import com.microservices.common.feignclient.data.user.result.UserDevice;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -28,24 +31,25 @@ public class UserController {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    private final Logger logger	= LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
+    /**
+     * 用户信息  新增
+     * @param body
+     * @return
+     */
     @RequestMapping(value = "/insert", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<String> insert(@RequestBody CreateUserBody body) {
-        ResponseModel<String> responseModel = new ResponseModel<>();
+    public ResponseModel<UserBase> insert(@RequestBody UserBase body) {
+        ResponseModel<UserBase> responseModel = new ResponseModel<>();
 
-        UserBase entity = new UserBase();
-        entity.id = snowflakeIdService.getId();
-        entity.name = body.name;
-        entity.type = body.type;
-        entity.phoneNumber = body.phoneNumber;
-        entity.createTime = new Date();
-        entity.delflag = "A";
+        body.id = snowflakeIdService.getId();
+        body.createTime = new Date();
+        body.delflag = "A";
 
-        int count = sqlSessionTemplate.insert("com.microservices.data.user.UserBaseMapper.insert", entity);
+        int count = sqlSessionTemplate.insert("com.microservices.data.user.UserBaseMapper.insert", body);
         if (count > 0) {
-            responseModel.setData(entity.id);
+            responseModel.setData(body);
             responseModel.setSuccess(true);
         } else {
             responseModel.setMessage("表数据插入失败：" + body);
@@ -54,25 +58,66 @@ public class UserController {
         return responseModel;
     }
 
-    @RequestMapping(value = "/selectByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber) {
+    /**
+     * 用户信息 通过 userID 或者 phoneNumber + type
+     *
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> select(@RequestBody JSONObject body) {
         ResponseModel<UserBase> responseModel = new ResponseModel<>();
 
         Map<String, Object> map = new HashMap<>();
-        if (!StringUtil.isEmpty(phoneNumber)) {
-            map.put("phoneNumber", phoneNumber);
-            UserBase user = sqlSessionTemplate.selectOne("com.microservices.data.user.UserBaseMapper.selectUserByPhoneNumber", map);
-            if (user == null) {
-                responseModel.setMessage("该用户不存在：" + phoneNumber);
-            } else {
-                responseModel.setSuccess(true);
-                responseModel.setData(user);
-            }
-        } else {
-            responseModel.setMessage("手机号为空");
+
+        if (!StringUtil.isEmpty(body.getString("phoneNumber"))) {
+            map.put("phoneNumber", body.getString("phoneNumber"));
         }
 
-        return  responseModel;
+        if (!StringUtil.isEmpty(body.getString("type"))) {
+            map.put("type", body.getString("type"));
+        }
+
+        if (!StringUtil.isEmpty(body.getString("userID"))) {
+            map.put("id", body.getString("userID"));
+        }
+
+        UserBase user = sqlSessionTemplate.selectOne("com.microservices.data.user.UserBaseMapper.select", map);
+        if (user == null) {
+            responseModel.setMessage("该用户不存在：" + body.toString());
+        } else {
+            responseModel.setSuccess(true);
+            responseModel.setData(user);
+        }
+
+        return responseModel;
     }
 
+    /**
+     * 个人信息 更新
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> update(@RequestBody UserBase body) {
+        ResponseModel<UserBase> responseModel = new ResponseModel<>();
+
+        if (StringUtil.isEmpty(body.id)) {
+            responseModel.setMessage("更新ID不能为空");
+            return responseModel;
+        }
+
+        body.updateTime = new Date();
+        body.delflag = "U";
+
+        int count = sqlSessionTemplate.update("com.microservices.data.user.UserBaseMapper.update", body);
+        if (count == 0) {
+            responseModel.setMessage("更新用户设备信息失败");
+        } else {
+            responseModel.setSuccess(true);
+            responseModel.setData(body);
+        }
+
+        return responseModel;
+    }
 }

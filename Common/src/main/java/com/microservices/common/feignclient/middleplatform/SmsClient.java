@@ -1,6 +1,5 @@
 package com.microservices.common.feignclient.middleplatform;
 
-import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.ClientConstants;
 import com.microservices.common.response.ResponseModel;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -13,8 +12,12 @@ public interface SmsClient {
 
     /********  sms  *********/
 
-    // 发送验证码
+    /**
+     * 发送验证码
+     * @param phoneNumber
+     * @return
+     */
     @RequestMapping(value = "sms/sendVerificationCode", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    ResponseModel<JSONObject> sendVerificationCode(@RequestBody JSONObject params);
+    ResponseModel<String> sendVerificationCode(@RequestBody String phoneNumber);
 
 }

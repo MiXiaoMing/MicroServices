@@ -38,7 +38,7 @@ public class ServiceController {
      * 获取服务分类详情
      *
      * @param code 服务分类编号
-     * @return
+     * @return  ServiceClassify + Link ServiceClassify
      */
     @RequestMapping(value = "/getServiceClassify", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> getServiceClassify(@RequestBody String code) {
@@ -91,7 +91,7 @@ public class ServiceController {
                         Service2JSONObject.service2Json(service, object1);
                         jsonArrayServers.add(object1);
                     }
-                    serviceClassifyObject.put("servers", jsonArrayServers);
+                    linkClassifyObject.put("servers", jsonArrayServers);
                 }
             }
 
@@ -109,7 +109,7 @@ public class ServiceController {
      * 获取服务分类详情
      *
      * @param code 服务分类编号
-     * @return
+     * @return  Service + ServiceDetail
      */
     @RequestMapping(value = "/getService", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> getServiceList(@RequestBody String code) {
@@ -132,7 +132,7 @@ public class ServiceController {
 
             JSONObject response = new JSONObject();
             response.put("service", jsonObject);
-            response.put("serviceDeital", jsonObject1);
+            response.put("serviceDetail", jsonObject1);
             responseModel.setData(response);
         }
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/setting/mainPage")
+@RequestMapping(value = "/setting")
 public class Setting_MainPageController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class Setting_MainPageController {
      *
      * @return
      */
-    @RequestMapping(value = "/getFive", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/getMainPageFive")
     public ResponseArrayModel<JSONObject> getFive() {
         return jbh_biz_client.getFive();
     }
@@ -43,7 +43,7 @@ public class Setting_MainPageController {
      *
      * @return
      */
-    @RequestMapping(value = "/getTen", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/getMainPageTen", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getTen() {
         return jbh_biz_client.getTen();
     }
@@ -53,9 +53,9 @@ public class Setting_MainPageController {
      *
      * @return
      */
-    @RequestMapping(value = "/getRecommend", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/getMainPageRecommend", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getRecommend() {
-        return jbh_biz_client.getFive();
+        return jbh_biz_client.getRecommend();
     }
 
     /**
@@ -63,9 +63,9 @@ public class Setting_MainPageController {
      *
      * @return
      */
-    @RequestMapping(value = "/getRecommendServiceClassify", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/getMainPageRecommendServiceClassify", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getRecommendServiceClassify() {
-        return jbh_biz_client.getFive();
+        return jbh_biz_client.getRecommendServiceClassify();
     }
 
 }

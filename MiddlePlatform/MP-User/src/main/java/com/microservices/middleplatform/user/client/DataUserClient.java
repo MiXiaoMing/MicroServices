@@ -1,11 +1,12 @@
 package com.microservices.middleplatform.user.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.ClientConstants;
-import com.microservices.common.feignclient.data.user.body.CreateUserBody;
-import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
-import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
+import com.microservices.common.feignclient.data.user.body.UserBaseBody;
 import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
+import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
+import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
 import com.microservices.common.feignclient.data.user.result.UserDevice;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
@@ -20,20 +21,29 @@ public interface DataUserClient {
     /************  用户基本信息  *************/
 
     /**
-     * 用户 插入新用户数据
+     * 用户信息  新增
      * @param body
      * @return
      */
     @RequestMapping(value = "user/base/insert", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<String> insert(@RequestBody CreateUserBody body);
+    public ResponseModel<UserBase> insertUser(@RequestBody UserBase body);
 
     /**
-     * 用户 通过手机号 获取用户基本信息
-     * @param phoneNumber
+     * 用户信息 通过 userID 或者 phoneNumber + type
+     *
+     * @param body
      * @return
      */
-    @RequestMapping(value = "user/base/selectByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber);
+    @RequestMapping(value = "user/base/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> selectUser(@RequestBody JSONObject body);
+
+    /**
+     * 个人信息 更新
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/base/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> updateUser(@RequestBody UserBase body);
 
 
 
@@ -86,7 +96,7 @@ public interface DataUserClient {
      * @return
      */
     @RequestMapping(value = "user/deliveryAddress/insert", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<String> insert(@RequestBody UserDeliveryAddressBody body);
+    public ResponseModel<String> insertDeliveryAddress(@RequestBody UserDeliveryAddressBody body);
 
     /**
      * 收货地址 通过ID 获取指定数据
@@ -95,7 +105,7 @@ public interface DataUserClient {
      * @return
      */
     @RequestMapping(value = "user/deliveryAddress/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserDeliveryAddress> select(@RequestBody String id);
+    public ResponseModel<UserDeliveryAddress> selectDeliveryAddress(@RequestBody String id);
 
     /**
      * 收货地址 通过 用户ID 获取该用户所有收货地址
@@ -104,7 +114,7 @@ public interface DataUserClient {
      * @return
      */
     @RequestMapping(value = "user/deliveryAddress/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<UserDeliveryAddress> selectList(@RequestBody String userID);
+    public ResponseArrayModel<UserDeliveryAddress> selectDeliveryAddressList(@RequestBody String userID);
 
     /**
      * 删除 收货地址
@@ -112,7 +122,7 @@ public interface DataUserClient {
      * @return
      */
     @RequestMapping(value = "user/deliveryAddress/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserDeliveryAddress> delete(@RequestBody String id);
+    public ResponseModel<UserDeliveryAddress> deleteDeliveryAddress(@RequestBody String id);
 
     /**
      * 收货地址 更新
@@ -120,5 +130,5 @@ public interface DataUserClient {
      * @return
      */
     @RequestMapping(value = "user/deliveryAddress/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserDeliveryAddress> update(@RequestBody UserDeliveryAddressBody body);
+    public ResponseModel<UserDeliveryAddress> updateDeliveryAddress(@RequestBody UserDeliveryAddressBody body);
 }

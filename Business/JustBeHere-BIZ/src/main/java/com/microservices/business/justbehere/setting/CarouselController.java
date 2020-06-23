@@ -36,7 +36,7 @@ public class CarouselController {
      * @return
      */
     @RequestMapping(value = "/getAllCarousel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<Carousel> getAllFromCart(@RequestBody JSONObject body) {
+    public ResponseArrayModel<Carousel> getAllCarousel(@RequestBody JSONObject body) {
         return jbh_mysql_client.selectCarouselList(body);
     }
 

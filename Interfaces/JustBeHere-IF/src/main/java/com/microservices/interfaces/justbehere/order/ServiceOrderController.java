@@ -1,5 +1,6 @@
 package com.microservices.interfaces.justbehere.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.business.JBH_BIZ_Client;
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
@@ -84,8 +85,8 @@ public class ServiceOrderController {
      * 获取用户 所有服务订单
      */
     @RequestMapping(value = "/getAllServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<ServiceOrder> getAllServiceOrder(@RequestHeader("token") String token) {
-        ResponseArrayModel<ServiceOrder> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<JSONObject> getAllServiceOrder(@RequestHeader("token") String token) {
+        ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
 
         if (StringUtil.isEmpty(token)) {
             responseModel.setErrCode("401");

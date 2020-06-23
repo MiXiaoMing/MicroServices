@@ -1,9 +1,10 @@
 package com.microservices.business.justbehere.user;
 
+import com.alibaba.fastjson.JSONObject;
+import com.microservices.common.constants.Constants;
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.data.cache.body.TokenBody;
-import com.microservices.common.feignclient.data.user.body.CreateUserBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.feignclient.middleplatform.UserClient;
 import com.microservices.common.generator.SnowflakeIdService;
@@ -66,17 +67,22 @@ public class LoginController {
         // 判断用户数据
         String userID = "";
 
-        ResponseModel<UserBase> userResultResponseModel = mpUserClient.getUserByPhoneNumber(body.phoneNumber);
-        if (!userResultResponseModel.isSuccess()) {
-            CreateUserBody createUserBody = new CreateUserBody();
-            createUserBody.phoneNumber = body.phoneNumber;
+        // TODO: 2020/6/23 这里需要区分 用户类型
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("phoneNumber", body.phoneNumber);
+        jsonObject.put("type", Constants.user_type_customer);
 
-            ResponseModel<String> createUserResponse = mpUserClient.createUser(createUserBody);
+        ResponseModel<UserBase> userResultResponseModel = mpUserClient.getUser(jsonObject);
+        if (!userResultResponseModel.isSuccess()) {
+            UserBase userBase = new UserBase();
+            userBase.phoneNumber = body.phoneNumber;
+
+            ResponseModel<UserBase> createUserResponse = mpUserClient.addUser(userBase);
             if (!createUserResponse.isSuccess()) {
                 responseModel.setMessage("用户创建失败：" + createUserResponse.getErrCode() + " - " + createUserResponse.getMessage());
                 return responseModel;
             } else {
-                userID = createUserResponse.getData();
+                userID = createUserResponse.getData().id;
             }
         } else {
             userID = userResultResponseModel.getData().id;

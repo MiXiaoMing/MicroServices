@@ -1,7 +1,8 @@
 package com.microservices.common.feignclient.middleplatform;
 
+import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.ClientConstants;
-import com.microservices.common.feignclient.data.user.body.CreateUserBody;
+import com.microservices.common.feignclient.data.user.body.UserBaseBody;
 import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
 import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
@@ -19,13 +20,41 @@ public interface UserClient {
 
     /************  用户 基本信息 *************/
 
-    // 创建用户
-    @RequestMapping(value = "user/createUser", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    ResponseModel<String> createUser(@RequestBody CreateUserBody body);
+    /**
+     * 用户信息 插入新数据
+     *
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/base/add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> addUser(@RequestBody UserBase body);
 
-    // 获取用户
-    @RequestMapping(value = "user/getUserByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    ResponseModel<UserBase> getUserByPhoneNumber(@RequestBody String phoneNumber);
+    /**
+     * 用户信息 通过ID 获取指定数据
+     *
+     * @param id 用户信息表ID
+     * @return
+     */
+    @RequestMapping(value = "user/base/getByID", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> getUser(@RequestBody String id);
+
+    /**
+     * 用户信息 通过 获取指定数据
+     *
+     * @param body phoneNumber + type
+     * @return
+     */
+    @RequestMapping(value = "user/base/getByPhoneNumber", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> getUser(@RequestBody JSONObject body);
+
+    /**
+     * 用户信息 更新
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "user/base/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<UserBase> updateUser(@RequestBody UserBase body);
+
 
 
 

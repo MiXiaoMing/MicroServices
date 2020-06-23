@@ -32,7 +32,7 @@ public class CarouselController {
     /**
      * 轮播图 列表获取
      *
-     * @param body 通过carouselCode, code
+     * @param body 通过carouselCode, classify, code
      * @return
      */
     @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -43,6 +43,10 @@ public class CarouselController {
 
         if (!StringUtil.isEmpty(body.getString("carouselCode"))) {
             map.put("carouselCode", body.getString("carouselCode"));
+        }
+
+        if (!StringUtil.isEmpty(body.getString("classify"))) {
+            map.put("classify", body.getString("classify"));
         }
 
         if (!StringUtil.isEmpty(body.getString("code"))) {

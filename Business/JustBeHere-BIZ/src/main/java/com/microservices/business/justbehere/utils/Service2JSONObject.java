@@ -7,6 +7,7 @@ import com.microservices.common.feignclient.data.justbehere.result.Service;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceClassify;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceDetail;
 import com.microservices.common.feignclient.data.justbehere.result.ServicePrice;
+import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,17 +90,23 @@ public class Service2JSONObject {
                 }
                 object.put("others", otherArray);
             }
-            ResponseModel<ServicePrice> servicePrice = client.selectServicePrice(serverDetail.code);
+            ResponseArrayModel<ServicePrice> servicePrice = client.selectServicePriceList(serverDetail.code);
             if (servicePrice.isSuccess()) {
-                JSONObject priceObject = new JSONObject();
-                priceObject.put("id", servicePrice.getData().id);
-                priceObject.put("name", servicePrice.getData().name);
-                priceObject.put("price", servicePrice.getData().price);
-                priceObject.put("discount", servicePrice.getData().discount);
-                priceObject.put("unit", servicePrice.getData().unit);
-                priceObject.put("minimum", servicePrice.getData().minimum);
+                JSONArray priceArray = new JSONArray();
 
-                object.put("price", priceObject);
+                for (int i = 0; i < servicePrice.getData().size(); ++i) {
+                    JSONObject priceObject = new JSONObject();
+                    priceObject.put("id", servicePrice.getData().get(i).id);
+                    priceObject.put("name", servicePrice.getData().get(i).name);
+                    priceObject.put("price", servicePrice.getData().get(i).price);
+                    priceObject.put("discount", servicePrice.getData().get(i).discount);
+                    priceObject.put("unit", servicePrice.getData().get(i).unit);
+                    priceObject.put("minimum", servicePrice.getData().get(i).minimum);
+
+                    priceArray.add(priceObject);
+                }
+
+                object.put("prices", priceArray);
             }
         }
     }
