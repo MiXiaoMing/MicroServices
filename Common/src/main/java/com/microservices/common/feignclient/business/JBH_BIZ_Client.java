@@ -220,6 +220,14 @@ public interface JBH_BIZ_Client {
     public ResponseModel<JSONObject> getService(@RequestBody String code);
 
 
+    /**
+     * 获取服务时间
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "service/getTimeList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<JSONObject> getTimeList();
 
 
 
@@ -286,6 +294,15 @@ public interface JBH_BIZ_Client {
     public ResponseModel<ServiceOrder> updateServiceOrder(@RequestBody ServiceOrderBody body);
 
     /**
+     * 获取服务订单详情
+     *
+     * @param id  订单ID
+     * @return ServiceOrder + Array<ServicePrice> + DeliveryAddress
+     */
+    @RequestMapping(value = "order/getServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> getServiceOrder(@RequestBody String id);
+
+    /**
      * 获取所有服务订单
      *
      * @param userID
@@ -314,9 +331,8 @@ public interface JBH_BIZ_Client {
      * @param body
      * @return
      */
-    @RequestMapping(value = "/addGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "order/addGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<GoodsOrder> addGoodsOrder(@RequestBody GoodsOrderBody body);
-
 
     /**
      * 更新 商品订单 状态
@@ -324,8 +340,17 @@ public interface JBH_BIZ_Client {
      * @param body  通过id, status, content
      * @return
      */
-    @RequestMapping(value = "/updateGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "order/updateGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<GoodsOrder> updateGoodsOrder(@RequestBody JSONObject body);
+
+    /**
+     * 获取商品订单详情
+     *
+     * @param id  订单ID
+     * @return GoodsOrder + Array<Goods> + DeliveryAddress
+     */
+    @RequestMapping(value = "order/getGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> getGoodsOrder(@RequestBody String id);
 
     /**
      * 获取所有商品订单
@@ -333,7 +358,7 @@ public interface JBH_BIZ_Client {
      * @param userID
      * @return GoodsOrder + Array<Goods>
      */
-    @RequestMapping(value = "/getAllGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "order/getAllGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getAllGoodsOrder(@RequestBody String userID);
 
     /**
@@ -342,6 +367,6 @@ public interface JBH_BIZ_Client {
      * @param userID
      * @return GoodsOrder + Array<Goods>
      */
-    @RequestMapping(value = "/getAllUnDoneGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "order/getAllUnDoneGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getAllUnDoneGoodsOrder(@RequestBody String userID);
 }

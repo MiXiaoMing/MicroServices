@@ -11,6 +11,8 @@ public class GoodsOrder implements Serializable {
     public float price;
     public String status, content;
 
+    public long remainTime;
+
     public String delflag;
     public Date updateTime, createTime;
 }

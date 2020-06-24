@@ -27,8 +27,15 @@ public class UserController {
     /************  用户   ************/
 
     // TODO: 2020/6/3 hystrix 使用
-    //获取用户基本信息
-    @HystrixCommand(fallbackMethod = "infoFall")
+
+//    @HystrixCommand(fallbackMethod = "infoFall")
+
+
+    /**
+     * 获取用户基本信息
+     * @param token
+     * @return
+     */
     @RequestMapping(value = "/info", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<UserBase> info(@RequestHeader("token") String token) {
         ResponseModel<UserBase> responseModel = new ResponseModel<>();

@@ -12,6 +12,8 @@ public class ServiceOrder implements Serializable {
     public float totalPrice, discountPrice, payPrice;
     public String status, content;
 
+    public long remainTime;
+
     public String delflag;
     public Date updateTime, createTime;
 }

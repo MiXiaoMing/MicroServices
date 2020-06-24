@@ -3,8 +3,10 @@ package com.microservices.interfaces.justbehere.order;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.business.JBH_BIZ_Client;
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
-import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
-import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
+import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
+import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/order")
-public class ServiceOrderController {
+public class GoodsOrderController {
 
     @Autowired
     JBH_BIZ_Client jbh_biz_client;
@@ -22,14 +24,14 @@ public class ServiceOrderController {
     DataCacheClient dataCacheClient;
 
 
-    /*************  服务 订单  ************/
+    /*************  商品 订单  ************/
 
     /**
-     * 添加 新服务订单
+     * 添加 新商品订单
      */
-    @RequestMapping(value = "/addServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> addServiceOrder(@RequestHeader("token") String token, @RequestBody ServiceOrderBody body) {
-        ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
+    @RequestMapping(value = "/addGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<GoodsOrder> addGoodsOrder(@RequestHeader("token") String token, @RequestBody GoodsOrderBody body) {
+        ResponseModel<GoodsOrder> responseModel = new ResponseModel<>();
 
         if (StringUtil.isEmpty(token)) {
             responseModel.setErrCode("401");
@@ -45,16 +47,16 @@ public class ServiceOrderController {
 
         body.userID = tokenResponse.getData();
 
-        return jbh_biz_client.addServiceOrder(body);
+        return jbh_biz_client.addGoodsOrder(body);
     }
 
     /**
-     * 更新 服务订单
+     * 更新 商品订单
      */
-    @RequestMapping(value = "/updateServiceOrderStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> updateServiceOrderStatus(@RequestHeader("token") String token,
-                                                    @RequestBody ServiceOrderBody body) {
-        ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
+    @RequestMapping(value = "/updateGoodsOrderStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<GoodsOrder> updateGoodsOrderStatus(@RequestHeader("token") String token,
+                                                    @RequestBody GoodsOrderBody body) {
+        ResponseModel<GoodsOrder> responseModel = new ResponseModel<>();
 
         if (StringUtil.isEmpty(token)) {
             responseModel.setErrCode("401");
@@ -78,25 +80,29 @@ public class ServiceOrderController {
             return responseModel;
         }
 
-        return jbh_biz_client.updateServiceOrder(body);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", body.id);
+        jsonObject.put("status", body.status);
+
+        return jbh_biz_client.updateGoodsOrder(jsonObject);
     }
 
     /**
-     * 获取 服务订单详情
+     * 获取 商品订单详情
      *
-     * @param id  服务订单ID
+     * @param id  商品订单ID
      * @return
      */
-    @RequestMapping(value = "/getServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> getServiceOrder(@RequestBody String id) {
-        return jbh_biz_client.getServiceOrder(id);
+    @RequestMapping(value = "/getGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> getGoodsOrder(@RequestBody String id) {
+        return jbh_biz_client.getGoodsOrder(id);
     }
 
     /**
-     * 获取用户 所有服务订单
+     * 获取用户 所有商品订单
      */
-    @RequestMapping(value = "/getAllServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> getAllServiceOrder(@RequestHeader("token") String token) {
+    @RequestMapping(value = "/getAllGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<JSONObject> getAllGoodsOrder(@RequestHeader("token") String token) {
         ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
 
         if (StringUtil.isEmpty(token)) {
@@ -112,14 +118,14 @@ public class ServiceOrderController {
             return responseModel;
         }
 
-        return jbh_biz_client.getAllServiceOrder(tokenResponse.getData());
+        return jbh_biz_client.getAllGoodsOrder(tokenResponse.getData());
     }
 
     /**
-     * 获取用户 所有未完成服务订单
+     * 获取用户 所有未完成商品订单
      */
-    @RequestMapping(value = "/getAllUndoneServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> getAllUndoenServiceOrder(@RequestHeader("token") String token) {
+    @RequestMapping(value = "/getAllUndoneGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<JSONObject> getAllUndoenGoodsOrder(@RequestHeader("token") String token) {
         ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
 
         if (StringUtil.isEmpty(token)) {
@@ -135,6 +141,6 @@ public class ServiceOrderController {
             return responseModel;
         }
 
-        return jbh_biz_client.getAllUnDoneServiceOrder(tokenResponse.getData());
+        return jbh_biz_client.getAllUnDoneGoodsOrder(tokenResponse.getData());
     }
 }

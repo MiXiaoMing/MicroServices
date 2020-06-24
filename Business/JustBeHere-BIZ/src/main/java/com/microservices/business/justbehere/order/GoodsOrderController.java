@@ -10,6 +10,7 @@ import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
 import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
 import com.microservices.common.feignclient.middleplatform.UserClient;
 import com.microservices.common.response.ResponseArrayModel;
+import com.microservices.common.response.ResponseJsonModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import org.slf4j.Logger;
@@ -85,6 +86,7 @@ public class GoodsOrderController {
 
         getGoodsOrderList(userID, "", responseModel.getData());
 
+        responseModel.setSuccess(true);
         return responseModel;
     }
 
@@ -107,6 +109,7 @@ public class GoodsOrderController {
         getGoodsOrderList(userID, Constants.order_status_undone, responseModel.getData());
         getGoodsOrderList(userID, Constants.order_status_ing, responseModel.getData());
 
+        responseModel.setSuccess(true);
         return responseModel;
     }
 
@@ -118,7 +121,7 @@ public class GoodsOrderController {
      */
     @RequestMapping(value = "/getGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> getGoodsOrder(@RequestBody String id) {
-        ResponseModel<JSONObject> responseModel = new ResponseModel<>();
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
         ResponseModel<GoodsOrder> goodsOrderResponseModel = jbh_mysql_client.selectGoodsOrder(id);
         if (goodsOrderResponseModel.isSuccess()) {
@@ -196,20 +199,25 @@ public class GoodsOrderController {
                 JSONObject response = new JSONObject();
 
                 GoodsOrder goodsOrder = orderResponseArrayModel.getData().get(i);
-                response.put("goodsOrder", goodsOrder);
 
                 // TODO: 2020/6/20 这里要做成 定时任务
-                if (goodsOrder.status.equals(Constants.order_status_unpay) && System.currentTimeMillis() - goodsOrder.createTime.getTime() >= 15 * 60 * 1000) {
-                    goodsOrder.status = "05";
-                    goodsOrder.content = "客户原因（15分钟超时未支付，系统自动取消）";
+                if (goodsOrder.status.equals(Constants.order_status_unpay)) {
+                    if (System.currentTimeMillis() - goodsOrder.createTime.getTime() >= 15 * 60 * 1000) {
+                        goodsOrder.status = "05";
+                        goodsOrder.content = "客户原因（15分钟超时未支付，系统自动取消）";
 
-                    JSONObject body = new JSONObject();
-                    body.put("id", goodsOrder.id);
-                    body.put("status", Constants.order_status_cancel);
-                    body.put("content", "客户原因（15分钟超时未支付，系统自动取消）");
+                        JSONObject body = new JSONObject();
+                        body.put("id", goodsOrder.id);
+                        body.put("status", Constants.order_status_cancel);
+                        body.put("content", "客户原因（15分钟超时未支付，系统自动取消）");
 
-                    jbh_mysql_client.updateGoodsOrder(body);
+                        jbh_mysql_client.updateGoodsOrder(body);
+                    } else {
+                        goodsOrder.remainTime = 15 * 60 * 1000 - (System.currentTimeMillis() - goodsOrder.createTime.getTime());
+                    }
                 }
+
+                response.put("goodsOrder", goodsOrder);
 
 
                 JSONArray jsonArray = new JSONArray();
