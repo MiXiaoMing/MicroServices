@@ -97,13 +97,13 @@ public interface JBH_Mysql_Client {
     /********  商品价格  *********/
 
     /**
-     * 商品价格 通过商品ID 获取指定数据
+     * 商品价格 通过商品编号 获取指定数据
      *
-     * @param goodsID 商品ID
+     * @param code 商品编号
      * @return
      */
     @RequestMapping(value = "goods/price/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<GoodsPrice> selectGoodsPrice(@RequestBody String goodsID);
+    public ResponseArrayModel<GoodsPrice> selectGoodsPrice(@RequestBody String code);
 
 
 

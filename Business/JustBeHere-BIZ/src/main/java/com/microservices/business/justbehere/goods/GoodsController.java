@@ -80,7 +80,7 @@ public class GoodsController {
      * @return
      */
     @RequestMapping(value = "/getGoods", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> getGoodsList(@RequestBody String code) {
+    public ResponseModel<JSONObject> getGoods(@RequestBody String code) {
         ResponseModel<JSONObject> responseModel = new ResponseModel<>();
 
         // TODO: 2020/6/19 需要性能优化
@@ -90,7 +90,7 @@ public class GoodsController {
 
             JSONObject jsonObject = new JSONObject();
             goodsDetail2Json(goodsResponseModel.getData(), jsonObject);
-            goodsPrice2Json(goodsResponseModel.getData().id, jsonObject);
+            goodsPrice2Json(goodsResponseModel.getData().code, jsonObject);
             goodsCarousel2Json(goodsResponseModel.getData().code, jsonObject);
 
             responseModel.setData(jsonObject);
@@ -116,10 +116,9 @@ public class GoodsController {
 
     private void goodsPrice2Json(String code, JSONObject object) {
         if (!StringUtil.isEmpty(code)) {
-            ResponseModel<GoodsPrice> goodsPrice = jbh_mysql_client.selectGoodsPrice(code);
+            ResponseArrayModel<GoodsPrice> goodsPrice = jbh_mysql_client.selectGoodsPrice(code);
             if (goodsPrice.isSuccess()) {
-                object.put("price", goodsPrice.getData().price);
-                object.put("discountRatio", goodsPrice.getData().discount);
+                object.put("prices", goodsPrice.getData());
             }
         }
     }

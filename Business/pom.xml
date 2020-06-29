@@ -12,7 +12,6 @@
     <artifactId>business</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>JustBeHere</module>
     </modules>
 
 

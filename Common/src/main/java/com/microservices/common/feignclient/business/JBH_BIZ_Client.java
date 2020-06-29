@@ -192,8 +192,8 @@ public interface JBH_BIZ_Client {
      * @param code 商品编号
      * @return
      */
-    @RequestMapping(value = "/getGoods", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> getGoodsList(@RequestBody String code);
+    @RequestMapping(value = "goods/getGoods", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> getGoods(@RequestBody String code);
 
 
 

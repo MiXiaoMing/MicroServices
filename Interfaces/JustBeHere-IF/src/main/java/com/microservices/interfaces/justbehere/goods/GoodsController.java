@@ -8,6 +8,7 @@ import com.microservices.common.feignclient.data.justbehere.result.Goods;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsClassify;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
 import com.microservices.common.response.ResponseArrayModel;
+import com.microservices.common.response.ResponseJsonModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +72,23 @@ public class GoodsController {
         body.put("start", page * number);
 
         return jbh_biz_client.getGoodsList(body);
+    }
+
+    /**
+     * 获取某一商品详情
+     *
+     * @param code  商品编号
+     * @return
+     */
+    @RequestMapping(value = "/getGoods", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<JSONObject> getGoodsList(@RequestBody String code) {
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+
+        if (StringUtil.isEmpty(code)) {
+            responseModel.setMessage("商品编号为空");
+            return responseModel;
+        }
+
+        return jbh_biz_client.getGoods(code);
     }
 }

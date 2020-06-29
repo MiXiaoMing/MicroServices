@@ -160,6 +160,8 @@ public class CartController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("count", allFromCart.getData().size());
             responseModel.setData(jsonObject);
+
+            responseModel.setSuccess(true);
         }
 
         return responseModel;
