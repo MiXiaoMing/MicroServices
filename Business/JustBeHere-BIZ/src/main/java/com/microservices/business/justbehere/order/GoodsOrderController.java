@@ -73,7 +73,7 @@ public class GoodsOrderController {
      * 获取所有商品订单
      *
      * @param userID
-     * @return GoodsOrder + Array<Goods>
+     * @return GoodsOrder + Array<Goods> +  DeliveryAddress
      */
     @RequestMapping(value = "/getAllGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getAllGoodsOrder(@RequestBody String userID) {
@@ -94,7 +94,7 @@ public class GoodsOrderController {
      * 获取所有商品订单 未结束
      *
      * @param userID
-     * @return GoodsOrder + Array<Goods>
+     * @return GoodsOrder + Array<Goods> +  DeliveryAddress
      */
     @RequestMapping(value = "/getAllUnDoneGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getAllUnDoneGoodsOrder(@RequestBody String userID) {
@@ -125,6 +125,8 @@ public class GoodsOrderController {
 
         ResponseModel<GoodsOrder> goodsOrderResponseModel = jbh_mysql_client.selectGoodsOrder(id);
         if (goodsOrderResponseModel.isSuccess()) {
+            responseModel.setSuccess(true);
+
             GoodsOrder goodsOrder = goodsOrderResponseModel.getData();
 
             // 存入 GoodsOrder
@@ -138,10 +140,12 @@ public class GoodsOrderController {
 
                 ResponseModel<Goods> goodsResponseModel = jbh_mysql_client.selectGoods(jsonObject.getString("code"));
                 if (goodsResponseModel.isSuccess()) {
-                    itemArray.add(goodsResponseModel.getData());
+                    jsonObject.put("icon", goodsResponseModel.getData().icon);
+                    jsonObject.put("title", goodsResponseModel.getData().title);
+                    itemArray.add(jsonObject);
                 }
             }
-            responseModel.getData().put("goods", itemArray);
+            responseModel.getData().put("items", itemArray);
 
             // 存入 DeliveryAddress
             ResponseModel<UserDeliveryAddress> addressResponseModel = userClient.getDeliveryAddress(goodsOrder.deliveryAddressID);
@@ -228,10 +232,18 @@ public class GoodsOrderController {
 
                     ResponseModel<Goods> goodsResponseModel = jbh_mysql_client.selectGoods(goodsObject.getString("code"));
                     if (goodsResponseModel.isSuccess()) {
-                        jsonArray.add(goodsResponseModel.getData());
+                        goodsObject.put("icon", goodsResponseModel.getData().icon);
+                        goodsObject.put("title", goodsResponseModel.getData().title);
+                        jsonArray.add(goodsObject);
                     }
                 }
-                response.put("goods", jsonArray);
+                response.put("items", jsonArray);
+
+                // 存入 DeliveryAddress
+                ResponseModel<UserDeliveryAddress> addressResponseModel = userClient.getDeliveryAddress(goodsOrder.deliveryAddressID);
+                if (addressResponseModel.isSuccess()) {
+                    response.put("deliveryAddress", addressResponseModel.getData());
+                }
 
                 responseArray.add(response);
             }

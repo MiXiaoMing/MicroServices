@@ -6,6 +6,8 @@ import com.microservices.common.feignclient.data.justbehere.body.CartBody;
 import com.microservices.common.feignclient.data.justbehere.body.CartBody;
 import com.microservices.common.feignclient.data.justbehere.result.Cart;
 import com.microservices.common.feignclient.data.justbehere.result.Cart;
+import com.microservices.common.feignclient.data.justbehere.result.Goods;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsPrice;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -78,8 +80,8 @@ public class CartController {
      * @return
      */
     @RequestMapping(value = "/getAllFromCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<Cart> getAllFromCart(@RequestBody String userID) {
-        ResponseArrayModel<Cart> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<JSONObject> getAllFromCart(@RequestBody String userID) {
+        ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
 
         if (StringUtil.isEmpty(userID)) {
             responseModel.setMessage("用户ID用空");
@@ -89,7 +91,35 @@ public class CartController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("userID", userID);
 
-        return serviceClient.selectCartList(jsonObject);
+        ResponseArrayModel<Cart> cartListResponse = serviceClient.selectCartList(jsonObject);
+        if (cartListResponse.isSuccess()) {
+            responseModel.setSuccess(true);
+
+            for (int i = 0; i < cartListResponse.getData().size(); ++i) {
+                JSONObject cartObject = new JSONObject();
+
+                Cart cart = cartListResponse.getData().get(i);
+                cartObject.put("cart", cart);
+
+                ResponseModel<Goods> goodsResponseModel = serviceClient.selectGoods(cart.goodsID);
+                if (goodsResponseModel.isSuccess()) {
+                    cartObject.put("goods", goodsResponseModel.getData());
+                }
+
+                ResponseArrayModel<GoodsPrice> goodsPriceResponseArrayModel = serviceClient.selectGoodsPrice(cart.goodsID);
+                if (goodsPriceResponseArrayModel.isSuccess()) {
+                    for (int j = 0; j < goodsPriceResponseArrayModel.getData().size(); ++j) {
+                        if (goodsPriceResponseArrayModel.getData().get(j).id.equals(cart.typeID)) {
+                            cartObject.put("price", goodsPriceResponseArrayModel.getData().get(j));
+                        }
+                    }
+                }
+
+                responseModel.getData().add(cartObject);
+            }
+        }
+
+        return responseModel;
     }
 
 }

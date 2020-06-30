@@ -115,8 +115,8 @@ public class CartController {
      * 获取用户 所有购物车
      */
     @RequestMapping(value = "/getAllFromCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<Cart> getAllFromCart(@RequestHeader("token") String token) {
-        ResponseArrayModel<Cart> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<JSONObject> getAllFromCart(@RequestHeader("token") String token) {
+        ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
 
         if (StringUtil.isEmpty(token)) {
             responseModel.setErrCode("401");
@@ -154,7 +154,7 @@ public class CartController {
             return responseModel;
         }
 
-        ResponseArrayModel<Cart> allFromCart = jbh_biz_client.getAllFromCart(tokenResponse.getData());
+        ResponseArrayModel<JSONObject> allFromCart = jbh_biz_client.getAllFromCart(tokenResponse.getData());
 
         if (allFromCart.isSuccess()) {
             JSONObject jsonObject = new JSONObject();

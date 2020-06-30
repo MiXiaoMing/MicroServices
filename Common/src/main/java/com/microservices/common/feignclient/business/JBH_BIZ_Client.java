@@ -268,7 +268,7 @@ public interface JBH_BIZ_Client {
      * @return
      */
     @RequestMapping(value = "cart/getAllFromCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<Cart> getAllFromCart(@RequestBody String userID);
+    public ResponseArrayModel<JSONObject> getAllFromCart(@RequestBody String userID);
 
 
 
@@ -356,7 +356,7 @@ public interface JBH_BIZ_Client {
      * 获取所有商品订单
      *
      * @param userID
-     * @return GoodsOrder + Array<Goods>
+     * @return GoodsOrder + Array<Goods> +  DeliveryAddress
      */
     @RequestMapping(value = "order/getAllGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getAllGoodsOrder(@RequestBody String userID);
@@ -365,7 +365,7 @@ public interface JBH_BIZ_Client {
      * 获取所有商品订单 未结束
      *
      * @param userID
-     * @return GoodsOrder + Array<Goods>
+     * @return GoodsOrder + Array<Goods> +  DeliveryAddress
      */
     @RequestMapping(value = "order/getAllUnDoneGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getAllUnDoneGoodsOrder(@RequestBody String userID);

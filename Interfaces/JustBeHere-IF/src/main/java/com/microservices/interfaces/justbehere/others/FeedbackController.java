@@ -32,7 +32,7 @@ public class FeedbackController {
      * 添加 新用户反馈
      */
     @RequestMapping(value = "/addFeedback", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<String> addGoodsOrder(@RequestHeader("token") String token, @RequestBody Feedback body) {
+    public ResponseModel<String> addGoodsOrder(@RequestHeader("token") String token, @RequestBody String content) {
         ResponseModel<String> responseModel = new ResponseModel<>();
 
         if (StringUtil.isEmpty(token)) {
@@ -44,10 +44,13 @@ public class FeedbackController {
         ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
         if (!tokenResponse.isSuccess()) {
             responseModel.setMessage(tokenResponse.getMessage());
+            responseModel.setErrCode("401");
             return responseModel;
         }
 
+        Feedback body = new Feedback();
         body.userID = tokenResponse.getData();
+        body.content = content;
 
         return jbh_biz_client.addFeedback(body);
     }
