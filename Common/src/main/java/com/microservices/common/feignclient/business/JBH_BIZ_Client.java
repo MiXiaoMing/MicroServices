@@ -369,4 +369,30 @@ public interface JBH_BIZ_Client {
      */
     @RequestMapping(value = "order/getAllUnDoneGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseArrayModel<JSONObject> getAllUnDoneGoodsOrder(@RequestBody String userID);
+
+
+
+
+
+
+    /************  意见反馈  *************/
+
+    /**
+     * 添加 新用户反馈
+     *
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "others/addFeedback", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<String> addFeedback(@RequestBody Feedback body);
+
+
+    /**
+     * 获取所有用户反馈数据
+     *
+     * @param body 通过 start（开始），number（个数）
+     * @return
+     */
+    @RequestMapping(value = "others/getAllFeedback", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<Feedback> getAllFeedback(@RequestBody JSONObject body);
 }

@@ -296,4 +296,33 @@ public interface JBH_Mysql_Client {
      */
     @RequestMapping(value = "cart/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<Cart> deleteFromCart(@RequestBody String id);
+
+
+
+
+
+
+
+    /********  意见反馈  *********/
+
+    /**
+     * 用户反馈 添加新数据
+     *
+     * @param body
+     * @return
+     */
+    @RequestMapping(value = "feedback/insert", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<String> insertFeedback(@RequestBody Feedback body);
+
+    /**
+     * 用户反馈 列表获取
+     *  按照 反馈时间 降序 排序，
+     *
+     * @param body 通过 start（开始），number（个数）
+     * @return
+     */
+    @RequestMapping(value = "feedback/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<Feedback> selectFeedbackList(@RequestBody JSONObject body);
+
+
 }
