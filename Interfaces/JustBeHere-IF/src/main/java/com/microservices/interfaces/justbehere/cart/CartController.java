@@ -29,24 +29,9 @@ public class CartController {
      * 添加 新购物车
      */
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<Cart> addToCart(@RequestHeader("token") String token,
-                                         @RequestBody CartBody body) {
-        ResponseModel<Cart> responseModel = new ResponseModel<>();
+    public ResponseModel<Cart> addToCart(@RequestHeader("userID") String userID, @RequestBody CartBody body) {
 
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        body.userID = tokenResponse.getData();
-
+        body.userID = userID;
         return jbh_biz_client.addToCart(body);
     }
 
@@ -54,21 +39,8 @@ public class CartController {
      * 更新 购物车
      */
     @RequestMapping(value = "/updateToCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<Cart> updateToCart(@RequestHeader("token") String token,
-                                                                    @RequestBody CartBody body) {
+    public ResponseModel<Cart> updateToCart(@RequestBody CartBody body) {
         ResponseModel<Cart> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
 
         if (StringUtil.isEmpty(body.id)) {
             responseModel.setMessage("购物车ID为空");
@@ -87,21 +59,8 @@ public class CartController {
      * 删除 购物车
      */
     @RequestMapping(value = "/deleteFromCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<Cart> deleteFromCart(@RequestHeader("token") String token,
-                                                                    @RequestBody String id) {
+    public ResponseModel<Cart> deleteFromCart(@RequestBody String id) {
         ResponseModel<Cart> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
 
         if (StringUtil.isEmpty(id)) {
             responseModel.setMessage("购物车ID为空");
@@ -115,46 +74,18 @@ public class CartController {
      * 获取用户 所有购物车
      */
     @RequestMapping(value = "/getAllFromCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> getAllFromCart(@RequestHeader("token") String token) {
-        ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        return jbh_biz_client.getAllFromCart(tokenResponse.getData());
+    public ResponseArrayModel<JSONObject> getAllFromCart(@RequestHeader("userID") String userID) {
+        return jbh_biz_client.getAllFromCart(userID);
     }
 
     /**
      * 获取用户 所有购物车
      */
     @RequestMapping(value = "/getAllCountFromCart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> getAllCountFromCart(@RequestHeader("token") String token) {
+    public ResponseModel<JSONObject> getAllCountFromCart(@RequestHeader("userID") String userID) {
         ResponseModel<JSONObject> responseModel = new ResponseModel<>();
 
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        ResponseArrayModel<JSONObject> allFromCart = jbh_biz_client.getAllFromCart(tokenResponse.getData());
+        ResponseArrayModel<JSONObject> allFromCart = jbh_biz_client.getAllFromCart(userID);
 
         if (allFromCart.isSuccess()) {
             JSONObject jsonObject = new JSONObject();

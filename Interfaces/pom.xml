@@ -12,7 +12,7 @@
     <artifactId>interfaces</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>JustBeHere</module>
+
     </modules>
 
 

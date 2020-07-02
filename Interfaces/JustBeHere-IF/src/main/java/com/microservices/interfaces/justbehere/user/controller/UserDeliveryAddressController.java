@@ -28,23 +28,11 @@ public class UserDeliveryAddressController {
      * 添加 新收货地址
      */
     @RequestMapping(value = "/addDeliveryAddress", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserDeliveryAddress> addDeliveryAddress(@RequestHeader("token") String token,
+    public ResponseModel<UserDeliveryAddress> addDeliveryAddress(@RequestHeader("userID") String userID,
                                                                  @RequestBody UserDeliveryAddressBody body) {
         ResponseModel<UserDeliveryAddress> responseModel = new ResponseModel<>();
 
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        body.userID = tokenResponse.getData();
+        body.userID = userID;
 
         if (!ValidateUtil.isCellphone(body.phoneNumber)) {
             responseModel.setMessage("请输入正确手机号");
@@ -68,21 +56,8 @@ public class UserDeliveryAddressController {
      * 更新 收货地址
      */
     @RequestMapping(value = "/updateDeliveryAddress", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserDeliveryAddress> updateDeliveryAddress(@RequestHeader("token") String token,
+    public ResponseModel<UserDeliveryAddress> updateDeliveryAddress(@RequestHeader("userID") String userID,
                                                                     @RequestBody UserDeliveryAddressBody body) {
-        ResponseModel<UserDeliveryAddress> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
 
         return jbh_biz_userClient.updateDeliveryAddress(body);
     }
@@ -91,21 +66,9 @@ public class UserDeliveryAddressController {
      * 删除 收货地址
      */
     @RequestMapping(value = "/deleteDeliveryAddress", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserDeliveryAddress> deleteDeliveryAddress(@RequestHeader("token") String token,
+    public ResponseModel<UserDeliveryAddress> deleteDeliveryAddress(@RequestHeader("userID") String userID,
                                                                     @RequestBody String id) {
         ResponseModel<UserDeliveryAddress> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
 
         if (StringUtil.isEmpty(id)) {
             responseModel.setMessage("收货地址ID为空");
@@ -119,22 +82,7 @@ public class UserDeliveryAddressController {
      * 获取用户 所有收货地址
      */
     @RequestMapping(value = "/getAllDeliveryAddress", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<UserDeliveryAddress> getAllDeliveryAddress(@RequestHeader("token") String token) {
-        ResponseArrayModel<UserDeliveryAddress> responseModel = new ResponseArrayModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        return jbh_biz_userClient.getAllDeliveryAddress(tokenResponse.getData());
+    public ResponseArrayModel<UserDeliveryAddress> getAllDeliveryAddress(@RequestHeader("userID") String userID) {
+        return jbh_biz_userClient.getAllDeliveryAddress(userID);
     }
 }

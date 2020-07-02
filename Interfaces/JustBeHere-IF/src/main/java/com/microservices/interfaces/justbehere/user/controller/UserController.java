@@ -33,27 +33,13 @@ public class UserController {
 
     /**
      * 获取用户基本信息
-     * @param token
+     * @param userID
      * @return
      */
     @RequestMapping(value = "/info", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<UserBase> info(@RequestHeader("token") String token) {
-        ResponseModel<UserBase> responseModel = new ResponseModel<>();
+    public ResponseModel<UserBase> info(@RequestHeader("userID") String userID) {
 
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        return jbh_biz_client.getUser(tokenResponse.getData());
+        return jbh_biz_client.getUser(userID);
     }
 
     public ResponseModel<JSONObject> infoFall(JSONObject params) {

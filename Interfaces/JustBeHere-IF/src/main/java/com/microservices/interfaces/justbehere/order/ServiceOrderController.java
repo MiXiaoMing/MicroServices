@@ -28,22 +28,8 @@ public class ServiceOrderController {
      * 添加 新服务订单
      */
     @RequestMapping(value = "/addServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> addServiceOrder(@RequestHeader("token") String token, @RequestBody ServiceOrderBody body) {
-        ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        body.userID = tokenResponse.getData();
+    public ResponseModel<ServiceOrder> addServiceOrder(@RequestHeader("userID") String userID, @RequestBody ServiceOrderBody body) {
+        body.userID = userID;
 
         return jbh_biz_client.addServiceOrder(body);
     }
@@ -52,21 +38,8 @@ public class ServiceOrderController {
      * 更新 服务订单
      */
     @RequestMapping(value = "/updateServiceOrderStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> updateServiceOrderStatus(@RequestHeader("token") String token,
-                                                    @RequestBody ServiceOrderBody body) {
+    public ResponseModel<ServiceOrder> updateServiceOrderStatus(@RequestHeader("userID") String userID, @RequestBody ServiceOrderBody body) {
         ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
 
         if (StringUtil.isEmpty(body.id)) {
             responseModel.setMessage("订单ID为空");
@@ -96,45 +69,17 @@ public class ServiceOrderController {
      * 获取用户 所有服务订单
      */
     @RequestMapping(value = "/getAllServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> getAllServiceOrder(@RequestHeader("token") String token) {
-        ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<JSONObject> getAllServiceOrder(@RequestHeader("userID") String userID) {
 
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        return jbh_biz_client.getAllServiceOrder(tokenResponse.getData());
+        return jbh_biz_client.getAllServiceOrder(userID);
     }
 
     /**
      * 获取用户 所有未完成服务订单
      */
     @RequestMapping(value = "/getAllUndoneServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> getAllUndoenServiceOrder(@RequestHeader("token") String token) {
-        ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<JSONObject> getAllUndoenServiceOrder(@RequestHeader("userID") String userID) {
 
-        if (StringUtil.isEmpty(token)) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage("请登录后重试");
-            return responseModel;
-        }
-
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
-            responseModel.setErrCode("401");
-            responseModel.setMessage(tokenResponse.getMessage());
-            return responseModel;
-        }
-
-        return jbh_biz_client.getAllUnDoneServiceOrder(tokenResponse.getData());
+        return jbh_biz_client.getAllUnDoneServiceOrder(userID);
     }
 }
