@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = ClientConstants.module_middle_platform_sms)
+@FeignClient(value = ClientConstants.module_middle_platform_notify)
 public interface NotifyClient {
 
     /********  sms  *********/

@@ -6,7 +6,7 @@
 	  <![CDATA[
 		  id, service_time as serviceTime, service_code as serviceCode,
 		  service_name as serviceName, service_items as serviceItems,
-		  remind, price_total as totalPrice, price_discount as discountPrice, price_pay as payPrice,
+		  remind, price_total as totalPrice, price_discount as discountPrice, price_pay as payPrice
         ]]>
     </sql>
 
@@ -78,7 +78,7 @@
         <include refid="column"/>
           from t_order_service
           where id in
-          <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+          <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
             #{id}
           </foreach>
           order by serviceTime desc

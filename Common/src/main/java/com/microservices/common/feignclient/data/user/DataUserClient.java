@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = ClientConstants.module_middle_platform_user)
+@FeignClient(value = ClientConstants.module_data_user)
 public interface DataUserClient {
 
     /************  用户 基本信息 *************/

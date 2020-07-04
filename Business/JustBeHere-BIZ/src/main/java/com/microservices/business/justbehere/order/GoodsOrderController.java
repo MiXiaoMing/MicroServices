@@ -117,7 +117,7 @@ public class GoodsOrderController {
             for (int i = 0; i < orderResponseArrayModel.getData().size(); ++i) {
                 Order order = orderResponseArrayModel.getData().get(i);
                 ids.add(order.id);
-                orderMap.put(order.id, orderResponseArrayModel.getData().get(i));
+                orderMap.put(order.id, order);
             }
 
             ResponseArrayModel<GoodsOrder> goodsOrderResponseArrayModel = jbh_mysql_client.selectGoodsOrderList(ids);

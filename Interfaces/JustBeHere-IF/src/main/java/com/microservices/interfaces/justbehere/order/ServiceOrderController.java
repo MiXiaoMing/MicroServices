@@ -2,9 +2,11 @@ package com.microservices.interfaces.justbehere.order;
 
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.business.JBH_BIZ_Client;
+import com.microservices.common.feignclient.business.body.CreateServiceOrderBody;
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
+import com.microservices.common.feignclient.data.order.result.Order;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -28,7 +30,7 @@ public class ServiceOrderController {
      * 添加 新服务订单
      */
     @RequestMapping(value = "/addServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> addServiceOrder(@RequestHeader("userID") String userID, @RequestBody ServiceOrderBody body) {
+    public ResponseModel<JSONObject> addServiceOrder(@RequestHeader("userID") String userID, @RequestBody CreateServiceOrderBody body) {
         body.userID = userID;
 
         return jbh_biz_client.addServiceOrder(body);
@@ -38,18 +40,7 @@ public class ServiceOrderController {
      * 更新 服务订单
      */
     @RequestMapping(value = "/updateServiceOrderStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> updateServiceOrderStatus(@RequestHeader("userID") String userID, @RequestBody ServiceOrderBody body) {
-        ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(body.id)) {
-            responseModel.setMessage("订单ID为空");
-            return responseModel;
-        }
-
-        if (StringUtil.isEmpty(body.status)) {
-            responseModel.setMessage("订单状态为空");
-            return responseModel;
-        }
+    public ResponseModel<Order> updateServiceOrderStatus(@RequestHeader("userID") String userID, @RequestBody JSONObject body) {
 
         return jbh_biz_client.updateServiceOrder(body);
     }

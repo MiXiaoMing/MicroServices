@@ -7,6 +7,7 @@ import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.data.cache.body.TokenBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.feignclient.data.user.DataUserClient;
+import com.microservices.common.feignclient.middleplatform.NotifyClient;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;

@@ -21,10 +21,8 @@ public class ClientConstants {
      * 中台层
      */
 
-    // 短信服务
-    public static final String module_middle_platform_sms = "mp-sms";
-    // 统一用户
-    public static final String module_middle_platform_user = "mp-user";
+    // 通知服务 - 短信、邮件
+    public static final String module_middle_platform_notify = "mp-notify";
 
 
     /**

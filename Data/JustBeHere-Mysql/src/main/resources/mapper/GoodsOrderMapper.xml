@@ -3,9 +3,7 @@
 <mapper namespace="com.microservices.data.justbehere.mysql.GoodsOrderMapper">
 
     <sql id="column">
-	  <![CDATA[
-		  id, goods_items as goodsItems, remind, price,
-        ]]>
+		  id, goods_items as goodsItems, remind, price
     </sql>
 
 
@@ -41,14 +39,15 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.List" resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsOrder">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsOrder">
         select
         <include refid="column"/>
-          from t_order_goods
-          where id in
-          <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        from t_order_goods
+        where id in
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
             #{id}
-          </foreach>
+        </foreach>
     </select>
 
     <select id="select" parameterType="java.util.Map"

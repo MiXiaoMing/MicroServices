@@ -91,7 +91,7 @@ public class GoodsOrderController {
      * @return
      */
     @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<GoodsOrder> selectList(@RequestBody List<String> body) {
+    public ResponseArrayModel<GoodsOrder> selectList(@RequestBody ArrayList<String> body) {
         ResponseArrayModel<GoodsOrder> responseModel = new ResponseArrayModel<>();
 
         List<GoodsOrder> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.GoodsOrderMapper.selectList", body);

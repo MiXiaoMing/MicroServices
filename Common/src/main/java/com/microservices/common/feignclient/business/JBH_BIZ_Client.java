@@ -3,11 +3,13 @@ package com.microservices.common.feignclient.business;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.ClientConstants;
 import com.microservices.common.feignclient.business.body.CreateGoodsOrderBody;
+import com.microservices.common.feignclient.business.body.CreateServiceOrderBody;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.data.justbehere.body.CartBody;
 import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.*;
+import com.microservices.common.feignclient.data.order.result.Order;
 import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
 import com.microservices.common.feignclient.data.user.body.UserDeviceBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
@@ -283,16 +285,16 @@ public interface JBH_BIZ_Client {
      * @return
      */
     @RequestMapping(value = "order/addServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> addServiceOrder(@RequestBody ServiceOrderBody body);
+    public ResponseModel<JSONObject> addServiceOrder(@RequestBody CreateServiceOrderBody body);
 
     /**
      * 更新 服务订单 状态
      *
-     * @param body
+     * @param body 通过id, status, content
      * @return
      */
     @RequestMapping(value = "order/updateServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> updateServiceOrder(@RequestBody ServiceOrderBody body);
+    public ResponseModel<Order> updateServiceOrder(@RequestBody JSONObject body);
 
     /**
      * 获取服务订单详情
@@ -342,7 +344,7 @@ public interface JBH_BIZ_Client {
      * @return
      */
     @RequestMapping(value = "order/updateGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<GoodsOrder> updateGoodsOrder(@RequestBody JSONObject body);
+    public ResponseModel<Order> updateGoodsOrder(@RequestBody JSONObject body);
 
     /**
      * 获取商品订单详情

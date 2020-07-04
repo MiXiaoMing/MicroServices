@@ -2,14 +2,17 @@ package com.microservices.interfaces.justbehere.order;
 
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.business.JBH_BIZ_Client;
+import com.microservices.common.feignclient.business.body.CreateGoodsOrderBody;
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
 import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
+import com.microservices.common.feignclient.data.order.result.Order;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +33,7 @@ public class GoodsOrderController {
      * 添加 新商品订单
      */
     @RequestMapping(value = "/addGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<GoodsOrder> addGoodsOrder(@RequestHeader("userID") String userID, @RequestBody GoodsOrderBody body) {
+    public ResponseModel<JSONObject> addGoodsOrder(@RequestHeader("userID") String userID, @RequestBody CreateGoodsOrderBody body) {
 
         body.userID = userID;
 
@@ -41,24 +44,8 @@ public class GoodsOrderController {
      * 更新 商品订单
      */
     @RequestMapping(value = "/updateGoodsOrderStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<GoodsOrder> updateGoodsOrderStatus(@RequestBody GoodsOrderBody body) {
-        ResponseModel<GoodsOrder> responseModel = new ResponseModel<>();
-
-        if (StringUtil.isEmpty(body.id)) {
-            responseModel.setMessage("订单ID为空");
-            return responseModel;
-        }
-
-        if (StringUtil.isEmpty(body.status)) {
-            responseModel.setMessage("订单状态为空");
-            return responseModel;
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", body.id);
-        jsonObject.put("status", body.status);
-
-        return jbh_biz_client.updateGoodsOrder(jsonObject);
+    public ResponseModel<Order> updateGoodsOrderStatus(@RequestBody JSONObject body) {
+        return jbh_biz_client.updateGoodsOrder(body);
     }
 
     /**
