@@ -1,4 +1,4 @@
-package com.microservices.middleplatform.user;
+package com.microservices.middleplatform.notify;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,10 +10,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableEurekaClient
 @EnableCircuitBreaker
 @EnableFeignClients(basePackages = "com.microservices")
-public class MpUserApplication {
+public class NotifyApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MpUserApplication.class, args);
+        SpringApplication.run(NotifyApplication.class, args);
     }
 
 }

@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.microservices.middleplatform</groupId>
-    <artifactId>mp-sms</artifactId>
+    <artifactId>mp-notify</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mp-sms</name>
-    <description>sms middle platform</description>
+    <name>mp-notify</name>
+    <description>中台层 通知消息</description>
 
     <properties>
         <java.version>1.8</java.version>

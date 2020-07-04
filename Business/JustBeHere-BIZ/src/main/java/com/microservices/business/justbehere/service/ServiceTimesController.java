@@ -97,7 +97,7 @@ public class ServiceTimesController {
                 long time = zeroTime + times.get(j).value * 60 * 60 * 1000;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("serviceTime", new Timestamp(time));
-                ResponseArrayModel<ServiceOrder> serviceOrderResponseArrayModel = jbh_mysql_client.selectServiceOrderList(jsonObject);
+                ResponseArrayModel<ServiceOrder> serviceOrderResponseArrayModel = jbh_mysql_client.selectServiceOrderListByTime(jsonObject);
                 if (serviceOrderResponseArrayModel.isSuccess()) {
                     int count = serviceOrderResponseArrayModel.getData().size();
 

@@ -2,6 +2,7 @@ package com.microservices.common.feignclient.business;
 
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.ClientConstants;
+import com.microservices.common.feignclient.business.body.CreateGoodsOrderBody;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.data.justbehere.body.CartBody;
 import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
@@ -332,7 +333,7 @@ public interface JBH_BIZ_Client {
      * @return
      */
     @RequestMapping(value = "order/addGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<GoodsOrder> addGoodsOrder(@RequestBody GoodsOrderBody body);
+    public ResponseModel<JSONObject> addGoodsOrder(@RequestBody CreateGoodsOrderBody body);
 
     /**
      * 更新 商品订单 状态

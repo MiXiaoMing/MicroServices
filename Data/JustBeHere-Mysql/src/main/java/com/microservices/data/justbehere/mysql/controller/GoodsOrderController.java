@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/order/goods")
@@ -35,6 +32,7 @@ public class GoodsOrderController {
 
     /**
      * 商品订单 添加新数据
+     *
      * @param body
      * @return
      */
@@ -43,16 +41,10 @@ public class GoodsOrderController {
         ResponseModel<String> responseModel = new ResponseModel<>();
 
         GoodsOrder entity = new GoodsOrder();
-        entity.id = snowflakeIdService.getId();
-        entity.userID = body.userID;
-        entity.tradeID = entity.id + System.currentTimeMillis();
-        entity.deliveryAddressID = body.deliveryAddressID;
+        entity.id = body.id;
         entity.goodsItems = body.goodsItems;
         entity.price = body.price;
         entity.remind = body.remind;
-        entity.status = "01";
-        entity.createTime = new Date();
-        entity.delflag = "A";
 
         int count = sqlSessionTemplate.insert("com.microservices.data.justbehere.mysql.GoodsOrderMapper.insert", entity);
         if (count > 0) {
@@ -93,69 +85,21 @@ public class GoodsOrderController {
     }
 
     /**
-     * 商品订单 列表获取 通过userID, status
-     * @param body
+     * 商品订单 列表获取 通过id列表
+     *
+     * @param body  ID列表
      * @return
      */
     @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<GoodsOrder> selectList(@RequestBody JSONObject body) {
+    public ResponseArrayModel<GoodsOrder> selectList(@RequestBody List<String> body) {
         ResponseArrayModel<GoodsOrder> responseModel = new ResponseArrayModel<>();
 
-        Map<String, Object> map = new HashMap<>();
-
-        if (!StringUtil.isEmpty(body.getString("userID"))) {
-            map.put("userID", body.getString("userID"));
-        }
-
-        if (!StringUtil.isEmpty(body.getString("status"))) {
-            map.put("status", body.getString("status"));
-        }
-
-        List<GoodsOrder> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.GoodsOrderMapper.selectList", map);
+        List<GoodsOrder> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.GoodsOrderMapper.selectList", body);
         if (entities == null) {
-            responseModel.setMessage("该用户没有订单数据：" + body.toJSONString());
+            responseModel.setMessage("没有订单数据：" + body.toString());
         } else {
             responseModel.setSuccess(true);
             responseModel.setData(entities);
-        }
-
-        return responseModel;
-    }
-
-    /**
-     * 商品订单 更新
-     * @param body 通过id, status, content
-     * @return
-     */
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<GoodsOrder> update(@RequestBody JSONObject body) {
-        ResponseModel<GoodsOrder> responseModel = new ResponseModel<>();
-
-        Map<String, Object> map = new HashMap<>();
-
-        if (StringUtil.isEmpty(body.getString("id"))) {
-            responseModel.setMessage("更新ID不能为空");
-            return responseModel;
-        }
-
-        map.put("id", body.getString("id"));
-
-        if (!StringUtil.isEmpty(body.getString("status"))) {
-            map.put("status", body.getString("status"));
-        }
-
-        if (!StringUtil.isEmpty(body.getString("content"))) {
-            map.put("content", body.getString("content"));
-        }
-
-        map.put("updateTime", new Date());
-        map.put("delflag", "U");
-
-        int count = sqlSessionTemplate.insert("com.microservices.data.justbehere.mysql.GoodsOrderMapper.update", map);
-        if (count == 0) {
-            responseModel.setMessage("更新用户商品订单失败");
-        } else {
-            return select(body.getString("id"));
         }
 
         return responseModel;

@@ -2,16 +2,23 @@ package com.microservices.business.justbehere.order;
 
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.constants.Constants;
+import com.microservices.common.feignclient.business.body.CreateServiceOrderBody;
 import com.microservices.common.feignclient.data.justbehere.JBH_Mysql_Client;
+import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
 import com.microservices.common.feignclient.data.justbehere.result.ServicePrice;
+import com.microservices.common.feignclient.data.order.DataOrderClient;
+import com.microservices.common.feignclient.data.order.body.OrderBody;
+import com.microservices.common.feignclient.data.order.result.Order;
+import com.microservices.common.feignclient.data.user.DataUserClient;
 import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
-import com.microservices.common.feignclient.middleplatform.UserClient;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseJsonModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
+import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +27,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/order")
 public class ServiceOrderController {
 
     @Autowired
-    JBH_Mysql_Client serviceClient;
+    JBH_Mysql_Client jbh_mysql_client;
 
     @Autowired
-    UserClient userClient;
+    DataOrderClient orderClient;
+
+    @Autowired
+    DataUserClient userClient;
 
 
     private final Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
@@ -42,65 +55,74 @@ public class ServiceOrderController {
      * 添加 新服务订单
      *
      * @param body
-     * @return
+     * @return Order + ServiceOrder
      */
     @RequestMapping(value = "/addServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> addServiceOrder(@RequestBody ServiceOrderBody body) {
-        ResponseModel<ServiceOrder> responseModel = new ResponseModel<>();
+    public ResponseModel<JSONObject> addServiceOrder(@RequestBody CreateServiceOrderBody body) {
+        ResponseModel<JSONObject> responseModel = new ResponseModel<>();
 
         // TODO: 2020/6/23 这里需要重新计算 金额
+        // TODO: 2020/7/3 需要 使用 redis 去库存
 
-        ResponseModel<String> addResponse = serviceClient.insertServiceOrder(body);
-        if (!addResponse.isSuccess()) {
-            responseModel.setMessage(addResponse.getMessage());
-            return responseModel;
+        OrderBody orderBody = new OrderBody();
+        orderBody.userID = body.userID;
+        orderBody.deliveryAddressID = body.deliveryAddressID;
+        ResponseModel<Order> orderResponseModel = orderClient.addOrder(orderBody);
+
+        if (orderResponseModel.isSuccess()) {
+            responseModel.setSuccess(true);
+
+            Order order = orderResponseModel.getData();
+            responseModel.getData().put("order", order);
+
+            ServiceOrderBody serviceOrderBody = new ServiceOrderBody();
+            serviceOrderBody.id = order.id;
+            serviceOrderBody.serviceName = body.serviceName;
+            serviceOrderBody.serviceCode = body.serviceCode;
+            serviceOrderBody.serviceItems = body.serviceItems;
+            serviceOrderBody.serviceTime = body.serviceTime;
+            serviceOrderBody.remind = body.remind;
+            serviceOrderBody.totalPrice = body.totalPrice;
+            serviceOrderBody.discountPrice = body.discountPrice;
+            serviceOrderBody.payPrice = body.payPrice;
+            ResponseModel<String> addResponse = jbh_mysql_client.insertServiceOrder(serviceOrderBody);
+
+            if (!addResponse.isSuccess()) {
+                responseModel.getData().put("serviceOrder", addResponse.getData());
+            }
         }
 
-        return serviceClient.selectServiceOrder(addResponse.getData());
+        return responseModel;
     }
 
     /**
      * 更新 服务订单 状态
      *
-     * @param body
-     * @return
+     * @param body 通过id, status, content
+     * @return Order
      */
-    @RequestMapping(value = "/updateServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> updateServiceOrder(@RequestBody ServiceOrderBody body) {
-        return serviceClient.updateServiceOrder(body);
+    @RequestMapping(value = "/updateServiceOrderStatus", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseModel<Order> updateServiceOrder(@RequestBody JSONObject body) {
+        return orderClient.updateOrder(body);
     }
 
     /**
      * 获取服务订单详情
      *
      * @param id  订单ID
-     * @return ServiceOrder + Array<ServicePrice> + DeliveryAddress
+     * @return Order + ServiceOrder + Array<ServicePrice> + DeliveryAddress
      */
     @RequestMapping(value = "/getServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> getServiceOrder(@RequestBody String id) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        ResponseModel<ServiceOrder> orderResponseModel = serviceClient.selectServiceOrder(id);
+        ResponseModel<Order> orderResponseModel = orderClient.getOrder(id);
         if (orderResponseModel.isSuccess()) {
             responseModel.setSuccess(true);
 
-            ServiceOrder serviceOrder = orderResponseModel.getData();
-
-            // 存入 ServiceOrder
-            responseModel.getData().put("serviceOrder", serviceOrder);
-
-            if (serviceOrder != null) {
-                // 存入 ServicePrice
-                ResponseArrayModel<ServicePrice> servicePrice = serviceClient.selectServicePriceList(serviceOrder.serviceCode);
-                if (servicePrice.isSuccess()) {
-                    responseModel.getData().put("prices", servicePrice.getData());
-                }
-
-                // 存入 DeliveryAddress
-                ResponseModel<UserDeliveryAddress> addressResponseModel = userClient.getDeliveryAddress(serviceOrder.deliveryAddressID);
-                if (addressResponseModel.isSuccess()) {
-                    responseModel.getData().put("deliveryAddress", addressResponseModel.getData());
-                }
+            ResponseModel<ServiceOrder> serviceOrderResponseModel = jbh_mysql_client.selectServiceOrder(id);
+            if (serviceOrderResponseModel.isSuccess()) {
+                responseModel.setData(joinServiceDetail(orderResponseModel.getData(), serviceOrderResponseModel.getData()));
             }
         }
 
@@ -117,14 +139,13 @@ public class ServiceOrderController {
     public ResponseArrayModel<JSONObject> getAllServiceOrder(@RequestBody String userID) {
         ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
 
-        if (StringUtil.isEmpty(userID)) {
-            responseModel.setMessage("用户ID用空");
-            return responseModel;
+        ResponseArrayModel<Order> orderResponseArrayModel = orderClient.getAllOrder(userID);
+        if (orderResponseArrayModel.isSuccess()) {
+            responseModel.setSuccess(true);
+
+            joinServiceOrderList(orderResponseArrayModel.getData(), responseModel.getData());
         }
 
-        getServerOrderList(userID, "", responseModel.getData());
-
-        responseModel.setSuccess(true);
         return responseModel;
     }
 
@@ -139,63 +160,58 @@ public class ServiceOrderController {
     public ResponseArrayModel<JSONObject> getAllUnDoneServiceOrder(@RequestBody String userID) {
         ResponseArrayModel<JSONObject> responseModel = new ResponseArrayModel<>();
 
-        if (StringUtil.isEmpty(userID)) {
-            responseModel.setMessage("用户ID用空");
-            return responseModel;
+        ResponseArrayModel<Order> orderResponseArrayModel = orderClient.getAllUnDoneOrder(userID);
+        if (orderResponseArrayModel.isSuccess()) {
+            responseModel.setSuccess(true);
+
+            joinServiceOrderList(orderResponseArrayModel.getData(), responseModel.getData());
         }
 
-        getServerOrderList(userID, Constants.order_status_unpay, responseModel.getData());
-        getServerOrderList(userID, Constants.order_status_undone, responseModel.getData());
-        getServerOrderList(userID, Constants.order_status_ing, responseModel.getData());
-
-        responseModel.setSuccess(true);
         return responseModel;
     }
 
-    private void getServerOrderList(String userID, String status, List<JSONObject> responseArray) {
-        JSONObject jsonObject = new JSONObject();
-        if (!StringUtil.isEmpty(userID)) {
-            jsonObject.put("userID", userID);
+    private void joinServiceOrderList(List<Order> orders, List<JSONObject> responseArray) {
+        List<String> ids = new ArrayList<>();
+        Map<String, Order> orderMap = new HashMap<>();
+        for (int i = 0; i < orders.size(); ++i) {
+            Order order = orders.get(i);
+            ids.add(order.id);
+            orderMap.put(order.id, orders.get(i));
         }
 
-        if (!StringUtil.isEmpty(status)) {
-            jsonObject.put("status", status);
-        }
-
-        ResponseArrayModel<ServiceOrder> orderResponseArrayModel = serviceClient.selectServiceOrderList(jsonObject);
-        if (orderResponseArrayModel.isSuccess()) {
-            for (int i = 0; i < orderResponseArrayModel.getData().size(); ++i) {
-                JSONObject response = new JSONObject();
-
-                ServiceOrder serviceOrder = orderResponseArrayModel.getData().get(i);
-
-                // TODO: 2020/6/20 这里要做成 定时任务
-                if (serviceOrder.status.equals(Constants.order_status_unpay)) {
-                    if (System.currentTimeMillis() - serviceOrder.createTime.getTime() >= 15 * 60 * 1000) {
-                        serviceOrder.status = "05";
-                        serviceOrder.content = "客户原因（15分钟超时未支付，系统自动取消）";
-
-                        ServiceOrderBody body = new ServiceOrderBody();
-                        body.id = serviceOrder.id;
-                        body.status = "05";
-                        body.content = "客户原因（15分钟超时未支付，系统自动取消）";
-
-                        serviceClient.updateServiceOrder(body);
-                    } else {
-                        serviceOrder.remainTime = 15 * 60 * 1000 - (System.currentTimeMillis() - serviceOrder.createTime.getTime());
-                    }
-                }
-
-                response.put("serviceOrder", serviceOrder);
-
-                ResponseModel<UserDeliveryAddress> addressResponse = userClient.getDeliveryAddress(serviceOrder.deliveryAddressID);
-                if (addressResponse.isSuccess()) {
-                    response.put("deliveryAddress", addressResponse.getData());
-                }
-
-                responseArray.add(response);
+        ResponseArrayModel<ServiceOrder> serviceOrderResponseArrayModel = jbh_mysql_client.selectServiceOrderList(ids);
+        if (serviceOrderResponseArrayModel.isSuccess()) {
+            for (int i = 0; i < serviceOrderResponseArrayModel.getData().size(); ++i) {
+                ServiceOrder serviceOrder = serviceOrderResponseArrayModel.getData().get(i);
+                JSONObject jsonObject = joinServiceDetail(orderMap.get(serviceOrder.id), serviceOrder);
+                responseArray.add(jsonObject);
             }
         }
     }
 
+    /**
+     * 拼接数据
+     */
+    private JSONObject joinServiceDetail(Order order, ServiceOrder serviceOrder) {
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("order", order);
+        jsonObject.put("serviceOrder", serviceOrder);
+
+        if (serviceOrder != null) {
+            // 存入 ServicePrice
+            ResponseArrayModel<ServicePrice> servicePrice = jbh_mysql_client.selectServicePriceList(serviceOrder.serviceCode);
+            if (servicePrice.isSuccess()) {
+                jsonObject.put("prices", servicePrice.getData());
+            }
+
+            // 存入 DeliveryAddress
+            ResponseModel<UserDeliveryAddress> addressResponseModel = userClient.getDeliveryAddress(order.deliveryAddressID);
+            if (addressResponseModel.isSuccess()) {
+                jsonObject.put("deliveryAddress", addressResponseModel.getData());
+            }
+        }
+
+        return jsonObject;
+    }
 }

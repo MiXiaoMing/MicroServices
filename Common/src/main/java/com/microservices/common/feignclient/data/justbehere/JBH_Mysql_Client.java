@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @FeignClient(value = ClientConstants.module_data_just_be_here)
 public interface JBH_Mysql_Client {
 
@@ -128,20 +131,12 @@ public interface JBH_Mysql_Client {
     public ResponseModel<GoodsOrder> selectGoodsOrder(@RequestBody String id);
 
     /**
-     * 商品订单 列表获取 通过userID, status
-     * @param body
+     * 商品订单 列表获取
+     * @param body 通过订单ID列表
      * @return
      */
     @RequestMapping(value = "order/goods/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<GoodsOrder> selectGoodsOrderList(@RequestBody JSONObject body);
-
-    /**
-     * 商品订单 更新
-     * @param body  通过id, status, content
-     * @return
-     */
-    @RequestMapping(value = "order/goods/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<GoodsOrder> updateGoodsOrder(@RequestBody JSONObject body);
+    public ResponseArrayModel<GoodsOrder> selectGoodsOrderList(@RequestBody List<String> body);
 
 
 
@@ -231,20 +226,22 @@ public interface JBH_Mysql_Client {
     public ResponseModel<ServiceOrder> selectServiceOrder(@RequestBody String id);
 
     /**
-     * 服务订单 列表获取 通过userID, status, serviceTime
-     * @param body
+     * 服务订单 列表获取
+     * @param body  通过订单ID列表
      * @return
      */
     @RequestMapping(value = "order/service/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<ServiceOrder> selectServiceOrderList(@RequestBody JSONObject body);
+    public ResponseArrayModel<ServiceOrder> selectServiceOrderList(@RequestBody List<String> body);
 
     /**
-     * 服务订单 更新
-     * @param body
+     * 服务订单 列表获取
+     *
+     * @param body 通过serviceTime
      * @return
      */
-    @RequestMapping(value = "order/service/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<ServiceOrder> updateServiceOrder(@RequestBody ServiceOrderBody body);
+    @RequestMapping(value = "order/service/selectListByTime", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseArrayModel<ServiceOrder> selectServiceOrderListByTime(@RequestBody JSONObject body);
+
 
 
 

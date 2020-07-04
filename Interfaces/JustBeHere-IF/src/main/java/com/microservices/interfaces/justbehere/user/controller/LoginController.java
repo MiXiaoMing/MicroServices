@@ -2,7 +2,7 @@ package com.microservices.interfaces.justbehere.user.controller;
 
 import com.microservices.common.feignclient.business.JBH_BIZ_Client;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
-import com.microservices.common.feignclient.middleplatform.SmsClient;
+import com.microservices.common.feignclient.middleplatform.NotifyClient;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import com.microservices.common.utils.ValidateUtil;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Autowired
-    SmsClient smsClient;
+    NotifyClient smsClient;
 
     @Autowired
     JBH_BIZ_Client userClient;

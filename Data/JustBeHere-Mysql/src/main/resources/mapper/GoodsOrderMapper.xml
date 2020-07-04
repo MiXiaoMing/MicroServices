@@ -4,10 +4,7 @@
 
     <sql id="column">
 	  <![CDATA[
-		  id, trade_id as tradeID, user_id as userID, delivery_address_id as deliveryAddressID,
-		  goods_items as goodsItems,
-		  remind, price,
-		  status, content, delflag, update_time as updateTime, create_time as createTime
+		  id, goods_items as goodsItems, remind, price,
         ]]>
     </sql>
 
@@ -18,15 +15,6 @@
             <if test="id != null">
                 id,
             </if>
-            <if test="userID != null">
-                user_id,
-            </if>
-            <if test="tradeID != null">
-                trade_id,
-            </if>
-            <if test="deliveryAddressID != null">
-                delivery_address_id,
-            </if>
             <if test="goodsItems != null">
                 goods_items,
             </if>
@@ -36,34 +24,10 @@
             <if test="price != null">
                 price,
             </if>
-            <if test="status != null">
-                status,
-            </if>
-            <if test="content != null">
-                content,
-            </if>
-            <if test="delflag != null">
-                delflag,
-            </if>
-            <if test="updateTime != null">
-                update_time,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 #{id,jdbcType=VARCHAR},
-            </if>
-            <if test="userID != null">
-                #{userID,jdbcType=VARCHAR},
-            </if>
-            <if test="tradeID != null">
-                #{tradeID,jdbcType=VARCHAR},
-            </if>
-            <if test="deliveryAddressID != null">
-                #{deliveryAddressID,jdbcType=VARCHAR},
             </if>
             <if test="goodsItems != null">
                 #{goodsItems,jdbcType=VARCHAR},
@@ -74,38 +38,17 @@
             <if test="price != null">
                 #{price,jdbcType=FLOAT},
             </if>
-            <if test="status != null">
-                #{status,jdbcType=VARCHAR},
-            </if>
-            <if test="content != null">
-                #{content,jdbcType=VARCHAR},
-            </if>
-            <if test="delflag != null">
-                #{delflag,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsOrder">
+    <select id="selectList" parameterType="java.util.List" resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsOrder">
         select
         <include refid="column"/>
           from t_order_goods
-          where
-          <![CDATA[
-            delflag <> 'D'
-          ]]>
-          <if test="userID != null">
-            and user_id = #{userID,jdbcType=VARCHAR}
-          </if>
-          <if test="status != null">
-            and status = #{status,jdbcType=VARCHAR}
-          </if>
+          where id in
+          <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+          </foreach>
     </select>
 
     <select id="select" parameterType="java.util.Map"
@@ -117,24 +60,5 @@
           where id = #{id,jdbcType=VARCHAR}
         ]]>
     </select>
-
-    <update id="update" parameterType="java.util.Map">
-        update t_order_goods
-        <set>
-            <if test="status != null">
-                status = #{status,jdbcType=VARCHAR},
-            </if>
-            <if test="content != null">
-                content = #{content,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="delflag != null">
-                delflag = #{delflag,jdbcType=VARCHAR},
-            </if>
-        </set>
-        where id = #{id,jdbcType=VARCHAR}
-    </update>
 
 </mapper>

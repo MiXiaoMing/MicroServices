@@ -1,7 +1,7 @@
 package com.microservices.business.justbehere.user;
 
 import com.microservices.common.feignclient.data.user.result.UserBase;
-import com.microservices.common.feignclient.middleplatform.UserClient;
+import com.microservices.common.feignclient.data.user.DataUserClient;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    UserClient mpUserClient;
+    DataUserClient mpUserClient;
 
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);

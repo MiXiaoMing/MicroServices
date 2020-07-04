@@ -2,7 +2,7 @@ package com.microservices.business.justbehere.user;
 
 import com.microservices.common.feignclient.data.user.body.UserDeliveryAddressBody;
 import com.microservices.common.feignclient.data.user.result.UserDeliveryAddress;
-import com.microservices.common.feignclient.middleplatform.UserClient;
+import com.microservices.common.feignclient.data.user.DataUserClient;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserDeliveryAddressController {
 
     @Autowired
-    UserClient mpUserClient;
+    DataUserClient mpUserClient;
 
 
     private final Logger logger = LoggerFactory.getLogger(UserDeliveryAddressController.class);

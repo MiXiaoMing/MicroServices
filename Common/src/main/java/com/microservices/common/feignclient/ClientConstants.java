@@ -35,6 +35,8 @@ public class ClientConstants {
     public static final String module_data_cache = "data-cache";
     // 统一用户
     public static final String module_data_user = "data-user";
+    // 订单服务
+    public static final String module_data_order = "data-order";
     // Just Be Here
     public static final String module_data_just_be_here = "jbh-mysql";
 

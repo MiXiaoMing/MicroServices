@@ -18,7 +18,7 @@ jbh-if | just be here | 7101 |
 #### Business 业务层
 模块名称 | 描述 |  访问端口  
 -|-|-
-jbh-biz-user | 用户 | 8101 |
+jbh-biz | 用户 | 8101 |
 
 ##### 部署
 - jbh-biz：
@@ -29,12 +29,10 @@ jbh-biz-user | 用户 | 8101 |
 #### MiddlePlatform 中台
 模块名称 | 描述 |  访问端口  
 -|-|-
-mp-sms | 短信服务 | 9001 |
-mp-user | 统一用户服务 | 9002 |
+mp-notify | 通知服务(短信、邮件、推送) | 9001 |
 
 ##### 部署
-- mp-sms：./publish.sh MiddlePlatform/MP-Sms mp-sms application
-- mp-user：./publish.sh MiddlePlatform/MP-User mp-user application
+- mp-notify：./publish.sh MiddlePlatform/MP-Notify mp-notify application
 
 
 
@@ -43,6 +41,7 @@ mp-user | 统一用户服务 | 9002 |
 -|-|-
 data-cache | 缓存数据 | 9100 |
 data-user | 用户中心数据 | 9101 |
+data-order | 订单服务数据 | 9102 |
 jbh-mysql | jbh 数据 | 9201 |
 
 ##### 部署

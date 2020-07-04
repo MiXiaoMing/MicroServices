@@ -8,11 +8,11 @@
         <version>2.1.7.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.microservices.middleplatform</groupId>
-    <artifactId>mp-user</artifactId>
+    <groupId>com.microservices.data</groupId>
+    <artifactId>data-order</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mp-user</name>
-    <description>统一用户 中台</description>
+    <name>data-order</name>
+    <description>数据层 订单</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -29,6 +29,23 @@
             <groupId>com.microservices</groupId>
             <artifactId>common</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--数据库 mysql-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.13</version>
         </dependency>
 
         <dependency>
