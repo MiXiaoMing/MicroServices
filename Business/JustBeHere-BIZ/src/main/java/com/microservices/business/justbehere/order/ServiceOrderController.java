@@ -59,7 +59,7 @@ public class ServiceOrderController {
      */
     @RequestMapping(value = "/addServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> addServiceOrder(@RequestBody CreateServiceOrderBody body) {
-        ResponseModel<JSONObject> responseModel = new ResponseModel<>();
+        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
         // TODO: 2020/6/23 这里需要重新计算 金额
         // TODO: 2020/7/3 需要 使用 redis 去库存

@@ -112,21 +112,7 @@ public class GoodsOrderController {
         if (orderResponseArrayModel.isSuccess()) {
             responseModel.setSuccess(true);
 
-            List<String> ids = new ArrayList<>();
-            Map<String, Order> orderMap = new HashMap<>();
-            for (int i = 0; i < orderResponseArrayModel.getData().size(); ++i) {
-                Order order = orderResponseArrayModel.getData().get(i);
-                ids.add(order.id);
-                orderMap.put(order.id, order);
-            }
-
-            ResponseArrayModel<GoodsOrder> goodsOrderResponseArrayModel = jbh_mysql_client.selectGoodsOrderList(ids);
-            if (goodsOrderResponseArrayModel.isSuccess()) {
-                for (int i = 0; i < goodsOrderResponseArrayModel.getData().size(); ++i) {
-                    GoodsOrder goodsOrder = goodsOrderResponseArrayModel.getData().get(i);
-                    joinGoodsOrderDetail(orderMap.get(goodsOrder.id), goodsOrder);
-                }
-            }
+            joinGoodsOrderList(orderResponseArrayModel.getData(), responseModel.getData());
         }
 
         return responseModel;
