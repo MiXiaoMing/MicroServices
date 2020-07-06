@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.justbehere.mysql.GoodsOrderMapper">
+
+    <sql id="column">
+		  id, goods_items as goodsItems, remind, price
+    </sql>
+
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.justbehere.result.GoodsOrder">
+        insert into t_order_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="goodsItems != null">
+                goods_items,
+            </if>
+            <if test="remind != null">
+                remind,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsItems != null">
+                #{goodsItems,jdbcType=VARCHAR},
+            </if>
+            <if test="remind != null">
+                #{remind,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=FLOAT},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsOrder">
+        select
+        <include refid="column"/>
+        from t_order_goods
+        where id in
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsOrder">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_order_goods
+          where id = #{id,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+</mapper>

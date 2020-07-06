@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.justbehere.mysql.ServiceMapper">
+
+    <sql id="column">
+	  <![CDATA[
+		  id, code, `name`, summary, `desc`, icon, icon_big as bigIcon, cover, classify, `level`,
+		  delflag, update_time as updateTime, create_time as createTime
+        ]]>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.justbehere.result.Service">
+        insert into t_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="summary != null">
+                summary,
+            </if>
+            <if test="desc != null">
+                `desc`,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="bigIcon != null">
+                icon_big,
+            </if>
+            <if test="cover != null">
+                cover,
+            </if>
+            <if test="classify != null">
+                classify,
+            </if>
+            <if test="level != null">
+                `level`,
+            </if>
+            <if test="delflag != null">
+                delflag,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="summary != null">
+                #{summary,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null">
+                #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="bigIcon != null">
+                #{bigIcon,jdbcType=VARCHAR},
+            </if>
+            <if test="cover != null">
+                #{cover,jdbcType=VARCHAR},
+            </if>
+            <if test="classify != null">
+                #{classify,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="delflag != null">
+                #{delflag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.Service">
+        select
+        <include refid="column"/>
+          from t_service
+          where
+          <![CDATA[
+            delflag <> 'D'
+          ]]>
+          <if test="classify != null">
+            and classify = #{classify,jdbcType=VARCHAR}
+          </if>
+          order by `level`, code asc
+          limit #{start}, #{number}
+    </select>
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.Service">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_service
+          where code = #{code,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+</mapper>
