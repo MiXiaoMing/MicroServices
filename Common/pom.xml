@@ -56,6 +56,13 @@
             <version>2.1.7.RELEASE</version>
         </dependency>
 
+        <!--使用ribbitmq，zipkin数据流-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+            <version>2.1.1.RELEASE</version>
+        </dependency>
+
         <!--基础组件-->
         <dependency>
             <groupId>com.alibaba</groupId>

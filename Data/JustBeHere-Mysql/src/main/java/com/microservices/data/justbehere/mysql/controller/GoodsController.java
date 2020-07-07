@@ -2,9 +2,11 @@ package com.microservices.data.justbehere.mysql.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.result.Goods;
+import com.microservices.common.feignclient.data.justbehere.result.ServiceClassify;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
+import com.microservices.data.justbehere.mysql.service.GoodsService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,9 @@ public class GoodsController {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
+    private GoodsService goodsService;
+
     private final Logger logger = LoggerFactory.getLogger(GoodsController.class);
 
 
@@ -38,18 +43,20 @@ public class GoodsController {
     public ResponseModel<Goods> select(@RequestBody String code) {
         ResponseModel<Goods> responseModel = new ResponseModel<>();
 
-        Map<String, Object> map = new HashMap<>();
-
-        if (!StringUtil.isEmpty(code)) {
-            map.put("code", code);
-        }
-
-        Goods entity = sqlSessionTemplate.selectOne("com.microservices.data.justbehere.mysql.GoodsMapper.select", map);
-        if (entity == null) {
-            responseModel.setMessage("该商品不存在：" + code);
-        } else {
+        Goods entity = goodsService.selectFromCache(code);
+        if (entity != null) {
             responseModel.setSuccess(true);
             responseModel.setData(entity);
+
+            return responseModel;
+        }
+
+        entity = goodsService.selectFromMysql(code);
+        if (entity != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
+
+            return responseModel;
         }
 
         return responseModel;

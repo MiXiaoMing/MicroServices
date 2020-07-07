@@ -82,7 +82,7 @@ public class ServiceController {
                 JSONObject object = new JSONObject();
                 object.put("classify", linkServiceClassify.getData().code);
                 object.put("start", 0);
-                object.put("number", 30);
+                object.put("number", 3);
                 ResponseArrayModel<Service> linkServiceResponseArrayModel = jbh_mysql_client.selectServiceList(object);
                 if (linkServiceResponseArrayModel.isSuccess()) {
                     JSONArray jsonArrayServers = new JSONArray();
