@@ -3,8 +3,8 @@ package com.microservices.data.cache;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.cache.body.TokenBody;
 import com.microservices.common.utils.ValidateUtil;
-import com.microservices.data.cache.entity.ExtendBody;
-import com.microservices.data.cache.entity.ExtendResult;
+import com.microservices.common.feignclient.data.cache.body.ExtendBody;
+import com.microservices.common.feignclient.data.cache.result.ExtendResult;
 import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.data.cache.entity.UserRedis;
 import com.microservices.data.cache.redis.RedisService;
@@ -105,7 +105,10 @@ public class RedisController {
         // 更新token值
         userRedis.token = body.token;
 
-        ResponseModel<JSONObject> userResult = set(user_pre + body.userID, userRedis.toString());
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("key", user_pre + body.userID);
+        jsonObject.put("value", userRedis.toString());
+        ResponseModel<JSONObject> userResult = set(jsonObject);
         if (!userResult.isSuccess()) {
             return userResult;
         }
@@ -172,16 +175,21 @@ public class RedisController {
 
     /************  extend : key-value   ************/
 
+    /**
+     * 通用
+     * @param body  通过 key-value
+     * @return
+     */
     @RequestMapping(value = "/set", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> set(@RequestBody String key, String value) {
+    public ResponseModel<JSONObject> set(@RequestBody JSONObject body) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
 
-        if (StringUtil.isEmpty(key)) {
+        if (StringUtil.isEmpty(body.getString("key"))) {
             responseModel.setMessage("缓存数据，key为空");
             return responseModel;
         }
 
-        String result = redisService.set(key, value);
+        String result = redisService.set(body.getString("key"), body.getString("value"));
         if (!StringUtil.isEmpty(result) && result.endsWith("OK")) {
             responseModel.setSuccess(true);
         } else {
@@ -191,6 +199,11 @@ public class RedisController {
         return responseModel;
     }
 
+    /**
+     * 获取value值
+     * @param key  通过key值
+     * @return
+     */
     @RequestMapping(value = "/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<String> get(@RequestBody String key) {
         ResponseModel<String> responseModel = new ResponseModel<>();
@@ -212,6 +225,11 @@ public class RedisController {
         return responseModel;
     }
 
+    /**
+     * 设置扩展key-value，添加ttl
+     * @param body
+     * @return
+     */
     @RequestMapping(value = "/setExtend", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> setExtend(@RequestBody ExtendBody body) {
         ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
@@ -231,6 +249,11 @@ public class RedisController {
         return responseModel;
     }
 
+    /**
+     * 通过key值获取扩展内容
+     * @param key
+     * @return
+     */
     @RequestMapping(value = "/getExtend", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<ExtendResult> getExtend(@RequestBody String key) {
         ResponseModel<ExtendResult> responseModel = new ResponseModel<>();

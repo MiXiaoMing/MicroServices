@@ -1,11 +1,13 @@
 package com.microservices.data.justbehere.mysql.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsClassify;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceClassify;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
+import com.microservices.data.justbehere.mysql.service.ServiceClassifyService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class ServiceClassifyController {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
+    private ServiceClassifyService serviceClassifyService;
+
     private final Logger logger = LoggerFactory.getLogger(ServiceClassifyController.class);
 
 
@@ -39,21 +44,20 @@ public class ServiceClassifyController {
     public ResponseModel<ServiceClassify> select(@RequestBody String code) {
         ResponseModel<ServiceClassify> responseModel = new ResponseModel<>();
 
-        Map<String, Object> map = new HashMap<>();
+        ServiceClassify serviceClassify = serviceClassifyService.selectFromCache(code);
+        if (serviceClassify != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(serviceClassify);
 
-        if (StringUtil.isEmpty(code)) {
-            responseModel.setMessage("服务分类code为空");
             return responseModel;
         }
 
-        map.put("code", code);
-
-        ServiceClassify entity = sqlSessionTemplate.selectOne("com.microservices.data.justbehere.mysql.ServiceClassifyMapper.select", map);
-        if (entity == null) {
-            responseModel.setMessage("该用户服务分类不存在：" + code);
-        } else {
+        serviceClassify = serviceClassifyService.selectFromMysql(code);
+        if (serviceClassify != null) {
             responseModel.setSuccess(true);
-            responseModel.setData(entity);
+            responseModel.setData(serviceClassify);
+
+            return responseModel;
         }
 
         return responseModel;
