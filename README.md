@@ -4,7 +4,19 @@ SpringBoot版本号：2.1.7.RELEASE
 
 SpringCloud版本：Greenwich.SR1
 
+#### Gateway 网关层
+    作用：转发、校验、统一
+模块名称 | 描述 |  访问端口  
+-|-|-
+zuul | 网关层 | 6666 |
+
+##### 部署
+- zuul：
+    ./publish.sh Gateway/zuul zuul application
+
+
 #### Interfaces 接口层
+    作用：入参转化、出参拼装
 模块名称 | 描述 |  访问端口  
 -|-|-
 jbh-if | just be here | 7101 |
@@ -16,6 +28,7 @@ jbh-if | just be here | 7101 |
 
 
 #### Business 业务层
+    作用：逻辑处理
 模块名称 | 描述 |  访问端口  
 -|-|-
 jbh-biz | 用户 | 8101 |
@@ -27,6 +40,7 @@ jbh-biz | 用户 | 8101 |
 
 
 #### MiddlePlatform 中台
+    作用：沉淀的处理逻辑
 模块名称 | 描述 |  访问端口  
 -|-|-
 mp-notify | 通知服务(短信、邮件、推送) | 9001 |
@@ -37,6 +51,7 @@ mp-notify | 通知服务(短信、邮件、推送) | 9001 |
 
 
 #### Data 数据层
+    作用：数据封装
 模块名称 | 描述 |  访问端口  
 -|-|-
 data-cache | 缓存数据 | 9100 |
@@ -61,6 +76,7 @@ jbh-mysql | jbh 数据 | 9201 |
 
 
 ### 评测平台
+    作用：app端性能数据采集
 模块名称 | 描述 |  访问端口  
 -|-|-
 testdata | 评测数据 | 8900 |
