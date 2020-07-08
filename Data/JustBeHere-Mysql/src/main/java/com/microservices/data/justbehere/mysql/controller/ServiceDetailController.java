@@ -2,6 +2,7 @@ package com.microservices.data.justbehere.mysql.controller;
 
 import com.microservices.common.feignclient.data.justbehere.result.ServiceDetail;
 import com.microservices.common.response.ResponseModel;
+import com.microservices.data.justbehere.mysql.service.ServiceDetailService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping(value = "/service/detail")
 public class ServiceDetailController {
 
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+
+    @Autowired
+    private ServiceDetailService serviceDetailService;
 
     private final Logger logger = LoggerFactory.getLogger(ServiceDetailController.class);
 
@@ -34,17 +35,23 @@ public class ServiceDetailController {
     public ResponseModel<ServiceDetail> select(@RequestBody String code) {
         ResponseModel<ServiceDetail> responseModel = new ResponseModel<>();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", code);
-
-        ServiceDetail entity = sqlSessionTemplate.selectOne("com.microservices.data.justbehere.mysql.ServiceDetailMapper.select", map);
-        if (entity == null) {
-            responseModel.setMessage("该服务不存在：" + code);
-        } else {
+        ServiceDetail entity = serviceDetailService.selectFromCache(code);
+        if (entity != null) {
             responseModel.setSuccess(true);
             responseModel.setData(entity);
+
+            return responseModel;
         }
 
+        entity = serviceDetailService.selectFromMysql(code);
+        if (entity != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
+
+            return responseModel;
+        }
+
+        responseModel.setMessage("该服务不存在：" + code);
         return responseModel;
     }
 }

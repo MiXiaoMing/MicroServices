@@ -2,8 +2,7 @@ package com.microservices.data.justbehere.mysql.controller;
 
 import com.microservices.common.feignclient.data.justbehere.result.ServicePrice;
 import com.microservices.common.response.ResponseArrayModel;
-import com.microservices.common.response.ResponseModel;
-import com.microservices.common.utils.StringUtil;
+import com.microservices.data.justbehere.mysql.service.ServicePriceService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,9 @@ public class ServicePriceController {
 
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+
+    @Autowired
+    private ServicePriceService servicePriceService;
 
     private final Logger logger = LoggerFactory.getLogger(ServicePriceController.class);
 
@@ -48,6 +50,24 @@ public class ServicePriceController {
             responseModel.setSuccess(true);
             responseModel.setData(entities);
         }
+
+        List<ServicePrice> entity = servicePriceService.selectFromCache(code);
+        if (entity != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
+
+            return responseModel;
+        }
+
+        entity = servicePriceService.selectFromMysql(code);
+        if (entity != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
+
+            return responseModel;
+        }
+
+        responseModel.setMessage("该服务不存在：" + code);
 
         return responseModel;
     }

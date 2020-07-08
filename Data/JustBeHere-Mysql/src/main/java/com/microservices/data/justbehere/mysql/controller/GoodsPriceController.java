@@ -1,9 +1,11 @@
 package com.microservices.data.justbehere.mysql.controller;
 
+import com.microservices.common.feignclient.data.justbehere.result.GoodsClassify;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsPrice;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
+import com.microservices.data.justbehere.mysql.service.GoodsPriceService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,7 @@ import java.util.Map;
 public class GoodsPriceController {
 
     @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+    GoodsPriceService goodsPriceService;
 
     private final Logger logger = LoggerFactory.getLogger(GoodsPriceController.class);
 
@@ -37,20 +39,23 @@ public class GoodsPriceController {
     public ResponseArrayModel<GoodsPrice> select(@RequestBody String code) {
         ResponseArrayModel<GoodsPrice> responseModel = new ResponseArrayModel<>();
 
-        if (StringUtil.isEmpty(code)) {
-            return  responseModel;
-        }
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", code);
-
-        List<GoodsPrice> entity = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.GoodsPriceMapper.select", map);
-        if (entity == null) {
-            responseModel.setMessage("该商品价格不存在：" + code);
-        } else {
+        List<GoodsPrice> entity = goodsPriceService.selectFromCache(code);
+        if (entity != null) {
             responseModel.setSuccess(true);
             responseModel.setData(entity);
+
+            return responseModel;
         }
+
+        entity = goodsPriceService.selectFromMysql(code);
+        if (entity != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
+
+            return responseModel;
+        }
+
+        responseModel.setMessage("该商品价格不存在：" + code);
 
         return responseModel;
     }

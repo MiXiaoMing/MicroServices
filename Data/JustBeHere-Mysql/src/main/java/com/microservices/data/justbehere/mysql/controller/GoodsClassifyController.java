@@ -3,10 +3,12 @@ package com.microservices.data.justbehere.mysql.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsClassify;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsPrice;
+import com.microservices.common.feignclient.data.justbehere.result.ServiceClassify;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
+import com.microservices.data.justbehere.mysql.service.GoodsClassifyService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,9 @@ public class GoodsClassifyController {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
+    private GoodsClassifyService goodsClassifyService;
+
     private final Logger logger = LoggerFactory.getLogger(GoodsClassifyController.class);
 
 
@@ -40,23 +45,23 @@ public class GoodsClassifyController {
     public ResponseModel<GoodsClassify> select(@RequestBody String code) {
         ResponseModel<GoodsClassify> responseModel = new ResponseModel<>();
 
-        Map<String, Object> map = new HashMap<>();
+        GoodsClassify entity = goodsClassifyService.selectFromCache(code);
+        if (entity != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
 
-        if (StringUtil.isEmpty(code)) {
-            responseModel.setMessage("商品分类code为空");
             return responseModel;
         }
 
-        map.put("code", code);
-
-        GoodsClassify entity = sqlSessionTemplate.selectOne("com.microservices.data.justbehere.mysql.GoodsClassifyMapper.select", map);
-        if (entity == null) {
-            responseModel.setMessage("该用户商品分类不存在：" + code);
-        } else {
+        entity = goodsClassifyService.selectFromMysql(code);
+        if (entity != null) {
             responseModel.setSuccess(true);
             responseModel.setData(entity);
+
+            return responseModel;
         }
 
+        responseModel.setMessage("该用户商品分类不存在：" + code);
         return responseModel;
     }
 

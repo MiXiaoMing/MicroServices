@@ -5,6 +5,7 @@ import com.microservices.common.feignclient.data.justbehere.result.Service;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
+import com.microservices.data.justbehere.mysql.service.ServiceService;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class ServiceController {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
+    private ServiceService selectFromCache;
+
     private final Logger logger = LoggerFactory.getLogger(ServiceController.class);
 
 
@@ -38,19 +42,22 @@ public class ServiceController {
     public ResponseModel<Service> select(@RequestBody String code) {
         ResponseModel<Service> responseModel = new ResponseModel<>();
 
-        Map<String, Object> map = new HashMap<>();
-
-        if (!StringUtil.isEmpty(code)) {
-            map.put("code", code);
-        }
-
-        Service entity = sqlSessionTemplate.selectOne("com.microservices.data.justbehere.mysql.ServiceMapper.select", map);
-        if (entity == null) {
-            responseModel.setMessage("该服务不存在：" + code);
-        } else {
+        Service entity = selectFromCache.selectFromCache(code);
+        if (entity != null) {
             responseModel.setSuccess(true);
             responseModel.setData(entity);
+
+            return responseModel;
         }
+
+        entity = selectFromCache.selectFromMysql(code);
+        if (entity != null) {
+            responseModel.setSuccess(true);
+            responseModel.setData(entity);
+
+            return responseModel;
+        }
+
 
         return responseModel;
     }
