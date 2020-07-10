@@ -2,10 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.microservices.data.justbehere.mysql.GoodsMapper">
 
+    <resultMap id="GoodsCollectionMap"
+               type="com.microservices.common.feignclient.data.justbehere.result.GoodsCollection">
+        <result property="code" column="code" javaType="java.lang.String"/>
+
+        <association property="goods"
+                     javaType="com.microservices.common.feignclient.data.justbehere.result.Goods">
+            <id property="id" column="id" javaType="java.lang.String"/>
+            <result property="code" column="code" javaType="java.lang.String"/>
+            <result property="title" column="title" javaType="java.lang.String"/>
+            <result property="icon" column="icon" javaType="java.lang.String"/>
+            <result property="tag" column="tag" javaType="java.lang.String"/>
+            <result property="desc" column="desc" javaType="java.lang.String"/>
+            <result property="content" column="content" javaType="java.lang.String"/>
+            <result property="classify" column="classify" javaType="java.lang.String"/>
+            <result property="level" column="level" javaType="java.lang.String"/>
+            <result property="delflag" column="delflag" javaType="java.lang.String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="update_time" column="update_time" javaType="java.util.Date"/>
+        </association>
+        <collection property="goodsPrices"
+                    ofType="com.microservices.common.feignclient.data.justbehere.result.GoodsPrice">
+            <id property="id" column="pid" javaType="java.lang.String"/>
+            <result property="code" column="code" javaType="java.lang.String"/>
+            <result property="name" column="name" javaType="java.lang.String"/>
+            <result property="price" column="price" javaType="java.lang.Float"/>
+            <result property="discount" column="discount" javaType="java.lang.Float"/>
+            <result property="delflag" column="delflag" javaType="java.lang.String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="update_time" column="update_time" javaType="java.util.Date"/>
+        </collection>
+        <collection property="carousels"
+                    ofType="com.microservices.common.feignclient.data.justbehere.result.Carousel">
+            <id property="id" column="cid" javaType="java.lang.String"/>
+            <result property="carouselCode" column="carousel_code" javaType="java.lang.String"/>
+            <result property="classify" column="classify" javaType="java.lang.String"/>
+            <result property="code" column="code" javaType="java.lang.String"/>
+            <result property="path" column="path" javaType="java.lang.String"/>
+            <result property="delflag" column="delflag" javaType="java.lang.String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="update_time" column="update_time" javaType="java.util.Date"/>
+        </collection>
+    </resultMap>
+
     <sql id="column">
 	  <![CDATA[
+
 		  id, code, title, icon, tag, `desc`, content, classify, `level`,
 		  delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -90,29 +135,29 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.Goods">
-        select
-        <include refid="column"/>
-          from t_goods
-          where
-          <![CDATA[
-            delflag <> 'D'
+    <select id="selectList" parameterType="java.util.Map" resultMap="GoodsCollectionMap">
+        select *, goodsPrice.id pid, carousel.id cid
+        from t_goods goods
+        left join t_goods_price goodsPrice on goods.code = goodsPrice.code
+        left join t_carousel carousel on goods.code = carousel.code
+        where
+        <![CDATA[
+            goods.delflag <> 'D'
           ]]>
-          <if test="classify != null">
-            and classify = #{classify,jdbcType=VARCHAR}
-          </if>
-          order by `level`, code asc
-          limit #{start}, #{number}
+        <if test="classify != null">
+            and goods.classify = #{classify,jdbcType=VARCHAR}
+        </if>
+        order by goods.`level`, goods.code asc
+        limit #{start}, #{number}
     </select>
 
-    <select id="select" parameterType="java.util.Map"
-            resultType="com.microservices.common.feignclient.data.justbehere.result.Goods">
-        select
-        <include refid="column"/>
-        <![CDATA[
-          from t_goods
-          where code = #{code,jdbcType=VARCHAR}
-        ]]>
+    <select id="selectCollection" parameterType="java.util.Map" resultMap="GoodsCollectionMap">
+            select *, goodsPrice.id pid, carousel.id cid
+            from t_goods goods
+            left join t_goods_price goodsPrice on goods.code = goodsPrice.code
+            left join t_carousel carousel on goods.code = carousel.code
+            where goods.code = #{code,jdbcType=VARCHAR}
+            and carousel.carousel_code = #{carouselCode,jdbcType=VARCHAR}
     </select>
 
 </mapper>

@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.JBH_Mysql_Client;
 import com.microservices.common.feignclient.data.justbehere.body.CartBody;
 import com.microservices.common.feignclient.data.justbehere.body.CartBody;
+import com.microservices.common.feignclient.data.justbehere.result.*;
 import com.microservices.common.feignclient.data.justbehere.result.Cart;
-import com.microservices.common.feignclient.data.justbehere.result.Cart;
-import com.microservices.common.feignclient.data.justbehere.result.Goods;
-import com.microservices.common.feignclient.data.justbehere.result.GoodsPrice;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
@@ -101,7 +99,7 @@ public class CartController {
                 Cart cart = cartListResponse.getData().get(i);
                 cartObject.put("cart", cart);
 
-                ResponseModel<Goods> goodsResponseModel = serviceClient.selectGoods(cart.goodsID);
+                ResponseModel<GoodsCollection> goodsResponseModel = serviceClient.selectGoods(cart.goodsID);
                 if (goodsResponseModel.isSuccess()) {
                     cartObject.put("goods", goodsResponseModel.getData());
                 }

@@ -186,7 +186,7 @@ public interface JBH_BIZ_Client {
      * @return
      */
     @RequestMapping(value = "goods/getGoodsList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> getGoodsList(@RequestBody JSONObject body);
+    public ResponseArrayModel<GoodsCollection> getGoodsList(@RequestBody JSONObject body);
 
 
     /**
@@ -196,7 +196,7 @@ public interface JBH_BIZ_Client {
      * @return
      */
     @RequestMapping(value = "goods/getGoods", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> getGoods(@RequestBody String code);
+    public ResponseModel<GoodsCollection> getGoods(@RequestBody String code);
 
 
 

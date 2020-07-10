@@ -162,10 +162,10 @@ public class Setting_MainPageController {
                         object.put("goodsClassify", objectObj);
                     }
                 } else if (classify.equals(Constants.data_goods)) {
-                    ResponseModel<Goods> goodsDetail = jbh_mysql_client.selectGoods(setting.code);
+                    ResponseModel<GoodsCollection> goodsDetail = jbh_mysql_client.selectGoods(setting.code);
                     if (goodsDetail.isSuccess()) {
-                        goodsDetail2Json(goodsDetail.getData(), objectObj);
-                        object.put("goods", objectObj);
+//                        goodsDetail2Json(goodsDetail.getData(), objectObj);
+                        object.put("goods", goodsDetail.getData());
                     }
                 } else {
                     logger.error("错误数据：需要查找原因:" + setting.code);

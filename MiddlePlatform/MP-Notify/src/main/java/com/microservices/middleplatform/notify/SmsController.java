@@ -67,7 +67,7 @@ public class SmsController {
             SendSmsRequest request = new SendSmsRequest();
             request.setPhoneNumbers(phoneNumber);
             request.setSignName("倾心");
-            request.setTemplateCode("SMS_159620377");
+            request.setTemplateCode("");
             request.setTemplateParam("{\"code\":\"" + smsCode + "\"}");
 
 //            SendSmsResponse resp = client.getAcsResponse(request);

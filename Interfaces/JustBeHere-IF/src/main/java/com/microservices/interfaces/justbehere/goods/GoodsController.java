@@ -6,6 +6,7 @@ import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.Goods;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsClassify;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsCollection;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseJsonModel;
@@ -57,7 +58,7 @@ public class GoodsController {
      * @return
      */
     @RequestMapping(value = "/getGoodsList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<JSONObject> getGoodsList(@RequestBody JSONObject body) {
+    public ResponseArrayModel<GoodsCollection> getGoodsList(@RequestBody JSONObject body) {
 
         int page = body.getInteger("page");
         if (page <= 0) {
@@ -81,8 +82,8 @@ public class GoodsController {
      * @return
      */
     @RequestMapping(value = "/getGoods", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<JSONObject> getGoodsList(@RequestBody String code) {
-        ResponseModel<JSONObject> responseModel = new ResponseJsonModel();
+    public ResponseModel<GoodsCollection> getGoodsList(@RequestBody String code) {
+        ResponseModel<GoodsCollection> responseModel = new ResponseModel<>();
 
         if (StringUtil.isEmpty(code)) {
             responseModel.setMessage("商品编号为空");

@@ -165,6 +165,16 @@ public class RedisController {
         if (tokenResponse.isSuccess()) {
             responseModel.setSuccess(true);
             responseModel.setData(tokenResponse.getData().value);
+
+            // 更新下过期时间
+            {
+                ExtendBody tokenExtendBody = new ExtendBody();
+                tokenExtendBody.key = token_pre + token;
+                tokenExtendBody.value = tokenResponse.getData().value;
+                tokenExtendBody.seconds = 60 * 60;
+
+                setExtend(tokenExtendBody);
+            }
         } else {
             responseModel.setMessage(tokenResponse.getErrCode() + " -- " + tokenResponse.getMessage());
         }

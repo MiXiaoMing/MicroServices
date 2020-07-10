@@ -60,7 +60,7 @@ public interface JBH_Mysql_Client {
      * @return
      */
     @RequestMapping(value = "goods/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<Goods> selectGoods(@RequestBody String code);
+    public ResponseModel<GoodsCollection> selectGoods(@RequestBody String code);
 
     /**
      * 商品 列表获取 通过classify，start（开始），number（个数）
@@ -70,7 +70,7 @@ public interface JBH_Mysql_Client {
      * @return
      */
     @RequestMapping(value = "goods/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<Goods> selectGoodsList(@RequestBody JSONObject body);
+    public ResponseArrayModel<GoodsCollection> selectGoodsList(@RequestBody JSONObject body);
 
 
 

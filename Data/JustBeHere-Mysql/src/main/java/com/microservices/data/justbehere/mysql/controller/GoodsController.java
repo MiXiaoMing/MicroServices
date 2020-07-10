@@ -2,6 +2,7 @@ package com.microservices.data.justbehere.mysql.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.result.Goods;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsCollection;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceClassify;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
@@ -40,10 +41,10 @@ public class GoodsController {
      * @return
      */
     @RequestMapping(value = "/select", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseModel<Goods> select(@RequestBody String code) {
-        ResponseModel<Goods> responseModel = new ResponseModel<>();
+    public ResponseModel<GoodsCollection> select(@RequestBody String code) {
+        ResponseModel<GoodsCollection> responseModel = new ResponseModel<>();
 
-        Goods entity = goodsService.selectFromCache(code);
+        GoodsCollection entity = goodsService.selectFromCache(code);
         if (entity != null) {
             responseModel.setSuccess(true);
             responseModel.setData(entity);
@@ -70,8 +71,8 @@ public class GoodsController {
      * @return
      */
     @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<Goods> selectList(@RequestBody JSONObject body) {
-        ResponseArrayModel<Goods> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<GoodsCollection> selectList(@RequestBody JSONObject body) {
+        ResponseArrayModel<GoodsCollection> responseModel = new ResponseArrayModel<>();
 
         Map<String, Object> map = new HashMap<>();
 
@@ -82,7 +83,7 @@ public class GoodsController {
         map.put("start", body.getIntValue("start"));
         map.put("number", body.getIntValue("number"));
 
-        List<Goods> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.GoodsMapper.selectList", map);
+        List<GoodsCollection> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.GoodsMapper.selectList", map);
         if (entities == null) {
             responseModel.setMessage("没有商品数据：" + body.toJSONString());
         } else {

@@ -6,6 +6,7 @@ import com.microservices.common.feignclient.business.body.CreateGoodsOrderBody;
 import com.microservices.common.feignclient.data.justbehere.JBH_Mysql_Client;
 import com.microservices.common.feignclient.data.justbehere.body.GoodsOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.Goods;
+import com.microservices.common.feignclient.data.justbehere.result.GoodsCollection;
 import com.microservices.common.feignclient.data.justbehere.result.GoodsOrder;
 import com.microservices.common.feignclient.data.order.DataOrderClient;
 import com.microservices.common.feignclient.data.order.body.OrderBody;
@@ -198,10 +199,10 @@ public class GoodsOrderController {
         for (int j = 0; j < jsonArrayItems.size(); ++j) {
             JSONObject goodsObject = jsonArrayItems.getJSONObject(j);
 
-            ResponseModel<Goods> goodsResponseModel = jbh_mysql_client.selectGoods(goodsObject.getString("code"));
+            ResponseModel<GoodsCollection> goodsResponseModel = jbh_mysql_client.selectGoods(goodsObject.getString("code"));
             if (goodsResponseModel.isSuccess()) {
-                goodsObject.put("icon", goodsResponseModel.getData().icon);
-                goodsObject.put("title", goodsResponseModel.getData().title);
+                goodsObject.put("icon", goodsResponseModel.getData().goods.icon);
+                goodsObject.put("title", goodsResponseModel.getData().goods.title);
                 jsonArray.add(goodsObject);
             }
         }
