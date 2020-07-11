@@ -89,6 +89,10 @@ public class GoodsController {
         } else {
             responseModel.setSuccess(true);
             responseModel.setData(entities);
+
+            for (int i = 0; i < entities.size(); ++i) {
+                goodsService.sendMQ(entities.get(i).code, JSONObject.toJSONString(entities.get(i)));
+            }
         }
 
         return responseModel;

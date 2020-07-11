@@ -3,6 +3,7 @@ package com.microservices.data.justbehere.mysql.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.body.ServiceOrderBody;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
+import com.microservices.common.feignclient.data.justbehere.result.ServiceTime;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
@@ -116,17 +117,10 @@ public class ServiceOrderController {
      * @return
      */
     @RequestMapping(value = "/selectListByTime", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<ServiceOrder> selectList(@RequestBody JSONObject body) {
-        ResponseArrayModel<ServiceOrder> responseModel = new ResponseArrayModel<>();
+    public ResponseArrayModel<ServiceTime> selectTimeList(@RequestBody List<Timestamp> body) {
+        ResponseArrayModel<ServiceTime> responseModel = new ResponseArrayModel<>();
 
-        Map<String, Object> map = new HashMap<>();
-
-        Timestamp timestamp = body.getTimestamp("serviceTime");
-        if (timestamp != null) {
-            map.put("serviceTime", timestamp);
-        }
-
-        List<ServiceOrder> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.ServiceOrderMapper.selectListByTime", map);
+        List<ServiceTime> entities = sqlSessionTemplate.selectList("com.microservices.data.justbehere.mysql.ServiceOrderMapper.selectListByTime", body);
         if (entities == null) {
             responseModel.setMessage("该用户没有订单数据：" + body.toString());
         } else {

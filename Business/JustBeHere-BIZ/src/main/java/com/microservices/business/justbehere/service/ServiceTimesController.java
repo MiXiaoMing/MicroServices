@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.microservices.common.feignclient.data.justbehere.JBH_Mysql_Client;
 import com.microservices.common.feignclient.data.justbehere.result.ServiceOrder;
+import com.microservices.common.feignclient.data.justbehere.result.ServiceTime;
 import com.microservices.common.response.ResponseArrayModel;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.DateUtil;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 @RestController
@@ -88,31 +90,49 @@ public class ServiceTimesController {
             object.put("dayTime", zeroTime);
             responseModel.getData().add(object);
 
-            JSONArray timeJsonArray = new JSONArray();
+            // 获取一天的订单数据
+
+            List<Timestamp> timeList = new ArrayList<>();
             for (int j = 0; j < times.size(); ++j) {
-                JSONObject timeObject = new JSONObject();
-                timeObject.put("timeDesc", times.get(j).key);
-                timeObject.put("hourTime", times.get(j).value * 60 * 60 * 1000);
-
                 long time = zeroTime + times.get(j).value * 60 * 60 * 1000;
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("serviceTime", new Timestamp(time));
-                ResponseArrayModel<ServiceOrder> serviceOrderResponseArrayModel = jbh_mysql_client.selectServiceOrderListByTime(jsonObject);
-                if (serviceOrderResponseArrayModel.isSuccess()) {
-                    int count = serviceOrderResponseArrayModel.getData().size();
-
-                    timeObject.put("count", count);
-                    if (count > 1) {
-                        timeObject.put("isTimeActive", false);
-                    } else {
-                        timeObject.put("isTimeActive", true);
-                    }
-                } else {
-                    timeObject.put("isTimeActive", true);
-                }
-
-                timeJsonArray.add(timeObject);
+                timeList.add(new Timestamp(time));
             }
+
+            JSONArray timeJsonArray = new JSONArray();
+
+            ResponseArrayModel<ServiceTime> serviceTimeResponseArrayModel = jbh_mysql_client.selectServiceOrderListByTime(timeList);
+            if (serviceTimeResponseArrayModel.isSuccess()) {
+                for (int j = 0; j < times.size(); ++j) {
+                    JSONObject timeObject = new JSONObject();
+                    timeObject.put("timeDesc", times.get(j).key);
+                    timeObject.put("hourTime", times.get(j).value * 60 * 60 * 1000);
+                    timeObject.put("isTimeActive", true);
+
+                    long time = zeroTime + times.get(j).value * 60 * 60 * 1000;
+                    for (int k = 0; k < serviceTimeResponseArrayModel.getData().size(); ++k) {
+                        if (serviceTimeResponseArrayModel.getData().get(k).serviceTime.getTime() == time) {
+                            int count = serviceTimeResponseArrayModel.getData().get(k).count;
+
+                            timeObject.put("count", count);
+                            if (count > 1) {
+                                timeObject.put("isTimeActive", false);
+                            }
+                        }
+                    }
+
+                    timeJsonArray.add(timeObject);
+                }
+                object.put("hourTimes", timeJsonArray);
+            } else {
+                for (int j = 0; j < times.size(); ++j) {
+                    JSONObject timeObject = new JSONObject();
+                    timeObject.put("timeDesc", times.get(j).key);
+                    timeObject.put("hourTime", times.get(j).value * 60 * 60 * 1000);
+                    timeObject.put("isTimeActive", true);
+                    timeJsonArray.add(timeObject);
+                }
+            }
+
             object.put("hourTimes", timeJsonArray);
         }
 

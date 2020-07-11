@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -240,7 +241,7 @@ public interface JBH_Mysql_Client {
      * @return
      */
     @RequestMapping(value = "order/service/selectListByTime", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseArrayModel<ServiceOrder> selectServiceOrderListByTime(@RequestBody JSONObject body);
+    public ResponseArrayModel<ServiceTime> selectServiceOrderListByTime(@RequestBody List<Timestamp> body);
 
 
 

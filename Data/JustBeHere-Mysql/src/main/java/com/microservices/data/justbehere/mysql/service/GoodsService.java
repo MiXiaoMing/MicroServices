@@ -83,7 +83,7 @@ public class GoodsService {
      * @param code
      * @param value
      */
-    private void sendMQ(String code, String value) {
+    public void sendMQ(String code, String value) {
         ExtendBody body = new ExtendBody();
         body.key = PRE + code;
         body.value =  value;

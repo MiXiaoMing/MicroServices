@@ -84,11 +84,14 @@
           order by serviceTime desc
     </select>
 
-    <select id="selectListByTime" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceOrder">
-        select
-        <include refid="column"/>
+    <select id="selectListByTime" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceTime">
+        select service_time as serviceTime, count(*) as count
         from t_order_service
-        where service_time = #{serviceTime,jdbcType=TIMESTAMP}
+        where service_time in
+        <foreach collection="list" item="time" index="index" open="(" separator="," close=")">
+            #{time}
+        </foreach>
+        group by service_time
     </select>
 
     <select id="select" parameterType="java.util.Map"
