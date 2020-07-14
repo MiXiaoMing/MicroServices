@@ -25,9 +25,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
     - redis
 
   data-user:
@@ -35,7 +34,7 @@ services:
     container_name: data-user
     ports:
     - "9101:9101"
-    environment: 
+    environment:
     - TZ=Asia/Shanghai
     volumes:
     - /jbh/servers/data/data-user.jar:/jbh/data/application.jar:Z
@@ -45,9 +44,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
     - mysql
 
   data-order:
@@ -65,9 +63,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
     - mysql
 
   jbh-mysql:
@@ -75,7 +72,7 @@ services:
     container_name: jbh-mysql
     ports:
     - "9201:9201"
-    environment: 
+    environment:
     - TZ=Asia/Shanghai
     volumes:
     - /jbh/servers/data/jbh-mysql.jar:/jbh/data/application.jar:Z
@@ -85,9 +82,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
     - mysql
 
 
@@ -98,7 +94,7 @@ services:
     container_name: mp-notify
     ports:
     - "9001:9001"
-    environment: 
+    environment:
     - TZ=Asia/Shanghai
     volumes:
     - /jbh/servers/data/mp-notify.jar:/jbh/data/application.jar:Z
@@ -108,9 +104,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
 
 
 
@@ -121,7 +116,7 @@ services:
     container_name: jbh-biz
     ports:
     - "8101:8101"
-    environment: 
+    environment:
     - TZ=Asia/Shanghai
     volumes:
     - /jbh/servers/data/jbh-biz.jar:/jbh/data/application.jar:Z
@@ -131,9 +126,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
 
 
 
@@ -144,7 +138,7 @@ services:
     container_name: jbh-if
     ports:
     - "7101:7101"
-    environment: 
+    environment:
     - TZ=Asia/Shanghai
     volumes:
     - /jbh/servers/data/jbh-if.jar:/jbh/data/application.jar:Z
@@ -154,9 +148,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
 
 
 
@@ -177,9 +170,8 @@ services:
     networks:
       - basic
     external_links:
-    - eureka
+    - nacos
     - zipkin
-    - config
 
 
 
