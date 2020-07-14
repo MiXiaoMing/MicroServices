@@ -10,6 +10,7 @@ import com.microservices.common.feignclient.data.user.DataUserClient;
 import com.microservices.common.feignclient.middleplatform.NotifyClient;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseModel;
+import com.microservices.common.utils.JwtUtil;
 import com.microservices.common.utils.StringUtil;
 import com.microservices.common.utils.ValidateUtil;
 import org.slf4j.Logger;
@@ -91,10 +92,12 @@ public class LoginController {
 
         // 返回token
         responseModel.setSuccess(true);
-        // TODO: 2020/5/28 token生成，需要切换为 正式的
-        String token = snowflakeIdService.getId();
+
+        // 使用jwt创建token
+        String token = JwtUtil.generateToken(userID, "", null);
         responseModel.setData(token);
 
+        // todo 这里需要缓存refresh token值
         // 缓存token数据
         {
             TokenBody tokenBody = new TokenBody();

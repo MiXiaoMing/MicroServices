@@ -2,6 +2,7 @@ package com.microservices.gateway.zuul.filter;
 
 import com.microservices.common.feignclient.data.cache.DataCacheClient;
 import com.microservices.common.response.ResponseModel;
+import com.microservices.common.utils.JwtUtil;
 import com.microservices.common.utils.StringUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -91,8 +92,9 @@ public class AuthFilter extends ZuulFilter {
             return null;
         }
 
-        ResponseModel<String> tokenResponse = dataCacheClient.getUserID(token);
-        if (!tokenResponse.isSuccess()) {
+        // jwt验证token正确性
+        boolean verify = JwtUtil.verifyToken(token, "");
+        if (!verify) {
             //返回错误信息
             rc.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());
             rc.setResponseBody(HttpStatus.UNAUTHORIZED.getReasonPhrase());
@@ -101,7 +103,7 @@ public class AuthFilter extends ZuulFilter {
         }
 
         // 添加header：userID
-        rc.addZuulRequestHeader("userID", tokenResponse.getData());
+        rc.addZuulRequestHeader("userID", JwtUtil.getUserID(token));
 
 
         return null;
