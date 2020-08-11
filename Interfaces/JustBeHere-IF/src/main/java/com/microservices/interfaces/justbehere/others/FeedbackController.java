@@ -25,7 +25,6 @@ public class FeedbackController {
     DataCacheClient dataCacheClient;
 
 
-
     /*************  用户反馈 ************/
 
     /**
@@ -45,7 +44,7 @@ public class FeedbackController {
     /**
      * 获取用户反馈列表
      *
-     * @param body  page（页数，从0开始），number（每页数量）
+     * @param body page（页数，从0开始），number（每页数量）
      * @return
      */
     @RequestMapping(value = "/getGoodsList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

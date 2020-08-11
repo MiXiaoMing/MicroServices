@@ -4,8 +4,10 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, code, `name`, `desc`, icon, cover, link,
 		  delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -78,7 +80,8 @@
         </trim>
     </insert>
 
-    <select id="select" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceClassify">
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceClassify">
         select
         <include refid="column"/>
         <![CDATA[

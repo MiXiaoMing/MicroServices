@@ -23,7 +23,6 @@ public class GoodsController {
     JBH_BIZ_Client jbh_biz_client;
 
 
-
     /*************  商品 分类 ************/
 
     /**
@@ -54,7 +53,7 @@ public class GoodsController {
     /**
      * 获取某一商品分类中商品，
      *
-     * @param body  classify（商品分类），page（页数，从0开始），number（每页数量）
+     * @param body classify（商品分类），page（页数，从0开始），number（每页数量）
      * @return
      */
     @RequestMapping(value = "/getGoodsList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -78,7 +77,7 @@ public class GoodsController {
     /**
      * 获取某一商品详情
      *
-     * @param code  商品编号
+     * @param code 商品编号
      * @return
      */
     @RequestMapping(value = "/getGoods", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

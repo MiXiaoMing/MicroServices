@@ -4,8 +4,10 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, user_id as userID, goods_id as goodsID, type_id as typeID, type_name as typeName,
 		  `number`, delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -72,23 +74,24 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.Cart">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.Cart">
         select
         <include refid="column"/>
-          from t_cart
-          where
-          <![CDATA[
+        from t_cart
+        where
+        <![CDATA[
             delflag <> 'D'
           ]]>
-          <if test="userID != null">
+        <if test="userID != null">
             and user_id = #{userID,jdbcType=VARCHAR}
-          </if>
-          <if test="goodsID != null">
+        </if>
+        <if test="goodsID != null">
             and goods_id = #{goodsID,jdbcType=VARCHAR}
-          </if>
-          <if test="typeID != null">
+        </if>
+        <if test="typeID != null">
             and type_id = #{typeID,jdbcType=VARCHAR}
-          </if>
+        </if>
     </select>
 
     <select id="select" parameterType="java.util.Map"

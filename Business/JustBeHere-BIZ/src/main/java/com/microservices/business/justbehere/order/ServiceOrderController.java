@@ -109,7 +109,7 @@ public class ServiceOrderController {
     /**
      * 获取服务订单详情
      *
-     * @param id  订单ID
+     * @param id 订单ID
      * @return Order + ServiceOrder + Array<ServicePrice> + DeliveryAddress
      */
     @RequestMapping(value = "/getServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

@@ -4,7 +4,9 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, carousel_code as carouselCode, classify, code, path, delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -65,23 +67,24 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.Carousel">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.Carousel">
         select
         <include refid="column"/>
-          from t_carousel
-          where
-          <![CDATA[
+        from t_carousel
+        where
+        <![CDATA[
             delflag <> 'D'
           ]]>
-          <if test="carouselCode != null">
+        <if test="carouselCode != null">
             and carousel_code = #{carouselCode,jdbcType=VARCHAR}
-          </if>
-          <if test="classify != null">
+        </if>
+        <if test="classify != null">
             and classify = #{classify,jdbcType=VARCHAR}
-          </if>
-          <if test="code != null">
+        </if>
+        <if test="code != null">
             and code = #{code,jdbcType=VARCHAR}
-          </if>
+        </if>
     </select>
 
 </mapper>

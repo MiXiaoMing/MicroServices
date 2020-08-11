@@ -87,7 +87,7 @@ public class GoodsOrderController {
     /**
      * 商品订单 列表获取 通过id列表
      *
-     * @param body  ID列表
+     * @param body ID列表
      * @return
      */
     @RequestMapping(value = "/selectList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

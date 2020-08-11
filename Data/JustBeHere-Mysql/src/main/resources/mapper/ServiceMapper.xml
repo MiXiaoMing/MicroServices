@@ -4,8 +4,10 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, code, `name`, summary, `desc`, icon, icon_big as bigIcon, cover, classify, `level`,
 		  delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -96,19 +98,20 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.Service">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.Service">
         select
         <include refid="column"/>
-          from t_service
-          where
-          <![CDATA[
+        from t_service
+        where
+        <![CDATA[
             delflag <> 'D'
           ]]>
-          <if test="classify != null">
+        <if test="classify != null">
             and classify = #{classify,jdbcType=VARCHAR}
-          </if>
-          order by `level`, code asc
-          limit #{start}, #{number}
+        </if>
+        order by `level`, code asc
+        limit #{start}, #{number}
     </select>
 
     <select id="select" parameterType="java.util.Map"

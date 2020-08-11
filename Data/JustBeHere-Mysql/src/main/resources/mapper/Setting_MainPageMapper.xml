@@ -4,7 +4,9 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, `type`, classify, code, delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -59,17 +61,18 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.Setting_MainPage">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.Setting_MainPage">
         select
         <include refid="column"/>
-          from t_setting_main_page
-          where
-          <![CDATA[
+        from t_setting_main_page
+        where
+        <![CDATA[
             delflag <> 'D'
           ]]>
-          <if test="type != null">
+        <if test="type != null">
             and `type` = #{type,jdbcType=VARCHAR}
-          </if>
+        </if>
     </select>
 
 </mapper>

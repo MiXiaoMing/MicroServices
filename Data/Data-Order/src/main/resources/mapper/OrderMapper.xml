@@ -4,8 +4,10 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, trade_id as tradeID, user_id as userID, delivery_address_id as deliveryAddressID,
 		  status, content, delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -72,23 +74,25 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.order.result.Order">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.order.result.Order">
         select
         <include refid="column"/>
-          from t_order
-          where
-          <![CDATA[
+        from t_order
+        where
+        <![CDATA[
             delflag <> 'D'
           ]]>
-          <if test="userID != null">
+        <if test="userID != null">
             and user_id = #{userID,jdbcType=VARCHAR}
-          </if>
-          <if test="status != null">
+        </if>
+        <if test="status != null">
             and status = #{status,jdbcType=VARCHAR}
-          </if>
+        </if>
     </select>
 
-    <select id="select" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.order.result.Order">
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.order.result.Order">
         select
         <include refid="column"/>
         <![CDATA[

@@ -79,14 +79,15 @@ public class GoodsService {
     }
 
     /**
-     *  数据缓存，方便快速获取
+     * 数据缓存，方便快速获取
+     *
      * @param code
      * @param value
      */
     public void sendMQ(String code, String value) {
         ExtendBody body = new ExtendBody();
         body.key = PRE + code;
-        body.value =  value;
+        body.value = value;
         body.seconds = ttl;
         amqpTemplate.convertAndSend("redis", "setExtend", body);
     }

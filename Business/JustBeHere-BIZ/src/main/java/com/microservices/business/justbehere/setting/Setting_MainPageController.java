@@ -126,9 +126,6 @@ public class Setting_MainPageController {
     }
 
 
-
-
-
     private void getData(String type, ResponseArrayModel<JSONObject> responseArrayModel) {
         ResponseArrayModel<Setting_MainPage> settingResponse = jbh_mysql_client.selectMainPageSettingList(type);
         if (settingResponse.isSuccess()) {
@@ -175,10 +172,6 @@ public class Setting_MainPageController {
             }
         }
     }
-
-
-
-
 
 
     private void goodsClassify2Json(GoodsClassify classify, JSONObject object) {

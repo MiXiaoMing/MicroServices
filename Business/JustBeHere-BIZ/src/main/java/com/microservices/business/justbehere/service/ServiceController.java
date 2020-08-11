@@ -33,12 +33,11 @@ public class ServiceController {
     /************ 服务分类 **************/
 
 
-
     /**
      * 获取服务分类详情
      *
      * @param code 服务分类编号
-     * @return  ServiceClassify + Link ServiceClassify
+     * @return ServiceClassify + Link ServiceClassify
      */
     @RequestMapping(value = "/getServiceClassify", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> getServiceClassify(@RequestBody String code) {
@@ -109,7 +108,7 @@ public class ServiceController {
      * 获取服务分类详情
      *
      * @param code 服务分类编号
-     * @return  Service + ServiceDetail
+     * @return Service + ServiceDetail
      */
     @RequestMapping(value = "/getService", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseModel<JSONObject> getServiceList(@RequestBody String code) {

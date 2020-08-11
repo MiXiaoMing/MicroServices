@@ -4,7 +4,9 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, user_id as userID, content, create_time as createTime
+
         ]]>
     </sql>
 
@@ -41,10 +43,11 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.Feedback">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.Feedback">
         select
         <include refid="column"/>
-          from t_feedback
+        from t_feedback
         where
         order by create_time desc
         limit #{start}, #{number}

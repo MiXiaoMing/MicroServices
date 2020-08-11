@@ -22,6 +22,7 @@ public class Service2JSONObject {
 
     /**
      * 服务分类 转 JSON
+     *
      * @param serviceClassify
      * @param object
      */
@@ -37,7 +38,7 @@ public class Service2JSONObject {
 
 
     /**
-     *  服务 转 JSON
+     * 服务 转 JSON
      *
      * @param service
      * @param object

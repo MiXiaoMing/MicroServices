@@ -4,8 +4,10 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, code, note, effect, introduce, refertime, others, scope, tools, assurance, flow,
 		  delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 

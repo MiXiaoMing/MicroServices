@@ -48,7 +48,7 @@ public class ServiceOrderController {
     /**
      * 获取 服务订单详情
      *
-     * @param id  服务订单ID
+     * @param id 服务订单ID
      * @return
      */
     @RequestMapping(value = "/getServiceOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

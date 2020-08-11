@@ -4,7 +4,9 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, `name`, `type`, phone_number as phoneNumber, delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -59,23 +61,24 @@
         </trim>
     </insert>
 
-    <select id="select" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.user.result.UserBase">
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.UserBase">
         select
         <include refid="column"/>
-          from t_user_base
-          where
-           <![CDATA[
+        from t_user_base
+        where
+        <![CDATA[
              delflag <> 'D'
            ]]>
-          <if test="phoneNumber != null">
+        <if test="phoneNumber != null">
             and phone_number = #{phoneNumber,jdbcType=VARCHAR}
-          </if>
-          <if test="type != null">
+        </if>
+        <if test="type != null">
             and `type` = #{type,jdbcType=VARCHAR}
-          </if>
-          <if test="id != null">
+        </if>
+        <if test="id != null">
             and id = #{id,jdbcType=VARCHAR}
-          </if>
+        </if>
     </select>
 
     <update id="update" parameterType="com.microservices.common.feignclient.data.user.result.UserBase">

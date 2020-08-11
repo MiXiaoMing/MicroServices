@@ -37,7 +37,6 @@ public class SmsController {
     private String secret;
 
 
-
     private final Logger logger = LoggerFactory.getLogger(SmsController.class);
 
 

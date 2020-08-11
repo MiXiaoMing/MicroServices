@@ -4,9 +4,11 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, service_time as serviceTime, service_code as serviceCode,
 		  service_name as serviceName, service_items as serviceItems,
 		  remind, price_total as totalPrice, price_discount as discountPrice, price_pay as payPrice
+
         ]]>
     </sql>
 
@@ -73,18 +75,20 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.List" resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceOrder">
+    <select id="selectList" parameterType="java.util.List"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceOrder">
         select
         <include refid="column"/>
-          from t_order_service
-          where id in
-          <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+        from t_order_service
+        where id in
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
             #{id}
-          </foreach>
-          order by serviceTime desc
+        </foreach>
+        order by serviceTime desc
     </select>
 
-    <select id="selectListByTime" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceTime">
+    <select id="selectListByTime" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceTime">
         select service_time as serviceTime, count(*) as count
         from t_order_service
         where service_time in
@@ -98,8 +102,8 @@
             resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceOrder">
         select
         <include refid="column"/>
-          from t_order_service
-          where id = #{id,jdbcType=VARCHAR}
+        from t_order_service
+        where id = #{id,jdbcType=VARCHAR}
     </select>
 
 </mapper>

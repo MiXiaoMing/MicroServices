@@ -4,8 +4,10 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, code, title, `name`, `desc`, icon
 		  delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -72,17 +74,19 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsClassify">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsClassify">
         select
         <include refid="column"/>
-          from t_goods_classify
-          where
-          <![CDATA[
+        from t_goods_classify
+        where
+        <![CDATA[
             delflag <> 'D'
           ]]>
     </select>
 
-    <select id="select" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsClassify">
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.GoodsClassify">
         select
         <include refid="column"/>
         <![CDATA[

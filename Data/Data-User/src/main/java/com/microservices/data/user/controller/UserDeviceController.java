@@ -20,7 +20,7 @@ public class UserDeviceController {
     @Autowired
     UserDeviceService userDeviceService;
 
-    private final Logger logger	= LoggerFactory.getLogger(UserDeviceController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserDeviceController.class);
 
     /**
      * 用户设备 插入新数据
@@ -57,6 +57,7 @@ public class UserDeviceController {
 
     /**
      * 用户设备 更新
+     *
      * @param body
      * @return
      */

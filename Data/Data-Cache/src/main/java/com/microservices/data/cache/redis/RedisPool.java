@@ -16,25 +16,25 @@ public class RedisPool {
     private Logger logger = LoggerFactory.getLogger(RedisPool.class);
 
     @Value("${data.redis.host}")
-    private  String host ;
+    private String host;
 
     @Value("${data.redis.port}")
-    private  int port ;
+    private int port;
 
     @Value("${data.redis.auth}")
-    private  String auth ;
+    private String auth;
 
     @Value("${data.redis.minIdle}")
-    private  int minIdle;
+    private int minIdle;
 
     @Value("${data.redis.maxIdle}")
-    private  int maxIdle;
+    private int maxIdle;
 
     @Value("${data.redis.maxTotal}")
-    private  int maxTotal;
+    private int maxTotal;
 
     @Value("${data.redis.timeout}")
-    private  int timeout;
+    private int timeout;
 
     @Bean
     public JedisPool redisPoolFactory() {

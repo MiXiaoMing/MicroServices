@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Business" />
         <module name="Common" />
         <module name="common" />
         <module name="data-cache" />
         <module name="Data-Cache" />
+        <module name="Data-Order" />
         <module name="Data-User" />
         <module name="gateway" />
         <module name="Gateway" />
@@ -19,23 +19,42 @@
         <module name="JBH-User" />
         <module name="justbehere" />
         <module name="JustBeHere" />
+        <module name="JustBeHere-Biz" />
+        <module name="JustBeHere-IF" />
         <module name="JustBeHere-Mysql" />
         <module name="justbehere-mysql" />
+        <module name="MP-Notify" />
         <module name="mp-sms" />
         <module name="MP-Sms" />
         <module name="MP-User" />
+        <module name="Zuul" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Business" target="1.5" />
       <module name="Cache" target="1.8" />
+      <module name="common" target="1.8" />
       <module name="Common-Data" target="1.8" />
       <module name="Common-Interfaces" target="1.8" />
       <module name="Common-MP" target="1.8" />
+      <module name="data" target="1.5" />
+      <module name="Data-Cache" target="1.8" />
+      <module name="Data-Order" target="1.8" />
+      <module name="Data-User" target="1.8" />
+      <module name="gateway" target="1.5" />
       <module name="Interfaces" target="1.5" />
+      <module name="JustBeHere-Biz" target="1.8" />
+      <module name="JustBeHere-IF" target="1.8" />
       <module name="justbehere-interfaces-user" target="1.8" />
+      <module name="JustBeHere-Mysql" target="1.8" />
+      <module name="middleplatform" target="1.5" />
+      <module name="MP-Notify" target="11" />
+      <module name="root" target="1.5" />
       <module name="Sms" target="1.8" />
       <module name="User" target="1.8" />
       <module name="user" target="1.8" />
+      <module name="Zull" target="11" />
+      <module name="Zuul" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

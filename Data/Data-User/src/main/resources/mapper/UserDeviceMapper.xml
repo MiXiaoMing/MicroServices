@@ -4,7 +4,9 @@
 
     <sql id="column">
 	  <![CDATA[
+
 		  id, user_id as userID, device_id as did, mac, region, delflag, update_time as updateTime, create_time as createTime
+
         ]]>
     </sql>
 
@@ -65,23 +67,24 @@
         </trim>
     </insert>
 
-    <select id="selectList" parameterType="java.util.Map" resultType="com.microservices.common.feignclient.data.user.result.UserDevice">
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.UserDevice">
         select
         <include refid="column"/>
-          from t_user_device
-          where
-          <![CDATA[
+        from t_user_device
+        where
+        <![CDATA[
             delflag <> 'D'
           ]]>
-          <if test="userID != null">
+        <if test="userID != null">
             and user_id = #{userID,jdbcType=VARCHAR}
-          </if>
-          <if test="did != null">
+        </if>
+        <if test="did != null">
             and device_id = #{did,jdbcType=VARCHAR}
-          </if>
-           <if test="mac != null">
+        </if>
+        <if test="mac != null">
             and mac = #{mac,jdbcType=VARCHAR}
-          </if>
+        </if>
     </select>
 
     <select id="select" parameterType="java.util.Map"

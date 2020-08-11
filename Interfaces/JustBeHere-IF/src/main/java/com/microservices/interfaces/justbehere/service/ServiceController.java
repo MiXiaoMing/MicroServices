@@ -21,7 +21,6 @@ public class ServiceController {
     JBH_BIZ_Client jbh_biz_client;
 
 
-
     /*************  服务 分类 ************/
 
     /**
@@ -35,7 +34,7 @@ public class ServiceController {
     /**
      * 获取 服务详情
      *
-     * @param code  服务编码
+     * @param code 服务编码
      * @return
      */
     @RequestMapping(value = "/getService", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

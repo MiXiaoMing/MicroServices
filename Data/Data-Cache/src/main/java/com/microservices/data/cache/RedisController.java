@@ -99,7 +99,7 @@ public class RedisController {
 
         ResponseModel<String> oldDataResult = get(user_pre + body.userID);
         if (oldDataResult.isSuccess()) {
-           userRedis = JSONObject.parseObject(oldDataResult.getData(), UserRedis.class);
+            userRedis = JSONObject.parseObject(oldDataResult.getData(), UserRedis.class);
         }
 
         // 更新token值
@@ -123,6 +123,7 @@ public class RedisController {
 
     /**
      * 通过userID 获取 token
+     *
      * @param userID
      * @return
      */
@@ -149,6 +150,7 @@ public class RedisController {
 
     /**
      * 通过 token 获取用户ID
+     *
      * @param token
      * @return
      */
@@ -187,7 +189,8 @@ public class RedisController {
 
     /**
      * 通用
-     * @param body  通过 key-value
+     *
+     * @param body 通过 key-value
      * @return
      */
     @RequestMapping(value = "/set", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -211,7 +214,8 @@ public class RedisController {
 
     /**
      * 获取value值
-     * @param key  通过key值
+     *
+     * @param key 通过key值
      * @return
      */
     @RequestMapping(value = "/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -237,6 +241,7 @@ public class RedisController {
 
     /**
      * 设置扩展key-value，添加ttl
+     *
      * @param body
      * @return
      */
@@ -261,6 +266,7 @@ public class RedisController {
 
     /**
      * 通过key值获取扩展内容
+     *
      * @param key
      * @return
      */

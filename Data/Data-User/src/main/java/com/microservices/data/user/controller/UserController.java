@@ -21,7 +21,7 @@ public class UserController {
     private UserService userService;
 
 
-    private final Logger logger	= LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
     /**
@@ -73,6 +73,7 @@ public class UserController {
 
     /**
      * 用户信息 更新
+     *
      * @param body
      * @return
      */

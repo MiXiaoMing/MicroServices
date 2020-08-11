@@ -51,7 +51,7 @@ public class GoodsOrderController {
     /**
      * 获取 商品订单详情
      *
-     * @param id  商品订单ID
+     * @param id 商品订单ID
      * @return
      */
     @RequestMapping(value = "/getGoodsOrder", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
