@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.user.RoleMapper">
+
+    <sql id="column">
+	  <![CDATA[
+		  id, `name`, code, state, remark, update_time as updateTime, create_time as createTime
+        ]]>
+    </sql>
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.user.result.Role">
+        insert into t_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.Role">
+        select
+        <include refid="column"/>
+        from t_role
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAllList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.Role">
+        select
+        <include refid="column"/>
+        from t_role
+    </select>
+
+    <update id="update" parameterType="com.microservices.common.feignclient.data.user.result.Role">
+        update t_role
+        <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR}
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

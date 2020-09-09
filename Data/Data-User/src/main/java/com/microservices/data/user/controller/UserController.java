@@ -5,6 +5,7 @@ import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.StringUtil;
 import com.microservices.data.user.service.UserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

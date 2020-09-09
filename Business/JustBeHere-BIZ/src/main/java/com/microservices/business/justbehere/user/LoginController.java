@@ -7,7 +7,6 @@ import com.microservices.common.feignclient.data.cache.body.SmsCodeBody;
 import com.microservices.common.feignclient.data.cache.body.TokenBody;
 import com.microservices.common.feignclient.data.user.result.UserBase;
 import com.microservices.common.feignclient.data.user.DataUserClient;
-import com.microservices.common.feignclient.middleplatform.NotifyClient;
 import com.microservices.common.generator.SnowflakeIdService;
 import com.microservices.common.response.ResponseModel;
 import com.microservices.common.utils.JwtUtil;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Autowired
-    DataUserClient mpUserClient;
+    DataUserClient dataUserClient;
 
     @Autowired
     DataCacheClient dataCacheClient;
@@ -74,12 +73,12 @@ public class LoginController {
         jsonObject.put("phoneNumber", body.phoneNumber);
         jsonObject.put("type", Constants.user_type_customer);
 
-        ResponseModel<UserBase> userResultResponseModel = mpUserClient.getUser(jsonObject);
+        ResponseModel<UserBase> userResultResponseModel = dataUserClient.getUser(jsonObject);
         if (!userResultResponseModel.isSuccess()) {
             UserBase userBase = new UserBase();
             userBase.phoneNumber = body.phoneNumber;
 
-            ResponseModel<UserBase> createUserResponse = mpUserClient.addUser(userBase);
+            ResponseModel<UserBase> createUserResponse = dataUserClient.addUser(userBase);
             if (!createUserResponse.isSuccess()) {
                 responseModel.setMessage("用户创建失败：" + createUserResponse.getErrCode() + " - " + createUserResponse.getMessage());
                 return responseModel;

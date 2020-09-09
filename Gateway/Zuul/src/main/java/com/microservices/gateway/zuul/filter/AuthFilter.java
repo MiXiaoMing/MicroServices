@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 /**
  * token值验证
  */
-@Component
+//@Component
 public class AuthFilter extends ZuulFilter {
 
     @Autowired
