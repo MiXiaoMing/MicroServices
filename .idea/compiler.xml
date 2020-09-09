@@ -26,6 +26,7 @@
         <module name="MP-Notify" />
         <module name="mp-sms" />
         <module name="MP-Sms" />
+        <module name="MP-Socket" />
         <module name="MP-User" />
         <module name="Zuul" />
       </profile>
@@ -48,7 +49,8 @@
       <module name="justbehere-interfaces-user" target="1.8" />
       <module name="JustBeHere-Mysql" target="1.8" />
       <module name="middleplatform" target="1.5" />
-      <module name="MP-Notify" target="11" />
+      <module name="MP-Notify" target="1.8" />
+      <module name="MP-Socket" target="1.8" />
       <module name="root" target="1.5" />
       <module name="Sms" target="1.8" />
       <module name="User" target="1.8" />
