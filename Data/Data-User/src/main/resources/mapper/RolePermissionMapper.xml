@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.user.RolePermissionMapper">
+
+    <sql id="column">
+	  <![CDATA[
+		  id, role_id, permission_id, delflag, update_time as updateTime, create_time as createTime
+        ]]>
+    </sql>
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.user.result.RolePermission">
+        insert into t_role_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="role_id != null">
+                role_id,
+            </if>
+            <if test="permission_id != null">
+                permission_id,
+            </if>
+            <if test="delflag != null">
+                delflag,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="role_id != null">
+                #{role_id,jdbcType=VARCHAR},
+            </if>
+            <if test="permission_id != null">
+                #{permission_id,jdbcType=VARCHAR},
+            </if>
+            <if test="delflag != null">
+                #{delflag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.RolePermission">
+        select
+        <include refid="column"/>
+        from t_role_permission
+        where
+        <![CDATA[
+            delflag <> 'D'
+          ]]>
+        and role_id = #{role_id,jdbcType=VARCHAR}
+    </select>
+
+    <update id="update" parameterType="com.microservices.common.feignclient.data.user.result.RolePermission">
+        update t_role_permission
+        <set>
+            <if test="role_id != null">
+                role_id = #{role_id,jdbcType=VARCHAR},
+            </if>
+            <if test="permission_id != null">
+                permission_id = #{permission_id,jdbcType=VARCHAR}
+            </if>
+            <if test="delflag != null">
+                delflag = #{delflag,jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

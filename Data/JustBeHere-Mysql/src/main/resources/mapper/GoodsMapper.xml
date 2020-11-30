@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.justbehere.mysql.GoodsMapper">
+
+    <resultMap id="GoodsCollectionMap"
+               type="com.microservices.common.feignclient.data.justbehere.result.GoodsCollection">
+        <result property="code" column="code" javaType="java.lang.String"/>
+
+        <association property="goods"
+                     javaType="com.microservices.common.feignclient.data.justbehere.result.Goods">
+            <id property="id" column="id" javaType="java.lang.String"/>
+            <result property="code" column="code" javaType="java.lang.String"/>
+            <result property="title" column="title" javaType="java.lang.String"/>
+            <result property="icon" column="icon" javaType="java.lang.String"/>
+            <result property="tag" column="tag" javaType="java.lang.String"/>
+            <result property="desc" column="desc" javaType="java.lang.String"/>
+            <result property="content" column="content" javaType="java.lang.String"/>
+            <result property="classify" column="classify" javaType="java.lang.String"/>
+            <result property="level" column="level" javaType="java.lang.String"/>
+            <result property="delflag" column="delflag" javaType="java.lang.String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="update_time" column="update_time" javaType="java.util.Date"/>
+        </association>
+        <collection property="goodsPrices"
+                    ofType="com.microservices.common.feignclient.data.justbehere.result.GoodsPrice">
+            <id property="id" column="pid" javaType="java.lang.String"/>
+            <result property="code" column="code" javaType="java.lang.String"/>
+            <result property="name" column="name" javaType="java.lang.String"/>
+            <result property="price" column="price" javaType="java.lang.Float"/>
+            <result property="discount" column="discount" javaType="java.lang.Float"/>
+            <result property="delflag" column="delflag" javaType="java.lang.String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="update_time" column="update_time" javaType="java.util.Date"/>
+        </collection>
+        <collection property="carousels"
+                    ofType="com.microservices.common.feignclient.data.justbehere.result.Carousel">
+            <id property="id" column="cid" javaType="java.lang.String"/>
+            <result property="carouselCode" column="carousel_code" javaType="java.lang.String"/>
+            <result property="classify" column="classify" javaType="java.lang.String"/>
+            <result property="code" column="code" javaType="java.lang.String"/>
+            <result property="path" column="path" javaType="java.lang.String"/>
+            <result property="delflag" column="delflag" javaType="java.lang.String"/>
+            <result property="createTime" column="create_time" javaType="java.util.Date"/>
+            <result property="update_time" column="update_time" javaType="java.util.Date"/>
+        </collection>
+    </resultMap>
+
+    <sql id="column">
+	  <![CDATA[
+
+
+		  id, code, title, icon, tag, `desc`, content, classify, `level`,
+		  delflag, update_time as updateTime, create_time as createTime
+
+
+        ]]>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.justbehere.result.Goods">
+        insert into t_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="tag != null">
+                tag,
+            </if>
+            <if test="desc != null">
+                `desc`,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="classify != null">
+                classify,
+            </if>
+            <if test="level != null">
+                `level`,
+            </if>
+            <if test="delflag != null">
+                delflag,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="tag != null">
+                #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="desc != null">
+                #{desc,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="classify != null">
+                #{classify,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="delflag != null">
+                #{delflag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map" resultMap="GoodsCollectionMap">
+        select *, goodsPrice.id pid, carousel.id cid
+        from t_goods goods
+        left join t_goods_price goodsPrice on goods.code = goodsPrice.code
+        left join t_carousel carousel on goods.code = carousel.code
+        where
+        <![CDATA[
+            goods.delflag <> 'D'
+          ]]>
+        <if test="classify != null">
+            and goods.classify = #{classify,jdbcType=VARCHAR}
+        </if>
+        order by goods.`level`, goods.code asc
+        limit #{start}, #{number}
+    </select>
+
+    <select id="selectCollection" parameterType="java.util.Map" resultMap="GoodsCollectionMap">
+            select *, goodsPrice.id pid, carousel.id cid
+            from t_goods goods
+            left join t_goods_price goodsPrice on goods.code = goodsPrice.code
+            left join t_carousel carousel on goods.code = carousel.code
+            where goods.code = #{code,jdbcType=VARCHAR}
+            and carousel.carousel_code = #{carouselCode,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

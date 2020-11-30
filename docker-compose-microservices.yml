@@ -1,0 +1,189 @@
+version: '2'
+
+
+networks:
+    basic:
+
+
+services:
+
+
+# data layer
+
+  data-cache:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: data-cache
+    ports:
+    - "9100:9100"
+    environment: 
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/data-cache.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/data-cache.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+    - redis
+
+  data-user:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: data-user
+    ports:
+    - "9101:9101"
+    environment:
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/data-user.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/data-user.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+    - mysql
+
+  data-order:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: data-order
+    ports:
+    - "9102:9102"
+    environment:
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/data-order.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/data-order.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+    - mysql
+
+  jbh-mysql:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: jbh-mysql
+    ports:
+    - "9201:9201"
+    environment:
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/jbh-mysql.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/jbh-mysql.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+    - mysql
+
+
+ # middle platform layer
+
+  mp-notify:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: mp-notify
+    ports:
+    - "9001:9001"
+    environment:
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/mp-notify.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/mp-notify.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+
+
+
+ # business layer
+
+  jbh-biz:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: jbh-biz
+    ports:
+    - "8101:8101"
+    environment:
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/jbh-biz.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/jbh-biz.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+
+
+
+ # interfaces layer
+
+  jbh-if:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: jbh-if
+    ports:
+    - "7101:7101"
+    environment:
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/jbh-if.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/jbh-if.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+
+
+
+ # gateway layer
+
+  zuul:
+    image: adoptopenjdk/openjdk8-openj9
+    container_name: zuul
+    ports:
+    - "6666:6666"
+    environment:
+    - TZ=Asia/Shanghai
+    volumes:
+    - /jbh/servers/data/zuul.jar:/jbh/data/application.jar:Z
+    - /jbh/servers/data/zuul.properties:/jbh/data/application.properties:Z
+    - /jbh/servers/log/:/microservices/log/:Z
+    command: java -jar /jbh/data/application.jar --spring.config.location=/jbh/data/application.properties >/dev/null 2>&1 & && tail -f /dev/null
+    networks:
+      - basic
+    external_links:
+    - nacos
+    - zipkin
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+

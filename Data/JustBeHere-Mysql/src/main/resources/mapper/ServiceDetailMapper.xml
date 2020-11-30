@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.justbehere.mysql.ServiceDetailMapper">
+
+    <sql id="column">
+	  <![CDATA[
+
+		  id, code, note, effect, introduce, refertime, others, scope, tools, assurance, flow,
+		  delflag, update_time as updateTime, create_time as createTime
+
+        ]]>
+    </sql>
+
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.justbehere.result.ServiceDetail">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_service_detail
+          where code = #{code,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+</mapper>

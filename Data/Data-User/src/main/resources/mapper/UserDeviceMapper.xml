@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microservices.data.user.UserDeviceMapper">
+
+    <sql id="column">
+	  <![CDATA[
+
+		  id, user_id as userID, device_id as did, mac, region, delflag, update_time as updateTime, create_time as createTime
+
+        ]]>
+    </sql>
+
+
+    <insert id="insert" parameterType="com.microservices.common.feignclient.data.user.result.UserDevice">
+        insert into t_user_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userID != null">
+                user_id,
+            </if>
+            <if test="did != null">
+                device_id,
+            </if>
+            <if test="mac != null">
+                mac,
+            </if>
+            <if test="region != null">
+                region,
+            </if>
+            <if test="delflag != null">
+                delflag,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userID != null">
+                #{userID,jdbcType=VARCHAR},
+            </if>
+            <if test="did != null">
+                #{did,jdbcType=VARCHAR},
+            </if>
+            <if test="mac != null">
+                #{mac,jdbcType=VARCHAR},
+            </if>
+            <if test="region != null">
+                #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="delflag != null">
+                #{delflag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectList" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.UserDevice">
+        select
+        <include refid="column"/>
+        from t_user_device
+        where
+        <![CDATA[
+            delflag <> 'D'
+          ]]>
+        <if test="userID != null">
+            and user_id = #{userID,jdbcType=VARCHAR}
+        </if>
+        <if test="did != null">
+            and device_id = #{did,jdbcType=VARCHAR}
+        </if>
+        <if test="mac != null">
+            and mac = #{mac,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="select" parameterType="java.util.Map"
+            resultType="com.microservices.common.feignclient.data.user.result.UserDevice">
+        select
+        <include refid="column"/>
+        <![CDATA[
+          from t_user_device
+          where id = #{id,jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+    <update id="update" parameterType="java.util.Map">
+        update t_user_device
+        <set>
+            <if test="userID != null">
+                user_id = #{userID,jdbcType=VARCHAR},
+            </if>
+            <if test="region != null">
+                region = #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delflag != null">
+                delflag = #{delflag,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>
